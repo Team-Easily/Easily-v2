@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import Main from './src/components/Main';
-
+import Login from './src/components/Login';
+import { Provider } from 'react-redux';
+import store from './src/store';
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#4F6D7A" />
-        <Text style={styles.welcome}>Welcome to Easily!</Text>
-        {/* <Button> "Lets Get Started"</Button> */}
-        <Main />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar barStyle="light-content" backgroundColor="#4F6D7A" />
+          <Text style={styles.welcome}>Welcome to Easily!</Text>
+          {/* <Button> "Lets Get Started"</Button> */}
+          <Login />
+        </View>
+      </Provider>
     );
   }
 }
