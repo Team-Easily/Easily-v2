@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import {  StyleSheet, Text, View, StatusBar } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import Main from './src/components/Main';
 
 export default class App extends Component {
   render() {
@@ -8,6 +9,7 @@ export default class App extends Component {
         <StatusBar barStyle="light-content" backgroundColor="#4F6D7A" />
         <Text style={styles.welcome}>Welcome to Easily!</Text>
         {/* <Button> "Lets Get Started"</Button> */}
+        <Main />
       </View>
     );
   }
@@ -16,15 +18,15 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#cccccc",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#cccccc',
   },
   welcome: {
     fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
     margin: 10,
-    color: "#black",
+    color: '#black',
   },
   // button: {
   //   button: {
