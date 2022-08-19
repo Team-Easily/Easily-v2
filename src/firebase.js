@@ -1,6 +1,5 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -38,8 +37,60 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore();
 
-export { app, auth, db };
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// ----------------USERS
+const registerWithEmailAndPassword = async (name, email, password) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    return user;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const logout = async () => {
+  await signOut(auth);
+};
+
+const getUserByUid = async (uid) => {
+  let user;
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('uid', '==', uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc, i) => {
+    user = doc.data();
+  });
+  return user;
+};
+
+export {
+  app,
+  auth,
+  db,
+  getUserByUid,
+  registerWithEmailAndPassword,
+  logInWithEmailAndPassword,
+  logout,
+};
