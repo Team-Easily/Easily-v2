@@ -1,55 +1,130 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import Login from './src/components/Login';
-import { Provider } from 'react-redux';
+import React from 'react';
+import { StyleSheet, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { getAuth, signOut } from 'firebase/auth';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
+import { DashboardScreen } from './src/screens/DashboardScreen';
+import { TodoListScreen } from './src/screens/TodoListScreen';
+import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
-export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor="#4F6D7A" />
-          <Text style={styles.welcome}>Welcome to Easily!</Text>
-          {/* <Button> "Lets Get Started"</Button> */}
-          <Login />
-        </View>
-      </Provider>
-    );
-  }
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+const auth = getAuth();
+const Tab = createMaterialBottomTabNavigator();
+
+const signOutHandler = () => {
+  console.log('signOutHandler');
+  signOut(auth)
+    .then(() => {
+      console.log('sign out successful');
+    })
+    .catch((error) => {
+      throw err;
+    });
+};
+
+const SignOutButton = () => <Button onPress={signOutHandler} title='Signout' />;
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#07BeB8',
+    accent: '#8F3985',
+  },
+};
+
+const TodoStack = createStackNavigator();
+
+function TodoStackScreen() {
+  return (
+    <TodoStack.Navigator>
+      <TodoStack.Screen name='TodoList' component={TodoListScreen} />
+      <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+    </TodoStack.Navigator>
+  );
 }
 
+const App = () => (
+  <StoreProvider store={store}>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Tab.Navigator>
+          {auth ? (
+            <Tab.Group
+              initialRouteName='Dashboard'
+              activeColor='#07BEB8'
+              barStyle={{ backgroundColor: '#98DFEA' }}
+            >
+              <Tab.Screen
+                name='Dashboard'
+                component={DashboardScreen}
+                options={{
+                  tabBarLabel: 'Dashboard',
+                  tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons
+                      name='view-dashboard'
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name='TodoList'
+                component={TodoStackScreen}
+                options={{
+                  tabBarLabel: 'Todo List',
+                  tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons
+                      name='format-list-bulleted'
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name='SignOut'
+                component={SignOutButton}
+                options={{
+                  tabBarLabel: 'Sign Out',
+                  tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons
+                      name='account'
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                }}
+              />
+            </Tab.Group>
+          ) : (
+            <Tab.Group>
+              <Tab.Screen name='Welcome' component={WelcomeScreen} />
+            </Tab.Group>
+          )}
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  </StoreProvider>
+);
+
+export default App;
+
 const styles = StyleSheet.create({
-  container: {
+  layout: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#cccccc',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-    color: '#black',
+  title: {
+    fontSize: 32,
+    marginBottom: 16,
   },
-  // button: {
-  //   button: {
-  //     width: "90%",
-  //     height: 50,
-  //     borderRadius: 30,
-  //     shadowColor: "black",
-  //     shadowOffset: {
-  //       width: 0,
-  //       height: 2,
-  //     },
-  //     shadowOpacity: 0.25,
-  //     shadowRadius: 2,
-  //     elevation: 2,
-  //     alignSelf: "center",
-  //     justifyContent: "center",
-  //     textAlign: "center",
-  //     alignItems: "center",
-  //     marginTop: 15,
-  //     backgroundColor: "#3B5999",
-  //   },
-  // },
 });
