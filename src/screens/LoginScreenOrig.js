@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
 import {
   registerWithEmailAndPassword,
   logInWithEmailAndPassword,
 } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, TextInput, Text } from 'react-native-paper';
 
-const Login = () => {
+const LoginScreen = () => {
   const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,15 +55,15 @@ const Login = () => {
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
         <Button
-          // containerStyle={styles.loginContainer}
-          // style={styles.loginText}
+          containerStyle={styles.loginContainer}
+          style={styles.loginText}
           onPress={() => {
             setIsRegistering(false);
           }}
           title={'Login'}
         />
         <Button
-          // style={styles.button}
+          style={styles.button}
           title={'Register'}
           onPress={() => {
             setIsRegistering(true);
@@ -72,27 +71,26 @@ const Login = () => {
         />
       </View>
       <View style={styles.form}>
-        {/* <View style={styles.form}> */}
         {isRegistering ? (
           <TextInput
             placeholder='name'
             value={userName}
             onChangeText={(text) => setUserName(text)}
-            // style={styles.input}
+            style={styles.input}
           />
         ) : null}
         <TextInput
           placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
-          // style={styles.input}
+          style={styles.input}
         />
         <TextInput
           placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          // style={styles.input}
+          style={styles.input}
         />
         <Button title={'Submit'} onPress={submitForm} />
       </View>
@@ -105,25 +103,25 @@ const styles = StyleSheet.create({
   container: {
     textAlign: 'center',
   },
-  // loginContainer: {
-  //   width: '70%',
-  //   borderRadius: 25,
-  //   padding: 100,
-  //   marginTop: 300,
-  // },
-  // loginText: {
-  //   color: 'white',
-  // },
+  loginContainer: {
+    width: '70%',
+    borderRadius: 25,
+    padding: 100,
+    marginTop: 300,
+  },
+  loginText: {
+    color: 'white',
+  },
   buttonContainer: {
     flex: 1,
-    // flexDirection: 'row',
-    // gap: '.5rem',
+    flexDirection: 'row',
+    gap: '.5rem',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // button: {
-  //   borderRadius: 25,
-  // },
+  button: {
+    borderRadius: 25,
+  },
   form: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -140,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default LoginScreen;

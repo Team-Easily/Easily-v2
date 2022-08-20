@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import Login from './src/components/Login';
+import Login from './src/screens/LoginScreen';
 import { Provider } from 'react-redux';
 import store from './src/store';
 

@@ -1,33 +1,23 @@
 import React from 'react';
 import { StyleSheet, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { getAuth, signOut } from 'firebase/auth';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { TodoListScreen } from './src/screens/TodoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import { SignOutScreen } from './src/screens/SignOutScreen';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getAuth, signOut } from 'firebase/auth';
 
-const auth = getAuth();
 const Tab = createMaterialBottomTabNavigator();
-
-const signOutHandler = () => {
-  console.log('signOutHandler');
-  signOut(auth)
-    .then(() => {
-      console.log('sign out successful');
-    })
-    .catch((error) => {
-      throw err;
-    });
-};
-
-const SignOutButton = () => <Button onPress={signOutHandler} title='Signout' />;
+const TodoStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
 const theme = {
   ...DefaultTheme,
@@ -39,8 +29,6 @@ const theme = {
   },
 };
 
-const TodoStack = createStackNavigator();
-
 function TodoStackScreen() {
   return (
     <TodoStack.Navigator>
@@ -50,12 +38,24 @@ function TodoStackScreen() {
   );
 }
 
+function AuthStackScreen() {
+  return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen name='Welcome' component={WelcomeScreen} />
+      <AuthStack.Screen name='Login' component={LoginScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
+const auth = getAuth();
+const user = auth.currentUser;
+
 const App = () => (
   <StoreProvider store={store}>
     <PaperProvider theme={theme}>
       <NavigationContainer>
         <Tab.Navigator>
-          {auth ? (
+          {user ? (
             <Tab.Group
               initialRouteName='Dashboard'
               activeColor='#07BEB8'
@@ -91,7 +91,7 @@ const App = () => (
               />
               <Tab.Screen
                 name='SignOut'
-                component={SignOutButton}
+                component={SignOutScreen}
                 options={{
                   tabBarLabel: 'Sign Out',
                   tabBarIcon: ({ color }) => (
@@ -106,7 +106,7 @@ const App = () => (
             </Tab.Group>
           ) : (
             <Tab.Group>
-              <Tab.Screen name='Welcome' component={WelcomeScreen} />
+              <Tab.Screen name='Welcome' component={AuthStackScreen} />
             </Tab.Group>
           )}
         </Tab.Navigator>
