@@ -4,23 +4,18 @@ import { getAuth, signOut } from 'firebase/auth';
 
 const auth = getAuth();
 
-const signOutHandler = ({ navigation }) => {
-  console.log('CURRENT USER', auth.currentUser);
-  signOut(auth);
-  console.log('CURRENT USER AFTER SIGN OUT', auth.currentUser);
-  console.log(navigation);
-  // navigation.navigate('Welcome');
-};
+export const SignOutScreen = ({ navigation }) => {
+  const handleSignOut = () => {
+    console.log('CURRENT USER', auth.currentUser);
+    signOut(auth);
+    console.log('CURRENT USER AFTER SIGN OUT', auth.currentUser);
+    navigation.push('Welcome');
+  };
 
-const SignOutButton = () => (
-  <Button onPress={signOutHandler} title='Sign Out' />
-);
-
-export const SignOutScreen = () => {
   return (
     <View style={styles.layout}>
       <Text style={styles.title}>Sign Out</Text>
-      <SignOutButton />
+      <Button onPress={handleSignOut} title='Sign Out' />
     </View>
   );
 };

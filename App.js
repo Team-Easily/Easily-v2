@@ -16,18 +16,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, signOut } from 'firebase/auth';
 
 const Tab = createMaterialBottomTabNavigator();
+const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
 const AuthStack = createStackNavigator();
-
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#07BeB8',
-    accent: '#8F3985',
-  },
-};
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator>
@@ -43,77 +34,92 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
+const NavBar = () => (
+  <Tab.Navigator>
+    <Tab.Group
+      initialRouteName='Dashboard'
+      activeColor='#07BEB8'
+      barStyle={{ backgroundColor: '#98DFEA' }}
+    >
+      <Tab.Screen
+        name='Dashboard'
+        component={DashboardScreen}
+        options={{
+          tabBarLabel: 'Dashboard',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name='view-dashboard'
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='TodoList'
+        component={TodoStackScreen}
+        options={{
+          tabBarLabel: 'Todo List',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name='format-list-bulleted'
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='SignOut'
+        component={SignOutScreen}
+        options={{
+          tabBarLabel: 'Sign Out',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name='account' color={color} size={24} />
+          ),
+        }}
+      />
+    </Tab.Group>
+  </Tab.Navigator>
+);
+
 function App() {
   const auth = getAuth();
-  const user = auth.currentUser;
-  // const [user, setUser] = useState([]);
+  const currentUser = auth.currentUser;
+  const [user, setUser] = useState([]);
 
-  // useEffect(() => {
-  //   setUser(currentUser);
-  // }, [currentUser]);
+  useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
 
   return (
     <StoreProvider store={store}>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <Tab.Navigator>
-            {user ? (
-              <Tab.Group
-                initialRouteName='Dashboard'
-                activeColor='#07BEB8'
-                barStyle={{ backgroundColor: '#98DFEA' }}
-              >
-                <Tab.Screen
-                  name='Dashboard'
-                  component={DashboardScreen}
-                  options={{
-                    tabBarLabel: 'Dashboard',
-                    tabBarIcon: ({ color }) => (
-                      <MaterialCommunityIcons
-                        name='view-dashboard'
-                        color={color}
-                        size={24}
-                      />
-                    ),
-                  }}
-                />
-                <Tab.Screen
-                  name='TodoList'
-                  component={TodoStackScreen}
-                  options={{
-                    tabBarLabel: 'Todo List',
-                    tabBarIcon: ({ color }) => (
-                      <MaterialCommunityIcons
-                        name='format-list-bulleted'
-                        color={color}
-                        size={24}
-                      />
-                    ),
-                  }}
-                />
-                <Tab.Screen
-                  name='SignOut'
-                  component={SignOutScreen}
-                  options={{
-                    tabBarLabel: 'Sign Out',
-                    tabBarIcon: ({ color }) => (
-                      <MaterialCommunityIcons
-                        name='account'
-                        color={color}
-                        size={24}
-                      />
-                    ),
-                  }}
-                />
-              </Tab.Group>
+      <NavigationContainer>
+        {/* {auth ? (
+              NavBar
             ) : (
               <Tab.Group>
                 <Tab.Screen name='Welcome' component={AuthStackScreen} />
               </Tab.Group>
-            )}
-          </Tab.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
+            )} */}
+        {auth ? (
+          <MainStack.Navigator
+            initialRouteName='Welcome'
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen name='Welcome' component={WelcomeScreen} />
+            <MainStack.Screen name='Login' component={LoginScreen} />
+            <MainStack.Screen name='Nav Bar' component={NavBar} />
+          </MainStack.Navigator>
+        ) : (
+          <MainStack.Navigator
+            initialRouteName='Nav Bar'
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen name='Nav Bar' component={NavBar} />
+          </MainStack.Navigator>
+        )}
+      </NavigationContainer>
     </StoreProvider>
   );
 }

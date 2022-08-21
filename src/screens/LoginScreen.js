@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
       setErrMessage(error);
     } finally {
       resetStates();
-      navigation.push('Dashboard');
+      navigation.push('Nav Bar');
     }
   };
 

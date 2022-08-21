@@ -74,22 +74,22 @@ const registerWithEmailAndPassword = async (name, email, password) => {
 };
 
 // Monitor auth state - might need to customize this
-// const monitorAuthState = async () => {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       console.log(user);
-//       showApp();
-//       showLoginState(user);
+const monitorAuthState = async () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log(user);
+      // showApp();
+      // showLoginState(user);
 
-//       hideLoginError();
-//     } else {
-//       showLoginForm();
-//       console.log('You are not logged in.');
-//     }
-//   });
-// };
+      // hideLoginError();
+    } else {
+      // showLoginForm();
+      console.log('You are not logged in.');
+    }
+  });
+};
 
-// monitorAuthState();
+monitorAuthState();
 
 const logout = async () => {
   await signOut(auth);
