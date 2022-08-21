@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -48,8 +49,10 @@ const logInWithEmailAndPassword = async (email, password) => {
       password
     );
     const user = userCredential.user;
+    console.log('CURRENT USER: ' + user);
     return user;
   } catch (err) {
+    console.error(err);
     throw err;
   }
 };
@@ -69,6 +72,24 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     throw err;
   }
 };
+
+// Monitor auth state - might need to customize this
+// const monitorAuthState = async () => {
+//   onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       console.log(user);
+//       showApp();
+//       showLoginState(user);
+
+//       hideLoginError();
+//     } else {
+//       showLoginForm();
+//       console.log('You are not logged in.');
+//     }
+//   });
+// };
+
+// monitorAuthState();
 
 const logout = async () => {
   await signOut(auth);

@@ -9,7 +9,7 @@ const signOutHandler = ({ navigation }) => {
   signOut(auth);
   console.log('CURRENT USER AFTER SIGN OUT', auth.currentUser);
   console.log(navigation);
-  navigation.navigate('Welcome');
+  // navigation.navigate('Welcome');
 };
 
 const SignOutButton = () => (
