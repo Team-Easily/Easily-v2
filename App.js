@@ -1,55 +1,139 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import Login from './src/components/Login';
-import { Provider } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Button } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
+import { DashboardScreen } from './src/screens/DashboardScreen';
+import { TodoListScreen } from './src/screens/TodoListScreen';
+import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import { SignOutScreen } from './src/screens/SignOutScreen';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
-export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor="#4F6D7A" />
-          <Text style={styles.welcome}>Welcome to Easily!</Text>
-          {/* <Button> "Lets Get Started"</Button> */}
-          <Login />
-        </View>
-      </Provider>
-    );
-  }
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getAuth, signOut } from 'firebase/auth';
+
+const Tab = createMaterialBottomTabNavigator();
+const MainStack = createStackNavigator();
+const TodoStack = createStackNavigator();
+const AuthStack = createStackNavigator();
+
+const TodoStackScreen = () => (
+  <TodoStack.Navigator>
+    <TodoStack.Screen name='TodoList' component={TodoListScreen} />
+    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+  </TodoStack.Navigator>
+);
+
+const AuthStackScreen = () => (
+  <AuthStack.Navigator>
+    <AuthStack.Screen name='Welcome' component={WelcomeScreen} />
+    <AuthStack.Screen name='Login' component={LoginScreen} />
+  </AuthStack.Navigator>
+);
+
+const NavBar = () => (
+  <Tab.Navigator>
+    <Tab.Group
+      initialRouteName='Dashboard'
+      activeColor='#07BEB8'
+      barStyle={{ backgroundColor: '#98DFEA' }}
+    >
+      <Tab.Screen
+        name='Dashboard'
+        component={DashboardScreen}
+        options={{
+          tabBarLabel: 'Dashboard',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name='view-dashboard'
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='TodoList'
+        component={TodoStackScreen}
+        options={{
+          tabBarLabel: 'Todo List',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name='format-list-bulleted'
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='SignOut'
+        component={SignOutScreen}
+        options={{
+          tabBarLabel: 'Sign Out',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name='account' color={color} size={24} />
+          ),
+        }}
+      />
+    </Tab.Group>
+  </Tab.Navigator>
+);
+
+function App() {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
+
+  return (
+    <StoreProvider store={store}>
+      <NavigationContainer>
+        {/* {auth ? (
+              NavBar
+            ) : (
+              <Tab.Group>
+                <Tab.Screen name='Welcome' component={AuthStackScreen} />
+              </Tab.Group>
+            )} */}
+        {auth ? (
+          <MainStack.Navigator
+            initialRouteName='Welcome'
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen name='Welcome' component={WelcomeScreen} />
+            <MainStack.Screen name='Login' component={LoginScreen} />
+            <MainStack.Screen name='Nav Bar' component={NavBar} />
+          </MainStack.Navigator>
+        ) : (
+          <MainStack.Navigator
+            initialRouteName='Nav Bar'
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen name='Nav Bar' component={NavBar} />
+          </MainStack.Navigator>
+        )}
+      </NavigationContainer>
+    </StoreProvider>
+  );
 }
 
+export default App;
+
 const styles = StyleSheet.create({
-  container: {
+  layout: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#cccccc',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-    color: '#black',
+  title: {
+    fontSize: 32,
+    marginBottom: 16,
   },
-  // button: {
-  //   button: {
-  //     width: "90%",
-  //     height: 50,
-  //     borderRadius: 30,
-  //     shadowColor: "black",
-  //     shadowOffset: {
-  //       width: 0,
-  //       height: 2,
-  //     },
-  //     shadowOpacity: 0.25,
-  //     shadowRadius: 2,
-  //     elevation: 2,
-  //     alignSelf: "center",
-  //     justifyContent: "center",
-  //     textAlign: "center",
-  //     alignItems: "center",
-  //     marginTop: 15,
-  //     backgroundColor: "#3B5999",
-  //   },
-  // },
 });

@@ -6,7 +6,7 @@ import {
 } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Login = () => {
+const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,49 +48,44 @@ const Login = () => {
       setErrMessage(error);
     } finally {
       resetStates();
+      navigation.push('Nav Bar');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
+    <View>
+      <View>
         <Button
-          containerStyle={styles.loginContainer}
-          style={styles.loginText}
           onPress={() => {
             setIsRegistering(false);
           }}
           title={'Login'}
         />
         <Button
-          style={styles.button}
           title={'Register'}
           onPress={() => {
             setIsRegistering(true);
           }}
         />
       </View>
-      <View style={styles.form}>
+      <View>
         {isRegistering ? (
           <TextInput
-            placeholder="name"
+            placeholder='name'
             value={userName}
             onChangeText={(text) => setUserName(text)}
-            style={styles.input}
           />
         ) : null}
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
         />
         <Button title={'Submit'} onPress={submitForm} />
       </View>
@@ -138,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default LoginScreen;
