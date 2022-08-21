@@ -37,6 +37,7 @@ const LoginScreen = ({ navigation }) => {
       setErrMessage(error);
     } finally {
       resetStates();
+      navigation.push('Nav Bar');
     }
   };
 
