@@ -19,6 +19,7 @@ import {
   updateDoc,
   getDoc,
   deleteDoc,
+  setDoc,
 } from 'firebase/firestore';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -58,13 +59,17 @@ const logInWithEmailAndPassword = async (email, password) => {
 };
 
 // ----------------USERS
-const registerWithEmailAndPassword = async (name, email, password) => {
+const registerWithEmailAndPassword = async (userName, email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
+    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+      userName: userName,
+      email: email,
+    });
     const user = userCredential.user;
     return user;
   } catch (err) {
