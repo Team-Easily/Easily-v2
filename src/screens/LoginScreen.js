@@ -10,7 +10,6 @@ const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userName, setUserName] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
 
@@ -29,16 +28,8 @@ const LoginScreen = ({ navigation }) => {
       await submitLogin();
     }
   };
-  const submitRegister = async () => {
-    try {
-      await registerWithEmailAndPassword(userName, email, password);
-    } catch (error) {
-      setIsError(true);
-      setErrMessage(error);
-    } finally {
-      resetStates();
-      navigation.push('Nav Bar');
-    }
+  const submitGoToRegister = () => {
+    navigation.push('Register');
   };
 
   const submitLogin = async () => {
@@ -64,37 +55,29 @@ const LoginScreen = ({ navigation }) => {
           }}
           title={'Login'}
         />
-        <Button
-          style={styles.button}
-          title={'Register'}
-          onPress={() => {
-            setIsRegistering(true);
-          }}
-        />
       </View>
       <View style={styles.form}>
-        {isRegistering ? (
-          <TextInput
-            placeholder='name'
-            value={userName}
-            onChangeText={(text) => setUserName(text)}
-            style={styles.input}
-          />
-        ) : null}
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
         <Button title={'Submit'} onPress={submitForm} />
+        <Button
+          style={styles.button}
+          title={'Create New Account'}
+          onPress={() => {
+            submitGoToRegister();
+          }}
+        />
       </View>
       {isError ? <Text>{errMessage.message}</Text> : null}
     </View>
