@@ -4,7 +4,7 @@ import {
   registerWithEmailAndPassword,
   logInWithEmailAndPassword,
 } from '../firebase';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 
 const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
@@ -54,39 +54,45 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <View>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
         <Button
+          // containerStyle={styles.loginContainer}
+          // style={styles.loginText}
           onPress={() => {
             setIsRegistering(false);
           }}
           title={'Login'}
         />
         <Button
+          style={styles.button}
           title={'Register'}
           onPress={() => {
             setIsRegistering(true);
           }}
         />
       </View>
-      <View>
+      <View style={styles.form}>
         {isRegistering ? (
           <TextInput
             placeholder='name'
             value={userName}
             onChangeText={(text) => setUserName(text)}
+            style={styles.input}
           />
         ) : null}
         <TextInput
           placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
+          style={styles.input}
         />
         <TextInput
           placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          style={styles.input}
         />
         <Button title={'Submit'} onPress={submitForm} />
       </View>
@@ -98,40 +104,46 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     textAlign: 'center',
-  },
-  loginContainer: {
-    width: '70%',
-    borderRadius: 25,
-    padding: 100,
+    // height: '100%',
     marginTop: 300,
+    // flex: 1,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
-  loginText: {
-    color: 'white',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    gap: '.5rem',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    borderRadius: 25,
-  },
-  form: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '1rem',
-    marginVertical: '.5rem',
-  },
-  input: {
-    marginTop: 20,
-    width: 300,
-    height: 40,
-    paddingHorizontal: 10,
-    borderRadius: 50,
-    backgroundColor: '#DCDCDC',
-  },
+  // loginContainer: {
+  //   width: '70%',
+  //   borderRadius: 25,
+  //   padding: 100,
+  //   // marginTop: 300,
+  // },
+  // loginText: {
+  //   color: 'white',
+  // },
+  // buttonContainer: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   gap: '.5rem',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // button: {
+  //   borderRadius: 25,
+  // },
+  // form: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   // gap: '1rem',
+  //   // marginVertical: '.5rem',
+  // },
+  // input: {
+  //   marginTop: 20,
+  //   width: 300,
+  //   height: 40,
+  //   paddingHorizontal: 10,
+  //   borderRadius: 50,
+  //   backgroundColor: '#DCDCDC',
+  // },
 });
 
 export default LoginScreen;

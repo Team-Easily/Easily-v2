@@ -3,13 +3,13 @@ import { StyleSheet, Button } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { TodoListScreen } from './src/screens/TodoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import { SignOutScreen } from './src/screens/SignOutScreen';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -93,34 +93,29 @@ function App() {
   }, [currentUser]);
 
   return (
-    <StoreProvider store={store}>
-      <NavigationContainer>
-        {/* {auth ? (
-              NavBar
-            ) : (
-              <Tab.Group>
-                <Tab.Screen name='Welcome' component={AuthStackScreen} />
-              </Tab.Group>
-            )} */}
-        {auth ? (
-          <MainStack.Navigator
-            initialRouteName='Welcome'
-            screenOptions={{ headerShown: false }}
-          >
-            <MainStack.Screen name='Welcome' component={WelcomeScreen} />
-            <MainStack.Screen name='Login' component={LoginScreen} />
-            <MainStack.Screen name='Nav Bar' component={NavBar} />
-          </MainStack.Navigator>
-        ) : (
-          <MainStack.Navigator
-            initialRouteName='Nav Bar'
-            screenOptions={{ headerShown: false }}
-          >
-            <MainStack.Screen name='Nav Bar' component={NavBar} />
-          </MainStack.Navigator>
-        )}
-      </NavigationContainer>
-    </StoreProvider>
+    <SafeAreaProvider>
+      <StoreProvider store={store}>
+        <NavigationContainer>
+          {auth ? (
+            <MainStack.Navigator
+              initialRouteName='Welcome'
+              screenOptions={{ headerShown: false }}
+            >
+              <MainStack.Screen name='Welcome' component={WelcomeScreen} />
+              <MainStack.Screen name='Login' component={LoginScreen} />
+              <MainStack.Screen name='Nav Bar' component={NavBar} />
+            </MainStack.Navigator>
+          ) : (
+            <MainStack.Navigator
+              initialRouteName='Nav Bar'
+              screenOptions={{ headerShown: false }}
+            >
+              <MainStack.Screen name='Nav Bar' component={NavBar} />
+            </MainStack.Navigator>
+          )}
+        </NavigationContainer>
+      </StoreProvider>
+    </SafeAreaProvider>
   );
 }
 
