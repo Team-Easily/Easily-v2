@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
+import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
 import {
   registerWithEmailAndPassword,
   logInWithEmailAndPassword,
 } from '../firebase';
-// import { useDispatch, useSelector } from 'react-redux';
 
 const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userName, setUserName] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
 
@@ -21,80 +19,47 @@ const LoginScreen = ({ navigation }) => {
     setUserName('');
   };
 
-  const submitForm = async () => {
-    setIsError(false);
-    if (isRegistering) {
-      await submitRegister();
-    } else {
-      await submitLogin();
-    }
-  };
-  const submitRegister = async () => {
-    try {
-      await registerWithEmailAndPassword(userName, email, password);
-    } catch (error) {
-      setIsError(true);
-      setErrMessage(error);
-    } finally {
-      resetStates();
-      navigation.push('Nav Bar');
-    }
+  const submitGoToRegister = () => {
+    navigation.push('Register');
   };
 
   const submitLogin = async () => {
     try {
-      const user = await logInWithEmailAndPassword(email, password);
+      await logInWithEmailAndPassword(email, password);
+      navigation.push('Nav Bar');
+      resetStates();
     } catch (error) {
       setIsError(true);
       setErrMessage(error);
-    } finally {
-      resetStates();
-      navigation.push('Nav Bar');
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Button
-          // containerStyle={styles.loginContainer}
-          // style={styles.loginText}
-          onPress={() => {
-            setIsRegistering(false);
-          }}
-          title={'Login'}
-        />
-        <Button
-          style={styles.button}
-          title={'Register'}
-          onPress={() => {
-            setIsRegistering(true);
-          }}
-        />
-      </View>
       <View style={styles.form}>
-        {isRegistering ? (
-          <TextInput
-            placeholder='name'
-            value={userName}
-            onChangeText={(text) => setUserName(text)}
-            style={styles.input}
-          />
-        ) : null}
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
-        <Button title={'Submit'} onPress={submitForm} />
+        <View>
+          <Button title={'Login'} onPress={submitLogin} />
+          <Button
+            style={styles.button}
+            title={'Create New Account'}
+            onPress={() => {
+              submitGoToRegister();
+            }}
+          />
+        </View>
       </View>
       {isError ? <Text>{errMessage.message}</Text> : null}
     </View>
@@ -120,16 +85,18 @@ const styles = StyleSheet.create({
   // loginText: {
   //   color: 'white',
   // },
-  // buttonContainer: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   gap: '.5rem',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-  // button: {
-  //   borderRadius: 25,
-  // },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: '.5rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    height: 20,
+    width: 40,
+    backgroundColor: 'red',
+  },
   // form: {
   //   alignItems: 'center',
   //   justifyContent: 'center',
