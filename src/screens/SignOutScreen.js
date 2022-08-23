@@ -6,9 +6,7 @@ const auth = getAuth();
 
 export const SignOutScreen = ({ navigation }) => {
   const handleSignOut = () => {
-    console.log('CURRENT USER', auth.currentUser);
     signOut(auth);
-    console.log('CURRENT USER AFTER SIGN OUT', auth.currentUser);
     navigation.push('Welcome');
   };
 
