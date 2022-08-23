@@ -71,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
-        <View>
+        <View style={styles.buttonContainer}>
           <FontAwesome.Button
             name='google'
             backgroundColor='#4285F4'
@@ -99,29 +99,20 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    textAlign: 'center',
     marginTop: 300,
     marginLeft: 40,
     marginRight: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  userInfo: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profilePic: {
-    width: 50,
-    height: 50,
-  },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: '.5rem',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
+  input: {
     marginTop: 10,
     marginBottom: 10,
   },
