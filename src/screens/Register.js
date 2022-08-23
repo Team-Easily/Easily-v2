@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
+import { registerWithEmailAndPassword } from '../firebase';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import {
-  registerWithEmailAndPassword,
-  logInWithEmailAndPassword,
-} from '../firebase';
+  getFirestore,
+  query,
+  doc,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+  updateDoc,
+  getDoc,
+  deleteDoc,
+  setDoc,
+} from 'firebase/firestore';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -29,6 +41,10 @@ const Register = ({ navigation }) => {
     return true;
   };
 
+  const submitGoToLogin = () => {
+    navigation.push('Login');
+  };
+
   const submitRegister = async () => {
     if (validate()) {
       try {
@@ -40,29 +56,69 @@ const Register = ({ navigation }) => {
     }
   };
 
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  const db = getFirestore();
+
+  const googleSignInWithPopup = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log('SUCCESS!', user);
+        setDoc(doc(db, 'users', user.uid), {
+          userName: user.displayName,
+          email: user.email,
+        });
+        navigation.push('Nav Bar');
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.form}>
         <TextInput
-          placeholder="name"
+          placeholder='name'
           value={userName}
           onChangeText={(text) => setUserName(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
         <Button title={'Submit'} onPress={submitRegister} />
+
+        <FontAwesome.Button
+          name='google'
+          backgroundColor='#4285F4'
+          style={(styles.button, styles.googleButton)}
+          onPress={googleSignInWithPopup}
+        >
+          Login with Google
+        </FontAwesome.Button>
       </View>
     </View>
   );
