@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
-import {
-  registerWithEmailAndPassword,
-  logInWithEmailAndPassword,
-} from '../firebase';
+import { logInWithEmailAndPassword } from '../firebase';
+import * as Google from 'expo-google-app-auth';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
@@ -11,6 +10,8 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const [accessToken, setAccessToken] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   // React States
   const resetStates = () => {
@@ -34,24 +35,54 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const signInWithGoogleAsync = async () => {
+    try {
+      const result = await Google.logInAsync({
+        iosClientId:
+          '650975721235-81qfqcr0vui92b5l28lckmclljkolh47.apps.googleusercontent.com',
+        scopes: ['profile', 'email', 'calendar'],
+      });
+      if (result.type === 'success') {
+        setAccessToken(result.accessToken);
+        // return result.accessToken;
+      } else {
+        console.log('Permission denied');
+        return { cancelled: true };
+      }
+    } catch (e) {
+      console.log(e);
+      return { error: true };
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.form}>
+      <View>
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
-        <View>
-          <Button title={'Login'} onPress={submitLogin} />
+        <View style={styles.buttonContainer}>
+          <FontAwesome.Button
+            name='google'
+            backgroundColor='#4285F4'
+            style={(styles.button, styles.googleButton)}
+            onPress={signInWithGoogleAsync}
+          >
+            Login with Google
+          </FontAwesome.Button>
+
+          <Button title={'Login'} onPress={submitLogin} style={styles.button} />
+
           <Button
             style={styles.button}
             title={'Create New Account'}
@@ -68,49 +99,26 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    textAlign: 'center',
-    // height: '100%',
     marginTop: 300,
-    // flex: 1,
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    marginLeft: 40,
+    marginRight: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  // loginContainer: {
-  //   width: '70%',
-  //   borderRadius: 25,
-  //   padding: 100,
-  //   // marginTop: 300,
-  // },
-  // loginText: {
-  //   color: 'white',
-  // },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: '.5rem',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    height: 20,
-    width: 40,
-    backgroundColor: 'red',
+  input: {
+    marginTop: 10,
+    marginBottom: 10,
   },
-  // form: {
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   // gap: '1rem',
-  //   // marginVertical: '.5rem',
-  // },
-  // input: {
-  //   marginTop: 20,
-  //   width: 300,
-  //   height: 40,
-  //   paddingHorizontal: 10,
-  //   borderRadius: 50,
-  //   backgroundColor: '#DCDCDC',
-  // },
+  googleButton: {
+    fontFamily: 'Roboto',
+  },
 });
 
 export default LoginScreen;
