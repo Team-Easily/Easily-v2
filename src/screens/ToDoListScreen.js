@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Task from "../components/Task";
+import { auth, db } from "../firebase";
 
 const TodoItemButton = () => {
   const nav = useNavigation();
