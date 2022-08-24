@@ -9,6 +9,7 @@ import { DashboardScreen } from './src/screens/DashboardScreen';
 import { TodoListScreen } from './src/screens/TodoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import { EditProfileScreen } from './src/screens/EditProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
 import { SignOutScreen } from './src/screens/SignOutScreen';
@@ -33,7 +34,7 @@ const TodoStackScreen = () => (
 const ProfileStackScreen = () => (
   <ProfileStack.Navigator>
     <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-    {/* <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} /> */}
+    <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
   </ProfileStack.Navigator>
 );
 

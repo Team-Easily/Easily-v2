@@ -1,9 +1,8 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, View, TouchableOpacity, } from "react-native";
+import { StyleSheet, SafeAreaView, View, TouchableOpacity } from "react-native";
 import { Avatar, Title, Text } from "react-native-paper";
-import { Icon } from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { EditProfile } from '../screens/EditProfileScreen'
 
 export const ProfileScreen = () => {
   return (
@@ -17,11 +16,15 @@ export const ProfileScreen = () => {
         </View>
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
-            <Icon name="map-maker-radius" color="#777777" size={20} />
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              color="#777777"
+              size={20}
+            />
             <Text>City, State, Country</Text>
           </View>
           <View style={styles.row}>
-            <Icon name="email" color="#777777" size={20} />
+            <MaterialCommunityIcons name="email" color="#777777" size={20} />
             <Text>Email</Text>
           </View>
         </View>
@@ -29,8 +32,22 @@ export const ProfileScreen = () => {
       <View style={styles.menuWrapper}>
         <TouchableOpacity onPress={() => useNavigation("EditProfile")}>
           <View style={styles.menuItem}>
-            <Icon name="settings-outline" color="#FF6347" size={25} />
+            <MaterialCommunityIcons
+              name="account-cog-outline"
+              color="#777777"
+              size={25}
+            />
             <Text style={styles.menuItemText}>Edit Profile</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => useNavigation("SignOutScreen")}>
+          <View style={styles.menuItem}>
+            <MaterialCommunityIcons
+              name="exit-to-app"
+              color="#777777"
+              size={25}
+            />
+            <Text style={styles.menuItemText}>Sign Out</Text>
           </View>
         </TouchableOpacity>
       </View>
