@@ -48,32 +48,32 @@ const Register = ({ navigation }) => {
   const auth = getAuth();
   const db = getFirestore();
 
-  const googleSignInWithPopup = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log('SUCCESS!', user);
-        setDoc(doc(db, 'users', user.uid), {
-          userName: user.displayName,
-          email: user.email,
-        });
-        navigation.push('Nav Bar');
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  };
+  // const googleSignInWithPopup = () => {
+  //   signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       // This gives you a Google Access Token. You can use it to access the Google API.
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential.accessToken;
+  //       // The signed-in user info.
+  //       const user = result.user;
+  //       console.log('SUCCESS!', user);
+  //       setDoc(doc(db, 'users', user.uid), {
+  //         userName: user.displayName,
+  //         email: user.email,
+  //       });
+  //       navigation.push('Nav Bar');
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       const email = error.customData.email;
+  //       // The AuthCredential type that was used.
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       // ...
+  //     });
+  // };
 
   return (
     <View style={styles.container}>
@@ -99,14 +99,14 @@ const Register = ({ navigation }) => {
         />
         <Button title={'Submit'} onPress={submitRegister} />
 
-        <FontAwesome.Button
+        {/* <FontAwesome.Button
           name='google'
           backgroundColor='#4285F4'
           style={(styles.button, styles.googleButton)}
           onPress={googleSignInWithPopup}
         >
           Login with Google
-        </FontAwesome.Button>
+        </FontAwesome.Button> */}
 
         <Button
           style={styles.button}
