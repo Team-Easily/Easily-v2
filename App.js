@@ -8,6 +8,7 @@ import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { TodoListScreen } from './src/screens/TodoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
 import { SignOutScreen } from './src/screens/SignOutScreen';
@@ -20,6 +21,7 @@ const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
 const AuthStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator>
@@ -28,18 +30,25 @@ const TodoStackScreen = () => (
   </TodoStack.Navigator>
 );
 
+const ProfileStackScreen = () => (
+  <ProfileStack.Navigator>
+    <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+    {/* <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} /> */}
+  </ProfileStack.Navigator>
+);
+
 const NavBar = () => (
   <Tab.Navigator>
     <Tab.Group
       initialRouteName="Dashboard"
       activeColor="#07BEB8"
-      barStyle={{ backgroundColor: '#98DFEA' }}
+      barStyle={{ backgroundColor: "#98DFEA" }}
     >
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          tabBarLabel: 'Dashboard',
+          tabBarLabel: "Dashboard",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="view-dashboard"
@@ -53,7 +62,7 @@ const NavBar = () => (
         name="TodoList"
         component={TodoStackScreen}
         options={{
-          tabBarLabel: 'Todo List',
+          tabBarLabel: "Todo List",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="format-list-bulleted"
@@ -64,10 +73,10 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name="SignOut"
-        component={SignOutScreen}
+        name="Profile"
+        component={ProfileStackScreen}
         options={{
-          tabBarLabel: 'Sign Out',
+          tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" color={color} size={24} />
           ),

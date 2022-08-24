@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,14 +8,14 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Task from '../components/Task';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Task from "../components/Task";
 
 const TodoItemButton = () => {
   const nav = useNavigation();
 
-  return <Button title='TodoItem' onPress={() => nav.navigate('TodoItem')} />;
+  return <Button title="TodoItem" onPress={() => nav.navigate("TodoItem")} />;
 };
 
 export const TodoListScreen = () => {
@@ -54,7 +54,7 @@ export const TodoListScreen = () => {
       <KeyboardAvoidingView style={styles.writeTaskWrapper}>
         <TextInput
           style={styles.textInput}
-          placeholder={'Write a task'}
+          placeholder={"Write a task"}
           value={task}
           onChangeText={(text) => setTask(text)}
         />
@@ -71,7 +71,7 @@ export const TodoListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: "#E8EAED",
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -79,36 +79,36 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   items: {
     marginTop: 30,
   },
   writeTaskWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 60,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 60,
-    borderColor: '#C0C0C0',
+    borderColor: "#C0C0C0",
     borderWidth: 1,
     width: 250,
   },
   addWrapper: {
     width: 60,
     height: 60,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C0C0C0',
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
     borderWidth: 1,
   },
   addText: {},
