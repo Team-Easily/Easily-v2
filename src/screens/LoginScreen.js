@@ -82,6 +82,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
         />
         <View style={styles.buttonContainer}>
+
           <Button title={'Login'} onPress={submitLogin} style={styles.button} />
 
           <FontAwesome.Button
