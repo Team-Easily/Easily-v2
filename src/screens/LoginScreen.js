@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase';
-import * as Google from 'expo-google-app-auth';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+} from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { TextInput, Button } from 'react-native-paper';
 
 const LoginScreen = ({ navigation }) => {
   const [isRegistering, setIsRegistering] = useState(true);
@@ -17,7 +25,6 @@ const LoginScreen = ({ navigation }) => {
   const resetStates = () => {
     setEmail('');
     setPassword('');
-    setUserName('');
   };
 
   const submitGoToRegister = () => {
@@ -35,25 +42,59 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const signInWithGoogleAsync = async () => {
-    try {
-      const result = await Google.logInAsync({
-        iosClientId:
-          '650975721235-81qfqcr0vui92b5l28lckmclljkolh47.apps.googleusercontent.com',
-        scopes: ['profile', 'email', 'calendar'],
-      });
-      if (result.type === 'success') {
-        setAccessToken(result.accessToken);
-        // return result.accessToken;
-      } else {
-        console.log('Permission denied');
-        return { cancelled: true };
-      }
-    } catch (e) {
-      console.log(e);
-      return { error: true };
-    }
-  };
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  const db = getFirestore();
+
+  // const googleSignInWithPopup = () => {
+  //   signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       // This gives you a Google Access Token. You can use it to access the Google API.
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential.accessToken;
+  //       // The signed-in user info.
+  //       const user = result.user;
+  //       console.log('SUCCESS!', user);
+  //       setDoc(doc(db, 'users', user.uid), {
+  //         userName: user.displayName,
+  //         email: user.email,
+  //       });
+  //       navigation.push('Nav Bar');
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       const email = error.customData.email;
+  //       // The AuthCredential type that was used.
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       // ...
+  //     });
+  // };
+
+  // const googleSignInWithRedirect = () => {
+  //   signInWithRedirect(auth, provider);
+  //   getRedirectResult(auth)
+  //     .then((result) => {
+  //       // This gives you a Google Access Token. You can use it to access Google APIs.
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential.accessToken;
+
+  //       // The signed-in user info.
+  //       const user = result.user;
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       const email = error.customData.email;
+  //       // The AuthCredential type that was used.
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       // ...
+  //     });
+  // };
 
   return (
     <View style={styles.container}>
@@ -62,34 +103,50 @@ const LoginScreen = ({ navigation }) => {
           placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
+          mode='flat'
         />
         <TextInput
           placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={{ marginTop: 15 }}
+          mode='flat'
         />
-        <View style={styles.buttonContainer}>
-          <FontAwesome.Button
+        <View>
+          <Button
+            style={{ marginTop: 15 }}
+            icon='send'
+            mode='contained'
+            onPress={submitLogin}
+            color='#07BEB8'
+            contentStyle={{ height: 45 }}
+            labelStyle={{ color: 'white', fontSize: 18 }}
+          >
+            Login
+          </Button>
+          {/* <FontAwesome.Button
             name='google'
             backgroundColor='#4285F4'
             style={(styles.button, styles.googleButton)}
-            onPress={signInWithGoogleAsync}
+            onPress={googleSignInWithRedirect}
           >
             Login with Google
-          </FontAwesome.Button>
+          </FontAwesome.Button> */}
 
           <Button title={'Login'} onPress={submitLogin} style={styles.button} />
 
           <Button
-            style={styles.button}
-            title={'Create New Account'}
+            style={{ marginTop: 15 }}
+            mode='text'
             onPress={() => {
               submitGoToRegister();
             }}
-          />
+            contentStyle={{ height: 45 }}
+            labelStyle={{ color: '#07BEB8', fontSize: 18 }}
+          >
+            Create New Account
+          </Button>
         </View>
       </View>
       {isError ? <Text>{errMessage.message}</Text> : null}
@@ -102,19 +159,6 @@ const styles = StyleSheet.create({
     marginTop: 300,
     marginLeft: 40,
     marginRight: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    gap: '.5rem',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    marginTop: 10,
-    marginBottom: 10,
   },
   googleButton: {
     fontFamily: 'Roboto',

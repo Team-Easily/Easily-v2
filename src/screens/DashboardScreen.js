@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-// import { Headline } from 'react-native-paper';
+import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
 
 export const DashboardScreen = () => {
