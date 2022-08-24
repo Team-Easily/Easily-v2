@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
+import { View, StyleSheet, Button, TextInput, Alert } from 'react-native';
 import { registerWithEmailAndPassword } from '../firebase';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import {
-  getFirestore,
-  query,
-  doc,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-  updateDoc,
-  getDoc,
-  deleteDoc,
-  setDoc,
-} from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -119,6 +107,14 @@ const Register = ({ navigation }) => {
         >
           Login with Google
         </FontAwesome.Button>
+
+        <Button
+          style={styles.button}
+          title={'Login'}
+          onPress={() => {
+            submitGoToLogin();
+          }}
+        />
       </View>
     </View>
   );
@@ -134,6 +130,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 5,
     marginVertical: 1,
+  },
+  googleButton: {
+    fontFamily: 'Trebuchet MS',
   },
 });
 

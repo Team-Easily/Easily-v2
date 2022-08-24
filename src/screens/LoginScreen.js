@@ -1,25 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
+import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase';
 // import * as Google from 'expo-google-app-auth';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import {
-  getFirestore,
-  query,
-  doc,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-  updateDoc,
-  getDoc,
-  deleteDoc,
-  setDoc,
-} from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const LoginScreen = ({ navigation }) => {
-  const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
@@ -140,7 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   googleButton: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Trebuchet MS',
   },
 });
 
