@@ -111,6 +111,17 @@ const getUserByUid = async (uid) => {
   return user;
 };
 
+const getTodosByUid = async (uid) => {
+  const todos = [];
+  const todosRef = collection(db, 'todos');
+  const q = query(todosRef, where('author', '==', uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    todos.push(doc.data());
+  });
+  return todos;
+};
+
 export {
   app,
   auth,
@@ -119,4 +130,5 @@ export {
   registerWithEmailAndPassword,
   logInWithEmailAndPassword,
   logout,
+  getTodosByUid,
 };
