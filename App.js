@@ -6,7 +6,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
-import { TodoListScreen } from './src/screens/TodoListScreen';
+import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
@@ -18,14 +18,6 @@ import { getAuth } from 'firebase/auth';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
-const TodoStack = createStackNavigator();
-
-const TodoStackScreen = () => (
-  <TodoStack.Navigator>
-    <TodoStack.Screen name="TodoList" component={TodoListScreen} />
-    <TodoStack.Screen name="TodoItem" component={TodoItemScreen} />
-  </TodoStack.Navigator>
-);
 
 const NavBar = () => (
   <Tab.Navigator
@@ -35,13 +27,13 @@ const NavBar = () => (
   >
     <Tab.Group initialRouteName='Dashboard'>
       <Tab.Screen
-        name="Dashboard"
+        name='Dashboard'
         component={DashboardScreen}
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name="view-dashboard"
+              name='view-dashboard'
               color={color}
               size={24}
             />
@@ -49,13 +41,13 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name="TodoList"
-        component={TodoStackScreen}
+        name='TodoList'
+        component={ToDoListScreen}
         options={{
           tabBarLabel: 'Todo List',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name="format-list-bulleted"
+              name='format-list-bulleted'
               color={color}
               size={24}
             />
@@ -63,12 +55,12 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name="SignOut"
+        name='SignOut'
         component={SignOutScreen}
         options={{
           tabBarLabel: 'Sign Out',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={24} />
+            <MaterialCommunityIcons name='account' color={color} size={24} />
           ),
         }}
       />
@@ -91,20 +83,20 @@ function App() {
         <NavigationContainer>
           {auth ? (
             <MainStack.Navigator
-              initialRouteName="Welcome"
+              initialRouteName='Welcome'
               screenOptions={{ headerShown: false }}
             >
-              <MainStack.Screen name="Welcome" component={WelcomeScreen} />
-              <MainStack.Screen name="Login" component={LoginScreen} />
-              <MainStack.Screen name="Register" component={Register} />
-              <MainStack.Screen name="Nav Bar" component={NavBar} />
+              <MainStack.Screen name='Welcome' component={WelcomeScreen} />
+              <MainStack.Screen name='Login' component={LoginScreen} />
+              <MainStack.Screen name='Register' component={Register} />
+              <MainStack.Screen name='Nav Bar' component={NavBar} />
             </MainStack.Navigator>
           ) : (
             <MainStack.Navigator
-              initialRouteName="Nav Bar"
+              initialRouteName='Nav Bar'
               screenOptions={{ headerShown: false }}
             >
-              <MainStack.Screen name="Nav Bar" component={NavBar} />
+              <MainStack.Screen name='Nav Bar' component={NavBar} />
             </MainStack.Navigator>
           )}
         </NavigationContainer>
