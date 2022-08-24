@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -16,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
 import { Timestamp } from 'firebase/firestore';
 
-export const TodoListScreen = () => {
+export const ToDoListScreen = () => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   const [todoName, setTodoName] = useState('');
@@ -91,13 +90,13 @@ export const TodoListScreen = () => {
         {form ? (
           <View>
             <TextInput
-              placeholder="task name"
+              placeholder='task name'
               value={todoName}
               onChangeText={(text) => setTodoName(text)}
               style={styles.input}
             />
             <TextInput
-              placeholder="task description"
+              placeholder='task description'
               value={todoDescription}
               onChangeText={(text) => setTodoDescription(text)}
               style={styles.input}
