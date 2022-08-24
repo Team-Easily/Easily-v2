@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,23 +10,43 @@ import {
   Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Task from '../components/Task';
-import { auth, db } from '../firebase';
-
-const TodoItemButton = () => {
-  const nav = useNavigation();
-
-  return <Button title="TodoItem" onPress={() => nav.navigate('TodoItem')} />;
-};
+import { auth, getTodosByUid, addTodosByUser } from '../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { Timestamp } from 'firebase/firestore';
 
 export const TodoListScreen = () => {
-  const [task, setTask] = useState();
-  const [taskItems, setTaskItems] = useState([]);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos);
+  const [todoName, setTodoName] = useState('');
+  const [form, setForm] = useState(false);
+  const [todoDescription, setTodoDescription] = useState('');
 
-  const handleAddTask = () => {
-    Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
+  useEffect(() => {
+    const getTodos = async () => {
+      const todos = await getTodosByUid(auth.currentUser.uid);
+      dispatch(setTodos(todos));
+    };
+    setTodos();
+  }, [todos]);
+
+  const handleSubmit = async () => {
+    try {
+      await addTodosByUser({
+        title: todoName,
+        description: todoDescription,
+        author: auth.currentUser.uid,
+        completed: false,
+        created: Timestamp.now(),
+      });
+      Keyboard.dismiss();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTodoName('');
+      setForm(false);
+      setTodoDescription('');
+    }
   };
 
   const completeTask = (index) => {
@@ -39,32 +59,49 @@ export const TodoListScreen = () => {
     <View style={styles.container}>
       {/* Todays todo list container */}
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's todo list</Text>
+        <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <View style={styles.items}>
-          {/* This is where our todo items will go */}
-          {taskItems.map((item, index) => {
-            return (
-              <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Task text={item} />
-              </TouchableOpacity>
-            );
-          })}
+          {todos.length > 0 ? (
+            todos.map((todo, index) => {
+              return (
+                <View key={index}>
+                  {todo.title}: {todo.description}
+                  <Button
+                    title={'Mark as Completed'}
+                    onPress={() => completeTask(index)}
+                  />
+                  <Button
+                    title={'Delete'}
+                    // onPress={() => completeTask(index)}
+                  />
+                </View>
+              );
+            })
+          ) : (
+            <Text> No Tasks for Today! </Text>
+          )}
         </View>
       </View>
-      <TodoItemButton />
-      <KeyboardAvoidingView style={styles.writeTaskWrapper}>
-        <TextInput
-          style={styles.textInput}
-          placeholder={'Write a task'}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>Add </Text>
+      <View style={styles.writeTaskWrapper}>
+        <Button title={'Add Task'} onPress={() => setForm(!form)} />
+        {form ? (
+          <View>
+            <TextInput
+              placeholder="task name"
+              value={todoName}
+              onChangeText={(text) => setTodoName(text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="task description"
+              value={todoDescription}
+              onChangeText={(text) => setTodoDescription(text)}
+              style={styles.input}
+            />
+            <Button title={'Submit'} onPress={handleSubmit} />
           </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        ) : null}
+      </View>
     </View>
   );
 };
