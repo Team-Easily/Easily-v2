@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
+import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase';
-// import * as Google from 'expo-google-app-auth';
+import * as Google from 'expo-google-app-auth';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const LoginScreen = ({ navigation }) => {
+  const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const [accessToken, setAccessToken] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   // React States
   const resetStates = () => {
@@ -34,35 +35,24 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const db = getFirestore();
-
-  const googleSignInWithPopup = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log('SUCCESS!', user);
-        setDoc(doc(db, 'users', user.uid), {
-          userName: user.displayName,
-          email: user.email,
-        });
-        navigation.push('Nav Bar');
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+  const signInWithGoogleAsync = async () => {
+    try {
+      const result = await Google.logInAsync({
+        iosClientId:
+          '650975721235-81qfqcr0vui92b5l28lckmclljkolh47.apps.googleusercontent.com',
+        scopes: ['profile', 'email', 'calendar'],
       });
+      if (result.type === 'success') {
+        setAccessToken(result.accessToken);
+        // return result.accessToken;
+      } else {
+        console.log('Permission denied');
+        return { cancelled: true };
+      }
+    } catch (e) {
+      console.log(e);
+      return { error: true };
+    }
   };
 
   return (
@@ -82,17 +72,16 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
         />
         <View style={styles.buttonContainer}>
-
-          <Button title={'Login'} onPress={submitLogin} style={styles.button} />
-
           <FontAwesome.Button
             name='google'
             backgroundColor='#4285F4'
             style={(styles.button, styles.googleButton)}
-            onPress={googleSignInWithPopup}
+            onPress={signInWithGoogleAsync}
           >
             Login with Google
           </FontAwesome.Button>
+
+          <Button title={'Login'} onPress={submitLogin} style={styles.button} />
 
           <Button
             style={styles.button}
@@ -128,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   googleButton: {
-    fontFamily: 'Trebuchet MS',
+    fontFamily: 'Roboto',
   },
 });
 
