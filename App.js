@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -14,12 +14,11 @@ import { SignOutScreen } from './src/screens/SignOutScreen';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
-const AuthStack = createStackNavigator();
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator>
@@ -29,12 +28,12 @@ const TodoStackScreen = () => (
 );
 
 const NavBar = () => (
-  <Tab.Navigator>
-    <Tab.Group
-      initialRouteName='Dashboard'
-      activeColor='#07BEB8'
-      barStyle={{ backgroundColor: '#98DFEA' }}
-    >
+  <Tab.Navigator
+    activeColor='#ffffff'
+    inactiveColor='#2c497f'
+    barStyle={{ backgroundColor: '#07BEB8' }}
+  >
+    <Tab.Group initialRouteName='Dashboard'>
       <Tab.Screen
         name='Dashboard'
         component={DashboardScreen}
