@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase';
-// import * as Google from 'expo-google-app-auth';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
@@ -82,6 +81,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
         />
         <View style={styles.buttonContainer}>
+
           <Button title={'Login'} onPress={submitLogin} style={styles.button} />
 
           <FontAwesome.Button
