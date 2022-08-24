@@ -17,18 +17,20 @@ import { Timestamp } from 'firebase/firestore';
 
 export const TodoListScreen = () => {
   const dispatch = useDispatch();
-  const todos = useSelector((state) => state.todos);
+  const todos = useSelector((state) => state.todos.todos);
   const [todoName, setTodoName] = useState('');
   const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
 
+  const getTodos = async () => {
+    const todos = await getTodosByUid(auth.currentUser.uid);
+    console.log(todos);
+    dispatch(setTodos(todos));
+  };
+
   useEffect(() => {
-    const getTodos = async () => {
-      const todos = await getTodosByUid(auth.currentUser.uid);
-      dispatch(setTodos(todos));
-    };
-    setTodos();
-  }, [todos]);
+    getTodos();
+  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -37,7 +39,6 @@ export const TodoListScreen = () => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: false,
-        created: Timestamp.now(),
       });
       Keyboard.dismiss();
     } catch (err) {
@@ -46,14 +47,15 @@ export const TodoListScreen = () => {
       setTodoName('');
       setForm(false);
       setTodoDescription('');
+      getTodos();
     }
   };
 
-  const completeTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy); //removes task items from the list
-  };
+  // const completeTask = (index) => {
+  //   let itemsCopy = [...taskItems];
+  //   itemsCopy.splice(index, 1);
+  //   setTaskItems(itemsCopy); //removes task items from the list
+  // };
 
   return (
     <View style={styles.container}>
@@ -65,10 +67,12 @@ export const TodoListScreen = () => {
             todos.map((todo, index) => {
               return (
                 <View key={index}>
-                  {todo.title}: {todo.description}
+                  <Text style={styles.title}>{todo.title}:</Text>
+                  <Text>{todo.description}</Text>
+
                   <Button
                     title={'Mark as Completed'}
-                    onPress={() => completeTask(index)}
+                    onPress={() => console.log('Complete!')}
                   />
                   <Button
                     title={'Delete'}
@@ -117,6 +121,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
+    fontWeight: 'bold',
+  },
+  title: {
     fontWeight: 'bold',
   },
   items: {
