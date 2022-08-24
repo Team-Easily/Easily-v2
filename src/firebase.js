@@ -52,7 +52,6 @@ const logInWithEmailAndPassword = async (email, password) => {
       password
     );
     const user = userCredential.user;
-    console.log('CURRENT USER: ' + user);
     return user;
   } catch (err) {
     console.error(err);
@@ -79,23 +78,23 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
   }
 };
 
-// Monitor auth state - might need to customize this
-const monitorAuthState = async () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log(user);
-      // showApp();
-      // showLoginState(user);
+// Monitor auth state - found in Firebase video, needs to be customized to use
+// const monitorAuthState = async () => {
+//   onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       console.log(user);
+//       // showApp();
+//       // showLoginState(user);
 
-      // hideLoginError();
-    } else {
-      // showLoginForm();
-      console.log('You are not logged in.');
-    }
-  });
-};
+//       // hideLoginError();
+//     } else {
+//       // showLoginForm();
+//       console.log('You are not logged in.');
+//     }
+//   });
+// };
 
-monitorAuthState();
+// monitorAuthState();
 
 const logout = async () => {
   await signOut(auth);
