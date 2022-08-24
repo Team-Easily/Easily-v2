@@ -13,10 +13,13 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
 
 const LoginScreen = ({ navigation }) => {
+  const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const [accessToken, setAccessToken] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   // React States
   const resetStates = () => {
@@ -131,6 +134,8 @@ const LoginScreen = ({ navigation }) => {
             Login with Google
           </FontAwesome.Button> */}
 
+          <Button title={'Login'} onPress={submitLogin} style={styles.button} />
+
           <Button
             style={{ marginTop: 15 }}
             mode='text'
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   googleButton: {
-    fontFamily: 'Trebuchet MS',
+    fontFamily: 'Roboto',
   },
 });
 

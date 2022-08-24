@@ -30,10 +30,6 @@ const Register = ({ navigation }) => {
     return true;
   };
 
-  const submitGoToLogin = () => {
-    navigation.push('Login');
-  };
-
   const submitRegister = async () => {
     if (validate()) {
       try {
@@ -80,20 +76,20 @@ const Register = ({ navigation }) => {
     <View style={styles.container}>
       <View>
         <TextInput
-          placeholder='name'
+          placeholder="name"
           value={userName}
           onChangeText={(text) => setUserName(text)}
           mode='flat'
         />
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={{ marginTop: 15 }}
           mode='flat'
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -142,9 +138,6 @@ const styles = StyleSheet.create({
     marginTop: 300,
     marginLeft: 40,
     marginRight: 40,
-  },
-  googleButton: {
-    fontFamily: 'Trebuchet MS',
   },
 });
 

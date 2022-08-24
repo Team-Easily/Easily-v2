@@ -22,8 +22,8 @@ const TodoStack = createStackNavigator();
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator>
-    <TodoStack.Screen name='TodoList' component={TodoListScreen} />
-    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+    <TodoStack.Screen name="TodoList" component={TodoListScreen} />
+    <TodoStack.Screen name="TodoItem" component={TodoItemScreen} />
   </TodoStack.Navigator>
 );
 
@@ -35,13 +35,13 @@ const NavBar = () => (
   >
     <Tab.Group initialRouteName='Dashboard'>
       <Tab.Screen
-        name='Dashboard'
+        name="Dashboard"
         component={DashboardScreen}
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name='view-dashboard'
+              name="view-dashboard"
               color={color}
               size={24}
             />
@@ -49,13 +49,13 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name='TodoList'
+        name="TodoList"
         component={TodoStackScreen}
         options={{
           tabBarLabel: 'Todo List',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name='format-list-bulleted'
+              name="format-list-bulleted"
               color={color}
               size={24}
             />
@@ -63,12 +63,12 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name='SignOut'
+        name="SignOut"
         component={SignOutScreen}
         options={{
           tabBarLabel: 'Sign Out',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='account' color={color} size={24} />
+            <MaterialCommunityIcons name="account" color={color} size={24} />
           ),
         }}
       />
@@ -91,20 +91,20 @@ function App() {
         <NavigationContainer>
           {auth ? (
             <MainStack.Navigator
-              initialRouteName='Welcome'
+              initialRouteName="Welcome"
               screenOptions={{ headerShown: false }}
             >
-              <MainStack.Screen name='Welcome' component={WelcomeScreen} />
-              <MainStack.Screen name='Login' component={LoginScreen} />
-              <MainStack.Screen name='Register' component={Register} />
-              <MainStack.Screen name='Nav Bar' component={NavBar} />
+              <MainStack.Screen name="Welcome" component={WelcomeScreen} />
+              <MainStack.Screen name="Login" component={LoginScreen} />
+              <MainStack.Screen name="Register" component={Register} />
+              <MainStack.Screen name="Nav Bar" component={NavBar} />
             </MainStack.Navigator>
           ) : (
             <MainStack.Navigator
-              initialRouteName='Nav Bar'
+              initialRouteName="Nav Bar"
               screenOptions={{ headerShown: false }}
             >
-              <MainStack.Screen name='Nav Bar' component={NavBar} />
+              <MainStack.Screen name="Nav Bar" component={NavBar} />
             </MainStack.Navigator>
           )}
         </NavigationContainer>
