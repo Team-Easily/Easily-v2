@@ -22,7 +22,6 @@ const LoginScreen = ({ navigation }) => {
   const resetStates = () => {
     setEmail('');
     setPassword('');
-    setUserName('');
   };
 
   const submitGoToRegister = () => {
@@ -102,19 +101,16 @@ const LoginScreen = ({ navigation }) => {
           value={email}
           onChangeText={(text) => setEmail(text)}
           mode='flat'
-          // style={styles.input}
         />
         <TextInput
           placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          // style={styles.input}
           style={{ marginTop: 15 }}
           mode='flat'
         />
         <View>
-          {/* <Button title={'Login'} onPress={submitLogin} style={styles.button} /> */}
           <Button
             style={{ marginTop: 15 }}
             icon='send'
@@ -135,21 +131,12 @@ const LoginScreen = ({ navigation }) => {
             Login with Google
           </FontAwesome.Button> */}
 
-          {/* <Button
-            style={styles.button}
-            title={'Create New Account'}
-            onPress={() => {
-              submitGoToRegister();
-            }}
-          /> */}
           <Button
             style={{ marginTop: 15 }}
-            icon='send'
             mode='text'
             onPress={() => {
               submitGoToRegister();
             }}
-            // outlineColor='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: '#07BEB8', fontSize: 18 }}
           >
@@ -167,19 +154,6 @@ const styles = StyleSheet.create({
     marginTop: 300,
     marginLeft: 40,
     marginRight: 40,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    gap: '.5rem',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    marginTop: 10,
-    marginBottom: 10,
   },
   googleButton: {
     fontFamily: 'Trebuchet MS',
