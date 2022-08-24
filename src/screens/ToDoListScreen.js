@@ -39,6 +39,7 @@ export const TodoListScreen = () => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: false,
+        // createdAt: Timestamp.now(),
       });
       Keyboard.dismiss();
     } catch (err) {
@@ -59,7 +60,6 @@ export const TodoListScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Todays todo list container */}
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <View style={styles.items}>
@@ -69,7 +69,6 @@ export const TodoListScreen = () => {
                 <View key={index}>
                   <Text style={styles.title}>{todo.title}:</Text>
                   <Text>{todo.description}</Text>
-
                   <Button
                     title={'Mark as Completed'}
                     onPress={() => console.log('Complete!')}
