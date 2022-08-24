@@ -42,6 +42,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore();
 
+// ----------------USERS
+
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -57,7 +59,6 @@ const logInWithEmailAndPassword = async (email, password) => {
   }
 };
 
-// ----------------USERS
 const registerWithEmailAndPassword = async (userName, email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -110,6 +111,28 @@ const getUserByUid = async (uid) => {
   return user;
 };
 
+// ----------------TODOs
+
+const getTodosByUid = async (uid) => {
+  const todos = [];
+  const todosRef = collection(db, 'todos');
+  const q = query(todosRef, where('author', '==', uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    todos.push(doc.data());
+  });
+  return todos;
+};
+
+const addTodosByUser = async (data) => {
+  try {
+    await addDoc(collection(db, 'todos'), data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export {
   app,
   auth,
@@ -118,4 +141,6 @@ export {
   registerWithEmailAndPassword,
   logInWithEmailAndPassword,
   logout,
+  getTodosByUid,
+  addTodosByUser,
 };
