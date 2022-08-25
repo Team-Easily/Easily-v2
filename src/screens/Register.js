@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { registerWithEmailAndPassword } from '../firebase';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
 
 const Register = ({ navigation }) => {
@@ -41,55 +38,24 @@ const Register = ({ navigation }) => {
     }
   };
 
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const db = getFirestore();
-
-  // const googleSignInWithPopup = () => {
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = credential.accessToken;
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //       console.log('SUCCESS!', user);
-  //       setDoc(doc(db, 'users', user.uid), {
-  //         userName: user.displayName,
-  //         email: user.email,
-  //       });
-  //       navigation.push('Nav Bar');
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       // ...
-  //     });
-  // };
-
   return (
     <View style={styles.container}>
       <View>
         <TextInput
-          placeholder="name"
+          placeholder='name'
           value={userName}
           onChangeText={(text) => setUserName(text)}
           mode='flat'
         />
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={{ marginTop: 15 }}
           mode='flat'
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -107,15 +73,6 @@ const Register = ({ navigation }) => {
         >
           Register
         </Button>
-
-        {/* <FontAwesome.Button
-          name='google'
-          backgroundColor='#4285F4'
-          style={(styles.button, styles.googleButton)}
-          onPress={googleSignInWithPopup}
-        >
-          Login with Google
-        </FontAwesome.Button> */}
 
         <Button
           style={{ marginTop: 15 }}
