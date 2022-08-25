@@ -127,7 +127,7 @@ export const ToDoListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: "#E8EAED",
   },
   tasksWrapper: {
     paddingTop: '30%',
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   title: {
     fontWeight: 'bold',
@@ -154,20 +154,20 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 60,
-    borderColor: '#C0C0C0',
+    borderColor: "#C0C0C0",
     borderWidth: 1,
     width: 250,
   },
   addWrapper: {
     width: 60,
     height: 60,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C0C0C0',
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
     borderWidth: 1,
   },
   addText: {},
