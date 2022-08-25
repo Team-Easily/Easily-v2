@@ -105,13 +105,13 @@ export const ToDoListScreen = () => {
         {form ? (
           <View>
             <TextInput
-              placeholder="task name"
+              placeholder='task name'
               value={todoName}
               onChangeText={(text) => setTodoName(text)}
               style={styles.input}
             />
             <TextInput
-              placeholder="task description"
+              placeholder='task description'
               value={todoDescription}
               onChangeText={(text) => setTodoDescription(text)}
               style={styles.input}

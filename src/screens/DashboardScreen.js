@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
+import { getPointsByUser } from '../firebase/firebaseMethods';
 
 export const DashboardScreen = () => {
   const auth = getAuth();
@@ -10,7 +11,15 @@ export const DashboardScreen = () => {
   return (
     <View style={styles.layout}>
       <Headline>Dashboard</Headline>
-      {user ? <Text>{user.email}</Text> : 'No user'}
+      {user ? (
+        <View>
+          <Text>{user.email}</Text>
+          <Text>{user}</Text>
+          {/* <Text>Points: {getPointsByUser(user)}</Text> */}
+        </View>
+      ) : (
+        'No user'
+      )}
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import { FirebaseError } from 'firebase/app';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -46,6 +47,7 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
     await setDoc(doc(db, 'users', auth.currentUser.uid), {
       userName: userName,
       email: email,
+      points: 0,
     });
     const user = userCredential.user;
     return user;
@@ -54,24 +56,6 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
     throw err;
   }
 };
-
-// Monitor auth state - found in Firebase video, needs to be customized to use
-// const monitorAuthState = async () => {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       console.log(user);
-//       // showApp();
-//       // showLoginState(user);
-
-//       // hideLoginError();
-//     } else {
-//       // showLoginForm();
-//       console.log('You are not logged in.');
-//     }
-//   });
-// };
-
-// monitorAuthState();
 
 const logout = async () => {
   await signOut(auth);
@@ -123,6 +107,22 @@ const deleteTodoById = async (id) => {
   }
 };
 
+// ----------------POINTS
+const getPointsByUser = async (user) => {
+  // let points = user.get('points');
+  // let points = user.collection('points');
+  return points;
+};
+
+const addPointToUser = async (user) => {
+  // let user = db.collection('users').doc(uid);
+  user.update({ points: getFirestore.FieldValue.increment(1) });
+};
+
+const removePointFromUser = async (user) => {
+  user.update({ points: getFirestore.FieldValue.increment(-1) });
+};
+
 export {
   getUserByUid,
   registerWithEmailAndPassword,
@@ -131,4 +131,7 @@ export {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
+  getPointsByUser,
+  addPointToUser,
+  removePointFromUser,
 };
