@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
 
 const Register = ({ navigation }) => {
@@ -45,20 +42,20 @@ const Register = ({ navigation }) => {
     <View style={styles.container}>
       <View>
         <TextInput
-          placeholder='name'
+          placeholder="name"
           value={userName}
           onChangeText={(text) => setUserName(text)}
           mode="flat"
         />
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={{ marginTop: 15 }}
           mode="flat"
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
