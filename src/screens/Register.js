@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { registerWithEmailAndPassword } from '../firebase';
+import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
@@ -79,14 +79,14 @@ const Register = ({ navigation }) => {
           placeholder="name"
           value={userName}
           onChangeText={(text) => setUserName(text)}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
           placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
           placeholder="password"
@@ -94,14 +94,14 @@ const Register = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <Button
           style={{ marginTop: 15 }}
-          icon='send'
-          mode='contained'
+          icon="send"
+          mode="contained"
           onPress={submitRegister}
-          color='#07BEB8'
+          color="#07BEB8"
           contentStyle={{ height: 45 }}
           labelStyle={{ color: 'white', fontSize: 18 }}
         >
@@ -119,7 +119,7 @@ const Register = ({ navigation }) => {
 
         <Button
           style={{ marginTop: 15 }}
-          mode='text'
+          mode="text"
           onPress={() => {
             submitGoToLogin();
           }}
