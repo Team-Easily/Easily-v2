@@ -35,7 +35,6 @@ export const ToDoListScreen = () => {
 
   const handleDelete = async (id) => {
     try {
-      console.log(id);
       await deleteTodoById(id);
     } catch (err) {
       console.error(err);
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
   },
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: '30%',
     paddingHorizontal: 20,
   },
   sectionTitle: {
@@ -142,11 +141,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   items: {
-    marginTop: 30,
+    marginTop: 10,
   },
   writeTaskWrapper: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 40,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
