@@ -97,7 +97,7 @@ export const ToDoListScreen = () => {
               );
             })
           ) : (
-            <Text> No Tasks for Today! </Text>
+            <Text style={styles.title}> No Tasks for Today! </Text>
           )}
         </View>
       </View>
