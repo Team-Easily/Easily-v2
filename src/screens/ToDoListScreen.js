@@ -10,15 +10,15 @@ import {
   Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {
-  auth,
-  getTodosByUid,
-  addTodosByUser,
-  deleteTodoById,
-} from '../firebase';
+import { auth } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
 import { documentId, Timestamp } from 'firebase/firestore';
+import {
+  getTodosByUid,
+  addTodosByUser,
+  deleteTodoById,
+} from '../firebase/firebaseMethods';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();

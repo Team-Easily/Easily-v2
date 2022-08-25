@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { logInWithEmailAndPassword } from '../firebase';
+import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+} from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
 
 const LoginScreen = ({ navigation }) => {
@@ -34,26 +43,26 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View>
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <View>
           <Button
             style={{ marginTop: 15 }}
-            icon='send'
-            mode='contained'
+            icon="send"
+            mode="contained"
             onPress={submitLogin}
-            color='#07BEB8'
+            color="#07BEB8"
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -64,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            mode='text'
+            mode="text"
             onPress={() => {
               submitGoToRegister();
             }}
