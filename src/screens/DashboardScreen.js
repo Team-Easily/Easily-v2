@@ -14,7 +14,7 @@ export const DashboardScreen = () => {
       {user ? (
         <View>
           <Text>{user.email}</Text>
-          <Text>{user}</Text>
+          <Text>{user?.points}</Text>
           {/* <Text>Points: {getPointsByUser(user)}</Text> */}
         </View>
       ) : (

@@ -8,6 +8,8 @@ import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
+import { EditProfileScreen } from './src/screens/EditProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
 import { SignOutScreen } from './src/screens/SignOutScreen';
@@ -18,6 +20,23 @@ import { getAuth } from 'firebase/auth';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
+const TodoStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
+
+const TodoStackScreen = () => (
+  <TodoStack.Navigator>
+    <TodoStack.Screen name='TodoList' component={ToDoListScreen} />
+    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+  </TodoStack.Navigator>
+);
+
+const ProfileStackScreen = () => (
+  <ProfileStack.Navigator>
+    <ProfileStack.Screen name='Profile' component={ProfileScreen} />
+    <ProfileStack.Screen name='EditProfile' component={EditProfileScreen} />
+    <ProfileStack.Screen name='SignOut' component={SignOutScreen} />
+  </ProfileStack.Navigator>
+);
 
 const NavBar = () => (
   <Tab.Navigator
@@ -55,10 +74,10 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name='SignOut'
-        component={SignOutScreen}
+        name='Profile'
+        component={ProfileScreen}
         options={{
-          tabBarLabel: 'Sign Out',
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='account' color={color} size={24} />
           ),

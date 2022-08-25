@@ -48,6 +48,7 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
       userName: userName,
       email: email,
       points: 0,
+      uid: auth.currentUser.uid,
     });
     const user = userCredential.user;
     return user;
@@ -108,11 +109,11 @@ const deleteTodoById = async (id) => {
 };
 
 // ----------------POINTS
-const getPointsByUser = async (user) => {
-  // let points = user.get('points');
-  // let points = user.collection('points');
-  return points;
-};
+// const getPointsByUser = async (user) => {
+//   // let points = user.get('points');
+//   // let points = user.collection('points');
+//   return points;
+// };
 
 const addPointToUser = async (user) => {
   // let user = db.collection('users').doc(uid);
@@ -131,7 +132,6 @@ export {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
-  getPointsByUser,
   addPointToUser,
   removePointFromUser,
 };
