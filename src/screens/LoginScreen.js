@@ -13,13 +13,10 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
 
 const LoginScreen = ({ navigation }) => {
-  const [isRegistering, setIsRegistering] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
-  const [accessToken, setAccessToken] = useState();
-  const [userInfo, setUserInfo] = useState();
 
   // React States
   const resetStates = () => {
@@ -41,60 +38,6 @@ const LoginScreen = ({ navigation }) => {
       setErrMessage(error);
     }
   };
-
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const db = getFirestore();
-
-  // const googleSignInWithPopup = () => {
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = credential.accessToken;
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //       console.log('SUCCESS!', user);
-  //       setDoc(doc(db, 'users', user.uid), {
-  //         userName: user.displayName,
-  //         email: user.email,
-  //       });
-  //       navigation.push('Nav Bar');
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       // ...
-  //     });
-  // };
-
-  // const googleSignInWithRedirect = () => {
-  //   signInWithRedirect(auth, provider);
-  //   getRedirectResult(auth)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access Google APIs.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = credential.accessToken;
-
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       // ...
-  //     });
-  // };
 
   return (
     <View style={styles.container}>
@@ -125,14 +68,6 @@ const LoginScreen = ({ navigation }) => {
           >
             Login
           </Button>
-          {/* <FontAwesome.Button
-            name='google'
-            backgroundColor='#4285F4'
-            style={(styles.button, styles.googleButton)}
-            onPress={googleSignInWithRedirect}
-          >
-            Login with Google
-          </FontAwesome.Button> */}
 
           <Button title={'Login'} onPress={submitLogin} style={styles.button} />
 
