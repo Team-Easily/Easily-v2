@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth';
 import { Button } from 'react-native-paper';
 
