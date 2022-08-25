@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
 import { StyleSheet, SafeAreaView, View, TouchableOpacity } from "react-native";
 import { Avatar, Title, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../components/auth/authSlice";
+import { getUserByUid } from "../firebase";
 
 export const ProfileScreen = () => {
+  const dispatch = useDispatch();
+  const [userId, setUserId] = useState(null);
+
+
+  const updateUser = async (userId) => {
+    const user = await getUserByUid(auth.currentUser.userId);
+    dispatch(setUser, user);
+  };
+  useEffect(() => {
+    updateUser();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -12,12 +28,12 @@ export const ProfileScreen = () => {
           <Avatar.Image src={{ uri: "tinyurl.com/24arcnk3" }} size={80} />
         </View>
         <View style={styles.userName}>
-          <Title style={styles.title}>UserName</Title>
+          <Title style={styles.title}>Name: {user?.displayName}</Title>
         </View>
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
             <MaterialCommunityIcons
-              name="map-marker-outline"
+              name="map-marker-star-outline"
               color="#777777"
               size={20}
             />
@@ -25,10 +41,11 @@ export const ProfileScreen = () => {
           </View>
           <View style={styles.row}>
             <MaterialCommunityIcons name="email" color="#777777" size={20} />
-            <Text>Email</Text>
+            <Text>Email: {user?.email}</Text>
           </View>
         </View>
       </View>
+
       <View style={styles.menuWrapper}>
         <TouchableOpacity onPress={() => useNavigation("EditProfile")}>
           <View style={styles.menuItem}>
@@ -40,6 +57,7 @@ export const ProfileScreen = () => {
             <Text style={styles.menuItemText}>Edit Profile</Text>
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => useNavigation("SignOutScreen")}>
           <View style={styles.menuItem}>
             <MaterialCommunityIcons
@@ -74,7 +92,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   userName: {
-    marginLeft: 20,
+    marginLeft: 15,
   },
   row: {
     flexDirection: "row",

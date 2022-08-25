@@ -35,6 +35,7 @@ const ProfileStackScreen = () => (
   <ProfileStack.Navigator>
     <ProfileStack.Screen name="Profile" component={ProfileScreen} />
     <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
+    <ProfileStack.Screen name="SignOut" component={SignOutScreen} />
   </ProfileStack.Navigator>
 );
 
