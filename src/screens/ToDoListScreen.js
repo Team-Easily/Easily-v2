@@ -10,10 +10,15 @@ import {
   Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { auth, getTodosByUid, addTodosByUser } from '../firebase';
+import {
+  auth,
+  getTodosByUid,
+  addTodosByUser,
+  deleteTodoById,
+} from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { Timestamp } from 'firebase/firestore';
+import { documentId, Timestamp } from 'firebase/firestore';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -28,9 +33,15 @@ export const ToDoListScreen = () => {
     dispatch(setTodos(todos));
   };
 
-  useEffect(() => {
-    getTodos();
-  }, []);
+  const handleDelete = async (id) => {
+    try {
+      await deleteTodoById(id);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      getTodos();
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -52,6 +63,10 @@ export const ToDoListScreen = () => {
     }
   };
 
+  useEffect(() => {
+    getTodos();
+  }, []);
+
   // const completeTask = (index) => {
   //   let itemsCopy = [...taskItems];
   //   itemsCopy.splice(index, 1);
@@ -64,9 +79,9 @@ export const ToDoListScreen = () => {
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <View style={styles.items}>
           {todos.length > 0 ? (
-            todos.map((todo, index) => {
+            todos.map((todo, idx) => {
               return (
-                <View key={index}>
+                <View style={styles.items} key={idx}>
                   <Text style={styles.title}>{todo.title}:</Text>
                   <Text>{todo.description}</Text>
                   <Button
@@ -75,13 +90,13 @@ export const ToDoListScreen = () => {
                   />
                   <Button
                     title={'Delete'}
-                    // onPress={() => completeTask(index)}
+                    onPress={() => handleDelete(todo.id)}
                   />
                 </View>
               );
             })
           ) : (
-            <Text> No Tasks for Today! </Text>
+            <Text style={styles.title}> No Tasks for Today! </Text>
           )}
         </View>
       </View>
@@ -90,13 +105,13 @@ export const ToDoListScreen = () => {
         {form ? (
           <View>
             <TextInput
-              placeholder='task name'
+              placeholder="task name"
               value={todoName}
               onChangeText={(text) => setTodoName(text)}
               style={styles.input}
             />
             <TextInput
-              placeholder='task description'
+              placeholder="task description"
               value={todoDescription}
               onChangeText={(text) => setTodoDescription(text)}
               style={styles.input}
@@ -115,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
   },
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: '30%',
     paddingHorizontal: 20,
   },
   sectionTitle: {
@@ -126,11 +141,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   items: {
-    marginTop: 30,
+    marginTop: 10,
   },
   writeTaskWrapper: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 40,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
