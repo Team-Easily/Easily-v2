@@ -1,24 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { StyleSheet, SafeAreaView, View, TouchableOpacity } from "react-native";
 import { Avatar, Title, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../components/auth/authSlice";
-import { getUserByUid } from "../firebase";
+import { getUserByUid } from "../firebase/firebaseMethods";
+import { auth, db } from "../firebase/firebase";
 
 export const ProfileScreen = () => {
   const dispatch = useDispatch();
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState({});
 
-
-  const updateUser = async (userId) => {
-    const user = await getUserByUid(auth.currentUser.userId);
-    dispatch(setUser, user);
+  const getUser = async () => {
+    const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+    if (docSnap.exists()) {
+      setUser(docSnap.data());
+    } else {
+      console.log("No such document!");
+    }
   };
+
+  const handleSubmit = async () => {
+    try {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        address: address,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      getUser();
+    }
+  };
+
   useEffect(() => {
-    updateUser();
+    getUser();
   }, []);
 
   return (
@@ -28,7 +48,7 @@ export const ProfileScreen = () => {
           <Avatar.Image src={{ uri: "tinyurl.com/24arcnk3" }} size={80} />
         </View>
         <View style={styles.userName}>
-          <Title style={styles.title}>Name: {user?.displayName}</Title>
+          <Title style={styles.title}>User Name: {user.userName}</Title>
         </View>
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
@@ -37,7 +57,7 @@ export const ProfileScreen = () => {
               color="#777777"
               size={20}
             />
-            <Text>City, State, Country</Text>
+            <Text>{user?.address}</Text>
           </View>
           <View style={styles.row}>
             <MaterialCommunityIcons name="email" color="#777777" size={20} />

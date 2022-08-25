@@ -76,7 +76,7 @@ const NavBar = () => (
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileStackScreen}
+        component={ProfileScreen}
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (

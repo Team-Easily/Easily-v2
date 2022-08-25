@@ -43,9 +43,10 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
       email,
       password
     );
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       userName: userName,
       email: email,
+      uid: auth.currentUser.uid,
     });
     const user = userCredential.user;
     return user;
@@ -87,6 +88,7 @@ const getUserByUid = async (uid) => {
   });
   return user;
 };
+
 
 // ----------------TODOs
 
