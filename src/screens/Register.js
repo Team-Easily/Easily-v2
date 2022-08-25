@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text, Alert } from 'react-native';
-import {
-  registerWithEmailAndPassword,
-  logInWithEmailAndPassword,
-} from '../firebase';
+import { View, StyleSheet, Alert } from 'react-native';
+import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
+import { TextInput, Button } from 'react-native-paper';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -42,27 +40,51 @@ const Register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.form}>
+      <View>
         <TextInput
           placeholder="name"
           value={userName}
           onChangeText={(text) => setUserName(text)}
-          style={styles.input}
+          mode="flat"
         />
         <TextInput
           placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
+          style={{ marginTop: 15 }}
+          mode="flat"
         />
         <TextInput
           placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={{ marginTop: 15 }}
+          mode="flat"
         />
-        <Button title={'Submit'} onPress={submitRegister} />
+        <Button
+          style={{ marginTop: 15 }}
+          icon="send"
+          mode="contained"
+          onPress={submitRegister}
+          color="#07BEB8"
+          contentStyle={{ height: 45 }}
+          labelStyle={{ color: 'white', fontSize: 18 }}
+        >
+          Register
+        </Button>
+
+        <Button
+          style={{ marginTop: 15 }}
+          mode="text"
+          onPress={() => {
+            submitGoToLogin();
+          }}
+          contentStyle={{ height: 45 }}
+          labelStyle={{ color: '#07BEB8', fontSize: 18 }}
+        >
+          Login
+        </Button>
       </View>
     </View>
   );
@@ -70,14 +92,9 @@ const Register = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  form: {
-    alignItems: 'center',
-    gap: 5,
-    marginVertical: 1,
+    marginTop: 300,
+    marginLeft: 40,
+    marginRight: 40,
   },
 });
 

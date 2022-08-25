@@ -1,17 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
 
 const LoginButton = () => {
   const nav = useNavigation();
 
-  return <Button title='Login' onPress={() => nav.navigate('Login')} />;
+  return (
+    <Button
+      style={{ marginTop: 15 }}
+      icon='send'
+      mode='contained'
+      onPress={() => nav.navigate('Login')}
+      color='#07BEB8'
+      contentStyle={{ height: 45 }}
+      labelStyle={{ color: 'white', fontSize: 18 }}
+    >
+      Login
+    </Button>
+  );
 };
 
 export const WelcomeScreen = () => {
   return (
     <View style={styles.layout}>
-      <Text style={styles.title}>Welcome to Easily!</Text>
+      <Image style={styles.logo} source={require('../assets/logo.png')} />
       <LoginButton />
     </View>
   );
@@ -20,8 +33,13 @@ export const WelcomeScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop: 210,
     alignItems: 'center',
+  },
+  logo: {
+    height: 200,
+    width: 200,
+    margin: 30,
   },
   title: {
     fontSize: 32,
