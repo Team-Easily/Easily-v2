@@ -119,7 +119,9 @@ const getTodosByUid = async (uid) => {
   const q = query(todosRef, where('author', '==', uid));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    todos.push(doc.data());
+    let docBody = doc.data()
+    docBody['id'] = doc.id
+    todos.push(docBody);
   });
   return todos;
 };
@@ -127,6 +129,17 @@ const getTodosByUid = async (uid) => {
 const addTodosByUser = async (data) => {
   try {
     await addDoc(collection(db, 'todos'), data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const deleteTodoById = async (id) => {
+  const taskDocRef = doc(db, 'todos', id);
+  console.log('FIRESTORE TASKDOCREF:', taskDocRef);
+  try {
+    await deleteDoc(taskDocRef);
   } catch (err) {
     console.error(err);
     throw err;
@@ -143,4 +156,5 @@ export {
   logout,
   getTodosByUid,
   addTodosByUser,
+  deleteTodoById,
 };
