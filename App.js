@@ -11,6 +11,7 @@ import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
 import { SignOutScreen } from './src/screens/SignOutScreen';
+import { Weather } from './src/screens/Weather';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -57,6 +58,16 @@ const NavBar = () => (
       <Tab.Screen
         name='SignOut'
         component={SignOutScreen}
+        options={{
+          tabBarLabel: 'Sign Out',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name='account' color={color} size={24} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='SignOut'
+        component={Weather}
         options={{
           tabBarLabel: 'Sign Out',
           tabBarIcon: ({ color }) => (
