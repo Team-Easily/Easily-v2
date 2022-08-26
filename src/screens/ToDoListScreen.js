@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
+import React, { useEffect, useState } from "react";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebase";
 import {
   StyleSheet,
   View,
@@ -8,9 +8,11 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Keyboard,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { setTodos, addToTodos } from "../components/todos/todoSlice";
+import { setUser } from "../components/auth/authSlice";
+
 import {
   getTodosByUid,
   addTodosByUser,
@@ -18,7 +20,7 @@ import {
   deleteTodoById,
   addPointToUser,
   removePointFromUser,
-} from '../firebase/firebaseMethods';
+} from "../firebase/firebaseMethods";
 import {
   Headline,
   Title,
@@ -28,31 +30,24 @@ import {
   TextInput,
   List,
   IconButton,
-} from 'react-native-paper';
+} from "react-native-paper";
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
-  const [todoName, setTodoName] = useState('');
+  // const user = useSelector((state) => state.auth.currentUser);
+  const [user, setUser] = useState(auth.currentUser);
+  // JR: using user from redux, not making a db fetch
+  const [todoName, setTodoName] = useState("");
   const [form, setForm] = useState(false);
-  const [todoDescription, setTodoDescription] = useState('');
-  const [todoFrequency, setTodoFrequency] = useState('');
+  const [todoDescription, setTodoDescription] = useState("");
+  const [todoFrequency, setTodoFrequency] = useState("");
   const [completed, setCompleted] = useState(false);
-  const [user, setUser] = useState({});
-
-  const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-    if (docSnap.exists()) {
-      setUser(docSnap.data());
-    } else {
-      console.log('No such document!');
-    }
-  };
 
   useEffect(() => {
-    getUser();
+    getTodos();
+    // dispatch(setUser());
   }, []);
-
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
     // console.log(todos);
@@ -76,25 +71,21 @@ export const ToDoListScreen = () => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: completed,
-        frequency: 'once',
+        frequency: "once",
         // createdAt: Timestamp.now(),
       });
       Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {
-      setTodoName('');
+      setTodoName("");
       setForm(false);
-      setTodoDescription('');
-      setTodoFrequency('');
+      setTodoDescription("");
+      setTodoFrequency("");
       setCompleted(false);
       getTodos();
     }
   };
-
-  useEffect(() => {
-    getTodos();
-  }, []);
 
   // const completeTask = (index) => {
   //   let itemsCopy = [...taskItems];
@@ -121,21 +112,21 @@ export const ToDoListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        <Title>{user.points} pts</Title>
+        {/* <Title>{user.points} pts</Title> */}
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
               return (
                 <List.Item
-                  style={{ color: '#2c497f' }}
+                  style={{ color: "#2c497f" }}
                   key={idx}
                   title={todo.title}
                   description={todo.description}
                   left={() => (
                     <View style={styles.checkboxOutline}>
                       <Checkbox
-                        style={{ borderWidth: '1px' }}
-                        status={todo.completed ? 'checked' : 'unchecked'}
+                        style={{ borderWidth: "1px" }}
+                        status={todo.completed ? "checked" : "unchecked"}
                         onPress={() => toggleComplete(idx)}
                         // onPress={() => {
                         //   setChecked(!checked);
@@ -145,8 +136,8 @@ export const ToDoListScreen = () => {
                   )}
                   right={() => (
                     <IconButton
-                      icon='trash-can-outline'
-                      color='#2c497f'
+                      icon="trash-can-outline"
+                      color="#2c497f"
                       onPress={() => handleDelete(todo.id)}
                     />
                   )}
@@ -154,33 +145,33 @@ export const ToDoListScreen = () => {
               );
             })
           ) : (
-            <Title style={{ color: '#2c497f' }}> No Tasks for Today! </Title>
+            <Title style={{ color: "#2c497f" }}> No Tasks for Today! </Title>
           )}
         </View>
       </View>
 
       <List.Accordion
         style={styles.accordion}
-        title='Add Task'
-        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+        title="Add Task"
+        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
       >
         <TextInput
-          placeholder='task name'
+          placeholder="task name"
           value={todoName}
           onChangeText={(text) => setTodoName(text)}
         />
         <TextInput
-          placeholder='task description'
+          placeholder="task description"
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
         <Button
-          mode='contained'
+          mode="contained"
           onPress={handleSubmit}
-          color='#90be6d'
+          color="#90be6d"
           contentStyle={{ height: 45, width: 290 }}
           labelStyle={{
-            color: 'white',
+            color: "white",
             fontSize: 16,
           }}
         >
@@ -194,8 +185,8 @@ export const ToDoListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
-    height: '100%',
+    backgroundColor: "#E8EAED",
+    height: "100%",
   },
   tasksWrapper: {
     paddingTop: 30,
@@ -203,27 +194,27 @@ const styles = StyleSheet.create({
   },
   checkboxOutline: {
     borderWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: "lightgrey",
     height: 37,
     marginRight: 10,
     marginTop: 8,
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   items: {
     marginTop: 10,
   },
   writeTaskWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });
