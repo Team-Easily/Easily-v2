@@ -80,7 +80,7 @@ const getTodosByUid = async (uid) => {
   const todosRef = collection(db, 'todos');
   const q = query(todosRef, where('author', '==', uid));
   const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
+  querySnapshot.forEach( (doc) => {
     let docBody = doc.data();
     docBody['id'] = doc.id;
     todos.push(docBody);
@@ -91,6 +91,16 @@ const getTodosByUid = async (uid) => {
 const addTodosByUser = async (data) => {
   try {
     await addDoc(collection(db, 'todos'), data);
+   
+   let id;
+    const todosRef = collection(db, 'todos');
+  const q = query(todosRef, where('author', '==', uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach( (doc) => {
+    let docBody = doc.data();
+    docBody['id'] = doc.id;
+    todos.push(docBody);
+  });
   } catch (err) {
     console.error(err);
     throw err;
