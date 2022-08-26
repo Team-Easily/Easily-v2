@@ -1,37 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import {
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  getFirestore,
-} from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
-import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { setUser } from '../components/auth/authSlice';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
-  // addPointToUser,
-  removePointFromUser,
 } from '../firebase/firebaseMethods';
+import { auth, db } from '../firebase/firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
 import {
   Headline,
   Title,
-  Text,
   Checkbox,
   Button,
   TextInput,
@@ -50,7 +30,6 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
-  const [points, setPoints] = useState(0);
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -63,48 +42,54 @@ export const ToDoListScreen = () => {
 
   useEffect(() => {
     getUser();
-    setPoints(user.points);
     getTodos();
     // dispatch(setUser());
   }, []);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
-    // console.log(todos);
     dispatch(setTodos(todos));
   };
 
   const addPointToUser = async (id) => {
-    // const userDocRef = doc(db, 'users', id);
-    // try {
-    //   await updateDoc(userDocRef, {
-    //     points: user.points + 1,
-    //   });
-    // } catch (err) {
-    //   alert(err);
-    // }
-    const db = firebase.firestore();
-    db.collection('users')
-      .doc(id)
-      .update(() => {
-        const increase = firebase.firestore.FieldValue.increment(1);
-        return { points: increase };
+    const userDocRef = doc(db, 'users', id);
+    try {
+      await updateDoc(userDocRef, {
+        points: increment(1),
       });
+    } catch (err) {
+      alert(err);
+    } finally {
+      getUser();
+    }
+  };
+  const removePointFromUser = async (id) => {
+    const userDocRef = doc(db, 'users', id);
+    try {
+      await updateDoc(userDocRef, {
+        points: increment(-1),
+      });
+    } catch (err) {
+      alert(err);
+    } finally {
+      getUser();
+    }
   };
 
   const handleCheckedChange = async (id, todoCompleted) => {
-    console.log('USER PTS:', user.points);
     const taskDocRef = doc(db, 'todos', id);
     try {
       await updateDoc(taskDocRef, {
         completed: !todoCompleted,
       });
-      addPointToUser(auth.currentUser.uid);
-      setPoints(user.points);
+      if (todoCompleted) {
+        removePointFromUser(auth.currentUser.uid);
+      } else {
+        addPointToUser(auth.currentUser.uid);
+      }
     } catch (err) {
       alert(err);
     } finally {
-      console.log('USER PTS:', points);
       getTodos();
     }
   };
@@ -152,8 +137,7 @@ export const ToDoListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        <Title>{points} pts</Title>
-        {/* <Title>{user.points} pts</Title> */}
+        <Title>{user?.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -171,9 +155,6 @@ export const ToDoListScreen = () => {
                         onPress={() =>
                           handleCheckedChange(todo.id, todo.completed)
                         }
-                        // onPress={() => {
-                        //   setChecked(!checked);
-                        // }}
                       />
                     </View>
                   )}
