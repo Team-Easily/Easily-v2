@@ -12,7 +12,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setTodos, addToTodos } from "../components/todos/todoSlice";
 import { setUser } from "../components/auth/authSlice";
-
 import {
   getTodosByUid,
   addTodosByUser,

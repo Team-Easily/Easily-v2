@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export const TodoItemScreen = () => {
+
+const TodoItemScreen = ({ route }) => {
   return (
     <View style={styles.layout}>
       <Text style={styles.title}>Todo Item</Text>
@@ -20,3 +21,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 });
+
+export default TodoItemScreen;
