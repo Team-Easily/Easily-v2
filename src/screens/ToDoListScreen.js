@@ -11,6 +11,17 @@ import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
 import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Keyboard,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { setUser } from '../components/auth/authSlice';
+import {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
@@ -31,12 +42,14 @@ import {
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
+  // const user = useSelector((state) => state.auth.currentUser);
+  const [user, setUser] = useState(auth.currentUser);
+  // JR: using user from redux, not making a db fetch
   const [todoName, setTodoName] = useState('');
   const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
-  const [user, setUser] = useState({});
   const [points, setPoints] = useState(0);
 
   const getUser = async () => {
@@ -51,6 +64,8 @@ export const ToDoListScreen = () => {
   useEffect(() => {
     getUser();
     setPoints(user.points);
+    getTodos();
+    // dispatch(setUser());
   }, []);
 
   const getTodos = async () => {
@@ -126,10 +141,6 @@ export const ToDoListScreen = () => {
       getTodos();
     }
   };
-
-  useEffect(() => {
-    getTodos();
-  }, []);
 
   // const completeTask = (index) => {
   //   let itemsCopy = [...taskItems];
