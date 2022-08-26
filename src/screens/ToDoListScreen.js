@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import React, { useEffect, useState } from 'react';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
 import {
   StyleSheet,
   View,
@@ -50,8 +50,47 @@ export const ToDoListScreen = () => {
   }, []);
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
-    // console.log(todos);
+    console.log(todos);
     dispatch(setTodos(todos));
+  };
+
+  const handleCheckedChange = async (id, todoCompleted) => {
+    console.log('TODO ID:', id);
+    console.log('TODO COMPLETED:', todoCompleted);
+    console.log('USER PTS:', user.points);
+    const taskDocRef = doc(db, 'tasks', id);
+    try {
+      await updateDoc(taskDocRef, {
+        completed: todoCompleted,
+      });
+    } catch (err) {
+      alert(err);
+    } finally {
+      console.log('TODO ID:', id);
+      console.log('TODO COMPLETED:', todoCompleted);
+      console.log('USER PTS:', user.points);
+      getTodos();
+    }
+  };
+
+  const toggleComplete = async (id, todoCompleted) => {
+    // try {
+    //   await updateTodosByUser({
+    //     completed: completed,
+    //   });
+    // } catch (err) {
+    //   console.error(err);
+    // }
+    if (!todoCompleted) {
+      // toggle to complete
+      console.log('TODO ID:', id);
+      console.log('TODO COMPLETED:', todoCompleted);
+      console.log('USER PTS:', user.points);
+      addPointToUser(auth.currentUser.uid);
+    } else {
+      // toggle to incomplete
+      // removePointFromUser(auth.currentUser);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -93,26 +132,11 @@ export const ToDoListScreen = () => {
   //   setTaskItems(itemsCopy); //removes task items from the list
   // };
 
-  const toggleComplete = async (idx) => {
-    // try {
-    //   await updateTodosByUser({
-    //     completed: completed,
-    //   });
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    if (completed) {
-      // addPointToUser(auth.currentUser.uid);
-    } else {
-      // removePointFromUser(auth.currentUser);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        {/* <Title>{user.points} pts</Title> */}
+        <Title>{user.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -125,9 +149,11 @@ export const ToDoListScreen = () => {
                   left={() => (
                     <View style={styles.checkboxOutline}>
                       <Checkbox
-                        style={{ borderWidth: "1px" }}
-                        status={todo.completed ? "checked" : "unchecked"}
-                        onPress={() => toggleComplete(idx)}
+                        style={{ borderWidth: '1px' }}
+                        status={todo.completed ? 'checked' : 'unchecked'}
+                        onPress={() =>
+                          handleCheckedChange(todo.id, todo.completed)
+                        }
                         // onPress={() => {
                         //   setChecked(!checked);
                         // }}
