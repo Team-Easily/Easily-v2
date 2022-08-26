@@ -1,11 +1,27 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Headline,
+  Title,
+} from 'react-native';
+import { useDispatch } from 'react-redux';
 
-export const TodoItemScreen = ({ route }) => {
+export const TodoItemScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+  const { id } = route.params;
+
+  //TODO: getTodoById - write in FirebaseMethods, todoSlice
+  //UseEffect(getTodo)
+
   return (
-    <View style={styles.layout}>
-      <Text style={styles.title}>Todo Item</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.taskWrapper}>
+        <Text style={styles.sectionTitle}>Your Task </Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -15,8 +31,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
     height: '100%',
   },
-  tasksWrapper: {
-    paddingTop: 30,
+  taskWrapper: {
+    paddingTop: '30%',
     paddingHorizontal: 20,
   },
   checkboxOutline: {

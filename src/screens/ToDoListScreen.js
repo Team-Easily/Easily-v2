@@ -45,7 +45,6 @@ export const ToDoListScreen = () => {
   useEffect(() => {
     getUser();
     getTodos();
-    // dispatch(setUser());
   }, []);
 
   const getTodos = async () => {
@@ -164,7 +163,11 @@ export const ToDoListScreen = () => {
                       <IconButton
                         icon="pencil-outline"
                         color="#2c497f"
-                        onPress={() => nav.navigate('TodoItem')}
+                        onPress={() =>
+                          nav.navigate('TodoItem', {
+                            id: todo.id,
+                          })
+                        }
                       />
                     </View>
                   )}

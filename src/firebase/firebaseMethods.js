@@ -93,6 +93,10 @@ const getTodosByUid = async (uid) => {
   return todos;
 };
 
+const getTodoById = async (id) => {
+  const todoRef = doc(db, 'todos', id);
+};
+
 const addTodosByUser = async (data) => {
   try {
     await addDoc(collection(db, 'todos'), data);
