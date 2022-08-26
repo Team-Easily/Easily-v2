@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  getAuth,
-  signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
-  GoogleAuthProvider,
-} from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { TextInput, Button } from 'react-native-paper';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserUid } from '../components/auth/authSlice';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const dispatch = useDispatch();
 
   // React States
   const resetStates = () => {
@@ -30,7 +24,8 @@ const LoginScreen = ({ navigation }) => {
 
   const submitLogin = async () => {
     try {
-      await logInWithEmailAndPassword(email, password);
+      const user = await logInWithEmailAndPassword(email, password);
+      dispatch(setUserUid(user.uid));
       navigation.push('Nav Bar');
       resetStates();
     } catch (error) {
@@ -43,26 +38,26 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View>
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
-          mode="flat"
+          mode='flat'
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode="flat"
+          mode='flat'
         />
         <View>
           <Button
             style={{ marginTop: 15 }}
-            icon="send"
-            mode="contained"
+            icon='send'
+            mode='contained'
             onPress={submitLogin}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -73,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            mode="text"
+            mode='text'
             onPress={() => {
               submitGoToRegister();
             }}

@@ -1,3 +1,4 @@
+import { FirebaseError } from 'firebase/app';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -43,9 +44,10 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
       email,
       password
     );
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    await setDoc(doc(db, 'users', auth.currentUser.uid), {
       userName: userName,
       email: email,
+      points: 0,
       uid: auth.currentUser.uid,
     });
     const user = userCredential.user;
@@ -55,24 +57,6 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
     throw err;
   }
 };
-
-// Monitor auth state - found in Firebase video, needs to be customized to use
-// const monitorAuthState = async () => {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       console.log(user);
-//       // showApp();
-//       // showLoginState(user);
-
-//       // hideLoginError();
-//     } else {
-//       // showLoginForm();
-//       console.log('You are not logged in.');
-//     }
-//   });
-// };
-
-// monitorAuthState();
 
 const logout = async () => {
   await signOut(auth);
@@ -88,7 +72,6 @@ const getUserByUid = async (uid) => {
   });
   return user;
 };
-
 
 // ----------------TODOs
 
@@ -114,6 +97,15 @@ const addTodosByUser = async (data) => {
   }
 };
 
+const updateTodosByUser = async (data) => {
+  try {
+    await setDoc(collection(db, 'todos'), data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const deleteTodoById = async (id) => {
   const taskDocRef = doc(db, 'todos', id);
   console.log('FIRESTORE TASKDOCREF:', taskDocRef);
@@ -125,6 +117,25 @@ const deleteTodoById = async (id) => {
   }
 };
 
+// ----------------POINTS
+
+const addPointToUser = async (uid) => {
+  // let user = db.collection('users').doc(uid);
+  // user.update({ points: getFirestore.FieldValue.increment(1) });
+  // user.update({ points: user.points + 1 });
+  const increment = getFirestore.FieldValue.increment(1);
+
+  // Document reference
+  const userRef = db.collection('users').doc(uid);
+
+  // Update read count
+  userRef.update({ points: increment });
+};
+
+const removePointFromUser = async (user) => {
+  user.update({ points: getFirestore.FieldValue.increment(-1) });
+};
+
 export {
   getUserByUid,
   registerWithEmailAndPassword,
@@ -132,5 +143,8 @@ export {
   logout,
   getTodosByUid,
   addTodosByUser,
+  updateTodosByUser,
   deleteTodoById,
+  addPointToUser,
+  removePointFromUser,
 };

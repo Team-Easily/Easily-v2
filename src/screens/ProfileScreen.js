@@ -1,39 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { StyleSheet, SafeAreaView, View, TouchableOpacity } from "react-native";
-import { Avatar, Title, Text } from "react-native-paper";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../components/auth/authSlice";
-import { getUserByUid } from "../firebase/firebaseMethods";
-import { auth, db } from "../firebase/firebase";
+import React, { useEffect, useState } from 'react';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { Avatar, Headline, Title, List, Button } from 'react-native-paper';
+import { auth, db } from '../firebase/firebase';
+import { getAuth, signOut } from 'firebase/auth';
 
-export const ProfileScreen = () => {
-  const dispatch = useDispatch();
+export const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
     } else {
-      console.log("No such document!");
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await setDoc(doc(db, "users", auth.currentUser.uid), {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        address: address,
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      getUser();
+      console.log('No such document!');
     }
   };
 
@@ -41,53 +21,68 @@ export const ProfileScreen = () => {
     getUser();
   }, []);
 
+  const handleSignOut = () => {
+    signOut(getAuth());
+    navigation.push('Welcome');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.userInfoSection}>
-        <View styles={styles.userImage}>
-          <Avatar.Image src={{ uri: "tinyurl.com/24arcnk3" }} size={80} />
+      <View>
+        <View style={{ alignItems: 'center' }}>
+          <Avatar.Image
+            src={{ uri: 'tinyurl.com/24arcnk3' }}
+            size={100}
+            style={{ marginBottom: 30 }}
+          />
+          <Headline>{user.userName}</Headline>
+          <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
         </View>
-        <View style={styles.userName}>
-          <Title style={styles.title}>User Name: {user.userName}</Title>
-        </View>
-        <View style={styles.userInfoSection}>
-          <View style={styles.row}>
-            <MaterialCommunityIcons
-              name="map-marker-star-outline"
-              color="#777777"
-              size={20}
-            />
-            <Text>{user?.address}</Text>
-          </View>
-          <View style={styles.row}>
-            <MaterialCommunityIcons name="email" color="#777777" size={20} />
-            <Text>Email: {user?.email}</Text>
-          </View>
-        </View>
-      </View>
 
-      <View style={styles.menuWrapper}>
-        <TouchableOpacity onPress={() => useNavigation("EditProfile")}>
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="account-cog-outline"
-              color="#777777"
-              size={25}
+        <List.Section style={styles.list}>
+          {user.address ? (
+            <List.Item
+              color={'#464A4E'}
+              title={user?.address}
+              left={() => (
+                <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
+              )}
             />
-            <Text style={styles.menuItemText}>Edit Profile</Text>
-          </View>
-        </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+          <List.Item
+            color={'#464A4E'}
+            title={user?.email}
+            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
+          />
+        </List.Section>
 
-        <TouchableOpacity onPress={() => useNavigation("SignOutScreen")}>
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="exit-to-app"
-              color="#777777"
-              size={25}
-            />
-            <Text style={styles.menuItemText}>Sign Out</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <Button
+            style={styles.button}
+            icon='account-cog-outline'
+            mode='contained'
+            onPress={() => navigation.push('EditProfile')}
+            color='#90be6d'
+            contentStyle={{ height: 45 }}
+            labelStyle={{ color: 'white', fontSize: 16 }}
+          >
+            Edit Profile
+          </Button>
+          <Button
+            style={styles.button}
+            icon='exit-to-app'
+            // icon='hand-wave'
+            mode='contained'
+            onPress={handleSignOut}
+            color='#90be6d'
+            contentStyle={{ height: 45 }}
+            labelStyle={{ color: 'white', fontSize: 16 }}
+          >
+            Sign Out
+          </Button>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -96,41 +91,19 @@ export const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
+    marginLeft: '15%',
+    marginRight: '15%',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
+  buttons: {
+    alignItems: 'center',
   },
-  userInfoSection: {
-    paddingHorizontal: 30,
-    marginBottom: 25,
+  button: {
+    minWidth: 180,
+    marginBottom: 15,
   },
-  userImage: {
-    flexDirection: "row",
-    marginTop: 15,
-  },
-  userName: {
-    marginLeft: 15,
-  },
-  row: {
-    flexDirection: "row",
-    marginBottom: 10,
-  },
-  menuWrapper: {
-    marginTop: 10,
-  },
-  menuItem: {
-    flexDirection: "row",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-  },
-  menuItemText: {
-    color: "#777777",
-    marginLeft: 20,
-    fontWeight: "600",
-    fontSize: 16,
-    lineHeight: 26,
+  list: {
+    marginTop: 30,
+    marginBottom: 30,
   },
 });

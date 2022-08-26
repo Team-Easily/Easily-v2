@@ -21,21 +21,20 @@ import { getAuth } from 'firebase/auth';
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
-const AuthStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator>
-    <TodoStack.Screen name="TodoList" component={TodoListScreen} />
-    <TodoStack.Screen name="TodoItem" component={TodoItemScreen} />
+    <TodoStack.Screen name='TodoList' component={ToDoListScreen} />
+    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
   </TodoStack.Navigator>
 );
 
 const ProfileStackScreen = () => (
   <ProfileStack.Navigator>
-    <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-    <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
-    <ProfileStack.Screen name="SignOut" component={SignOutScreen} />
+    <ProfileStack.Screen name='Profile' component={ProfileScreen} />
+    <ProfileStack.Screen name='EditProfile' component={EditProfileScreen} />
+    <ProfileStack.Screen name='SignOut' component={SignOutScreen} />
   </ProfileStack.Navigator>
 );
 
@@ -50,7 +49,7 @@ const NavBar = () => (
         name='Dashboard'
         component={DashboardScreen}
         options={{
-          tabBarLabel: "Dashboard",
+          tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name='view-dashboard'
@@ -64,7 +63,7 @@ const NavBar = () => (
         name='TodoList'
         component={ToDoListScreen}
         options={{
-          tabBarLabel: "Todo List",
+          tabBarLabel: 'Todo List',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name='format-list-bulleted'
@@ -75,10 +74,10 @@ const NavBar = () => (
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name='Profile'
         component={ProfileScreen}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='account' color={color} size={24} />
           ),

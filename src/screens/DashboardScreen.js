@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
 
@@ -10,7 +10,15 @@ export const DashboardScreen = () => {
   return (
     <View style={styles.layout}>
       <Headline>Dashboard</Headline>
-      {user ? <Text>{user.email}</Text> : 'No user'}
+      {user ? (
+        <View>
+          <Text>{user.email}</Text>
+          <Text>{user?.points}</Text>
+          <Text>{user.userName}</Text>
+        </View>
+      ) : (
+        'No user'
+      )}
     </View>
   );
 };
