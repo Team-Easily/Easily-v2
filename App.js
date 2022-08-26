@@ -31,7 +31,10 @@ const TodoStackScreen = () => (
 );
 
 const ProfileStackScreen = () => (
-  <ProfileStack.Navigator>
+  <ProfileStack.Navigator
+    initialRouteName='Profile'
+    screenOptions={{ headerShown: false }}
+  >
     <ProfileStack.Screen name='Profile' component={ProfileScreen} />
     <ProfileStack.Screen name='EditProfile' component={EditProfileScreen} />
     <ProfileStack.Screen name='SignOut' component={SignOutScreen} />
@@ -75,7 +78,7 @@ const NavBar = () => (
       />
       <Tab.Screen
         name='Profile'
-        component={ProfileScreen}
+        component={ProfileStackScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => (

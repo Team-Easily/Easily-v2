@@ -106,6 +106,17 @@ const updateTodosByUser = async (data) => {
   }
 };
 
+// const editTodoById = async (id) => {
+//   const taskDocRef = doc(db, 'todos', id);
+//   // console.log('FIRESTORE TASKDOCREF:', taskDocRef);
+//   try {
+//     await deleteDoc(taskDocRef);
+//   } catch (err) {
+//     console.error(err);
+//     throw err;
+//   }
+// };
+
 const deleteTodoById = async (id) => {
   const taskDocRef = doc(db, 'todos', id);
   console.log('FIRESTORE TASKDOCREF:', taskDocRef);
@@ -123,13 +134,12 @@ const addPointToUser = async (uid) => {
   // let user = db.collection('users').doc(uid);
   // user.update({ points: getFirestore.FieldValue.increment(1) });
   // user.update({ points: user.points + 1 });
-  const increment = getFirestore.FieldValue.increment(1);
 
-  // Document reference
-  const userRef = db.collection('users').doc(uid);
+  // const increment = getFirestore.FieldValue.increment(1);
+  // const userRef = db.collection('users').doc(uid);
+  // userRef.update({ points: increment });
 
-  // Update read count
-  userRef.update({ points: increment });
+  db.usersRef.child(uid).child('points').set(db.ServerValue.increment(1));
 };
 
 const removePointFromUser = async (user) => {
