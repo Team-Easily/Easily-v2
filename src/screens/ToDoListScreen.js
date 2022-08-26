@@ -18,6 +18,7 @@ import {
   List,
   IconButton,
 } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const nav = useNavigation();
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -127,12 +129,6 @@ export const ToDoListScreen = () => {
     }
   };
 
-  // const completeTask = (index) => {
-  //   let itemsCopy = [...taskItems];
-  //   itemsCopy.splice(index, 1);
-  //   setTaskItems(itemsCopy); //removes task items from the list
-  // };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -159,11 +155,18 @@ export const ToDoListScreen = () => {
                     </View>
                   )}
                   right={() => (
-                    <IconButton
-                      icon='trash-can-outline'
-                      color='#2c497f'
-                      onPress={() => handleDelete(todo.id)}
-                    />
+                    <View style={styles.buttonContainer}>
+                      <IconButton
+                        icon="trash-can-outline"
+                        color="#2c497f"
+                        onPress={() => handleDelete(todo.id)}
+                      />
+                      <IconButton
+                        icon="pencil-outline"
+                        color="#2c497f"
+                        onPress={() => nav.navigate('TodoItem')}
+                      />
+                    </View>
                   )}
                 />
               );
@@ -176,23 +179,23 @@ export const ToDoListScreen = () => {
 
       <List.Accordion
         style={styles.accordion}
-        title='Add Task'
-        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+        title="Add Task"
+        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
       >
         <TextInput
-          placeholder='task name'
+          placeholder="task name"
           value={todoName}
           onChangeText={(text) => setTodoName(text)}
         />
         <TextInput
-          placeholder='task description'
+          placeholder="task description"
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
         <Button
-          mode='contained'
+          mode="contained"
           onPress={handleSubmit}
-          color='#90be6d'
+          color="#90be6d"
           contentStyle={{ height: 45, width: 290 }}
           labelStyle={{
             color: 'white',
@@ -240,5 +243,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
 });

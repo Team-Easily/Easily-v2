@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-
-const TodoItemScreen = ({ route }) => {
+export const TodoItemScreen = ({ route }) => {
   return (
     <View style={styles.layout}>
       <Text style={styles.title}>Todo Item</Text>
@@ -11,15 +10,30 @@ const TodoItemScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  layout: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#E8EAED',
+    height: '100%',
+  },
+  tasksWrapper: {
+    paddingTop: 30,
+    paddingHorizontal: 20,
+  },
+  checkboxOutline: {
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+    height: 37,
+    marginRight: 10,
+    marginTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   title: {
-    fontSize: 32,
-    marginBottom: 16,
+    fontWeight: 'bold',
+  },
+  items: {
+    marginTop: 10,
   },
 });
-
-export default TodoItemScreen;
