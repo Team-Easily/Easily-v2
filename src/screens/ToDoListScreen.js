@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import {
   getTodosByUid,
   addTodosByUser,
-  updateTodosByUser,
   deleteTodoById,
-  addPointToUser,
-  removePointFromUser,
 } from '../firebase/firebaseMethods';
+import { auth, db } from '../firebase/firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
 import {
   Headline,
   Title,
-  Text,
   Checkbox,
   Button,
   TextInput,
@@ -33,12 +22,14 @@ import {
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
+  // const user = useSelector((state) => state.auth.currentUser);
+  const [user, setUser] = useState(auth.currentUser);
+  // JR: using user from redux, not making a db fetch
   const [todoName, setTodoName] = useState('');
   const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
-  const [user, setUser] = useState({});
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -51,50 +42,55 @@ export const ToDoListScreen = () => {
 
   useEffect(() => {
     getUser();
+    getTodos();
+    // dispatch(setUser());
   }, []);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
-    console.log(todos);
     dispatch(setTodos(todos));
   };
 
-  const handleCheckedChange = async (id, todoCompleted) => {
-    console.log('TODO ID:', id);
-    console.log('TODO COMPLETED:', todoCompleted);
-    console.log('USER PTS:', user.points);
-    const taskDocRef = doc(db, 'tasks', id);
+  const addPointToUser = async (id) => {
+    const userDocRef = doc(db, 'users', id);
     try {
-      await updateDoc(taskDocRef, {
-        completed: todoCompleted,
+      await updateDoc(userDocRef, {
+        points: increment(1),
       });
     } catch (err) {
       alert(err);
     } finally {
-      console.log('TODO ID:', id);
-      console.log('TODO COMPLETED:', todoCompleted);
-      console.log('USER PTS:', user.points);
-      getTodos();
+      getUser();
+    }
+  };
+  const removePointFromUser = async (id) => {
+    const userDocRef = doc(db, 'users', id);
+    try {
+      await updateDoc(userDocRef, {
+        points: increment(-1),
+      });
+    } catch (err) {
+      alert(err);
+    } finally {
+      getUser();
     }
   };
 
-  const toggleComplete = async (id, todoCompleted) => {
-    // try {
-    //   await updateTodosByUser({
-    //     completed: completed,
-    //   });
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    if (!todoCompleted) {
-      // toggle to complete
-      console.log('TODO ID:', id);
-      console.log('TODO COMPLETED:', todoCompleted);
-      console.log('USER PTS:', user.points);
-      addPointToUser(auth.currentUser.uid);
-    } else {
-      // toggle to incomplete
-      // removePointFromUser(auth.currentUser);
+  const handleCheckedChange = async (id, todoCompleted) => {
+    const taskDocRef = doc(db, 'todos', id);
+    try {
+      await updateDoc(taskDocRef, {
+        completed: !todoCompleted,
+      });
+      if (todoCompleted) {
+        removePointFromUser(auth.currentUser.uid);
+      } else {
+        addPointToUser(auth.currentUser.uid);
+      }
+    } catch (err) {
+      alert(err);
+    } finally {
+      getTodos();
     }
   };
 
@@ -131,10 +127,6 @@ export const ToDoListScreen = () => {
     }
   };
 
-  useEffect(() => {
-    getTodos();
-  }, []);
-
   // const completeTask = (index) => {
   //   let itemsCopy = [...taskItems];
   //   itemsCopy.splice(index, 1);
@@ -145,7 +137,7 @@ export const ToDoListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        <Title>{user.points} pts</Title>
+        <Title>{user?.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -163,9 +155,6 @@ export const ToDoListScreen = () => {
                         onPress={() =>
                           handleCheckedChange(todo.id, todo.completed)
                         }
-                        // onPress={() => {
-                        //   setChecked(!checked);
-                        // }}
                       />
                     </View>
                   )}

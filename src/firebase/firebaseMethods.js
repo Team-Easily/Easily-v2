@@ -22,6 +22,11 @@ import {
 } from 'firebase/firestore';
 import { app, auth, db } from './firebase';
 
+// Table of contents
+// --AUTH
+// --TODOs
+// --POINTS
+
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -91,6 +96,22 @@ const getTodosByUid = async (uid) => {
 const addTodosByUser = async (data) => {
   try {
     await addDoc(collection(db, 'todos'), data);
+    const { title, completed } = data;
+    let id;
+    const todosRef = collection(db, 'todos');
+    const q = query(
+      todosRef,
+      where('author', '==', data.author),
+      where('title', '==', title),
+      where('completed', '==', completed)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((todo) => {
+      let docBody = todo.data();
+      if (!docBody.id) {
+        updateDoc(doc(db, 'todos', todo.id), { id: todo.id });
+      }
+    });
   } catch (err) {
     console.error(err);
     throw err;
@@ -106,44 +127,14 @@ const updateTodosByUser = async (data) => {
   }
 };
 
-// const editTodoById = async (id) => {
-//   const taskDocRef = doc(db, 'todos', id);
-//   // console.log('FIRESTORE TASKDOCREF:', taskDocRef);
-//   try {
-//     await deleteDoc(taskDocRef);
-//   } catch (err) {
-//     console.error(err);
-//     throw err;
-//   }
-// };
-
 const deleteTodoById = async (id) => {
   const taskDocRef = doc(db, 'todos', id);
-  console.log('FIRESTORE TASKDOCREF:', taskDocRef);
   try {
     await deleteDoc(taskDocRef);
   } catch (err) {
     console.error(err);
     throw err;
   }
-};
-
-// ----------------POINTS
-
-const addPointToUser = async (uid) => {
-  // let user = db.collection('users').doc(uid);
-  // user.update({ points: getFirestore.FieldValue.increment(1) });
-  // user.update({ points: user.points + 1 });
-
-  // const increment = getFirestore.FieldValue.increment(1);
-  // const userRef = db.collection('users').doc(uid);
-  // userRef.update({ points: increment });
-
-  db.usersRef.child(uid).child('points').set(db.ServerValue.increment(1));
-};
-
-const removePointFromUser = async (user) => {
-  user.update({ points: getFirestore.FieldValue.increment(-1) });
 };
 
 export {
@@ -155,6 +146,4 @@ export {
   addTodosByUser,
   updateTodosByUser,
   deleteTodoById,
-  addPointToUser,
-  removePointFromUser,
 };
