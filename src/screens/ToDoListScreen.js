@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
 import {
   StyleSheet,
   View,
@@ -7,13 +9,12 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import { auth } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { documentId, Timestamp } from 'firebase/firestore';
 import {
   getTodosByUid,
   addTodosByUser,
+  updateTodosByUser,
   deleteTodoById,
   addPointToUser,
   removePointFromUser,
@@ -36,12 +37,25 @@ export const ToDoListScreen = () => {
   const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
-  const [checked, setChecked] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const [user, setUser] = useState({});
+
+  const getUser = async () => {
+    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    if (docSnap.exists()) {
+      setUser(docSnap.data());
+    } else {
+      console.log('No such document!');
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
     // console.log(todos);
-    console.log(auth.currentUser.points);
     dispatch(setTodos(todos));
   };
 
@@ -61,7 +75,7 @@ export const ToDoListScreen = () => {
         title: todoName,
         description: todoDescription,
         author: auth.currentUser.uid,
-        completed: false,
+        completed: completed,
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
@@ -73,6 +87,7 @@ export const ToDoListScreen = () => {
       setForm(false);
       setTodoDescription('');
       setTodoFrequency('');
+      setCompleted(false);
       getTodos();
     }
   };
@@ -87,13 +102,18 @@ export const ToDoListScreen = () => {
   //   setTaskItems(itemsCopy); //removes task items from the list
   // };
 
-  const toggleComplete = (checked) => {
-    if (!checked) {
-      setChecked(true);
-      addPointToUser(auth.currentUser.uid);
+  const toggleComplete = async (idx) => {
+    // try {
+    //   await updateTodosByUser({
+    //     completed: completed,
+    //   });
+    // } catch (err) {
+    //   console.error(err);
+    // }
+    if (completed) {
+      // addPointToUser(auth.currentUser.uid);
     } else {
-      setChecked(false);
-      removePointFromUser(auth.currentUser);
+      // removePointFromUser(auth.currentUser);
     }
   };
 
@@ -101,7 +121,7 @@ export const ToDoListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        <Title>{auth.currentUser.points} pts</Title>
+        <Title>{user.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -115,8 +135,8 @@ export const ToDoListScreen = () => {
                     <View style={styles.checkboxOutline}>
                       <Checkbox
                         style={{ borderWidth: '1px' }}
-                        status={checked ? 'checked' : 'unchecked'}
-                        onPress={() => toggleComplete(checked)}
+                        status={todo.completed ? 'checked' : 'unchecked'}
+                        onPress={() => toggleComplete(idx)}
                         // onPress={() => {
                         //   setChecked(!checked);
                         // }}
@@ -158,8 +178,11 @@ export const ToDoListScreen = () => {
           mode='contained'
           onPress={handleSubmit}
           color='#90be6d'
-          contentStyle={{ height: 45 }}
-          labelStyle={{ color: 'white', fontSize: 16 }}
+          contentStyle={{ height: 45, width: 290 }}
+          labelStyle={{
+            color: 'white',
+            fontSize: 16,
+          }}
         >
           Submit
         </Button>
@@ -173,7 +196,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E8EAED',
     height: '100%',
-    // paddingTop: 30,
   },
   tasksWrapper: {
     paddingTop: 30,
@@ -195,12 +217,6 @@ const styles = StyleSheet.create({
   },
   items: {
     marginTop: 10,
-  },
-  accordion: {
-    // position: 'absolute',
-    // bottom: 0,
-    alignItems: 'center',
-    // justifyContent: 'space-around',
   },
   writeTaskWrapper: {
     position: 'absolute',

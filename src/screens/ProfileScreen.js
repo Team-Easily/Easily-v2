@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Avatar, Headline, Title, List, Button } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 import { auth, db } from '../firebase/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 
 export const ProfileScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
   const [user, setUser] = useState({});
 
   const getUser = async () => {

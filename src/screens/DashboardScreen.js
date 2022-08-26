@@ -2,14 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
-import { getPointsByUser } from '../firebase/firebaseMethods';
-import { useSelector, useDispatch } from 'react-redux';
 
 export const DashboardScreen = () => {
-  // const auth = getAuth();
-  // const user = auth.currentUser;
-  // const [user, setUser] = useState({});
-  const count = useSelector((state) => state.currentUserUid);
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   return (
     <View style={styles.layout}>

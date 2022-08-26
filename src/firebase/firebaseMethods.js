@@ -97,6 +97,15 @@ const addTodosByUser = async (data) => {
   }
 };
 
+const updateTodosByUser = async (data) => {
+  try {
+    await setDoc(collection(db, 'todos'), data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const deleteTodoById = async (id) => {
   const taskDocRef = doc(db, 'todos', id);
   console.log('FIRESTORE TASKDOCREF:', taskDocRef);
@@ -134,6 +143,7 @@ export {
   logout,
   getTodosByUid,
   addTodosByUser,
+  updateTodosByUser,
   deleteTodoById,
   addPointToUser,
   removePointFromUser,
