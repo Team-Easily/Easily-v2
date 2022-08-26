@@ -109,15 +109,18 @@ const deleteTodoById = async (id) => {
 };
 
 // ----------------POINTS
-// const getPointsByUser = async (user) => {
-//   // let points = user.get('points');
-//   // let points = user.collection('points');
-//   return points;
-// };
 
-const addPointToUser = async (user) => {
+const addPointToUser = async (uid) => {
   // let user = db.collection('users').doc(uid);
-  user.update({ points: getFirestore.FieldValue.increment(1) });
+  // user.update({ points: getFirestore.FieldValue.increment(1) });
+  // user.update({ points: user.points + 1 });
+  const increment = getFirestore.FieldValue.increment(1);
+
+  // Document reference
+  const userRef = db.collection('users').doc(uid);
+
+  // Update read count
+  userRef.update({ points: increment });
 };
 
 const removePointFromUser = async (user) => {

@@ -44,15 +44,19 @@ export const ProfileScreen = ({ navigation }) => {
         <List.Section style={styles.list}>
           {user.address ? (
             <List.Item
+              color={'#464A4E'}
               title={user?.address}
-              left={() => <List.Icon icon='map-marker-star-outline' />}
+              left={() => (
+                <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
+              )}
             />
           ) : (
-            ''
+            <></>
           )}
           <List.Item
+            color={'#464A4E'}
             title={user?.email}
-            left={() => <List.Icon color={'grey'} icon='email' />}
+            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
           />
         </List.Section>
 

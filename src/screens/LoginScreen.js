@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserUid } from '../components/auth/authSlice';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const dispatch = useDispatch();
 
   // React States
   const resetStates = () => {
@@ -21,7 +24,8 @@ const LoginScreen = ({ navigation }) => {
 
   const submitLogin = async () => {
     try {
-      await logInWithEmailAndPassword(email, password);
+      const user = await logInWithEmailAndPassword(email, password);
+      dispatch(setUserUid(user.uid));
       navigation.push('Nav Bar');
       resetStates();
     } catch (error) {

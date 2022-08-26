@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  Button,
+  SafeAreaView,
   KeyboardAvoidingView,
-  TextInput,
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
@@ -18,7 +15,19 @@ import {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
+  addPointToUser,
+  removePointFromUser,
 } from '../firebase/firebaseMethods';
+import {
+  Headline,
+  Title,
+  Text,
+  Checkbox,
+  Button,
+  TextInput,
+  List,
+  IconButton,
+} from 'react-native-paper';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -26,10 +35,13 @@ export const ToDoListScreen = () => {
   const [todoName, setTodoName] = useState('');
   const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
+  const [todoFrequency, setTodoFrequency] = useState('');
+  const [checked, setChecked] = useState(false);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
-    console.log(todos);
+    // console.log(todos);
+    console.log(auth.currentUser.points);
     dispatch(setTodos(todos));
   };
 
@@ -50,6 +62,7 @@ export const ToDoListScreen = () => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: false,
+        frequency: 'once',
         // createdAt: Timestamp.now(),
       });
       Keyboard.dismiss();
@@ -59,6 +72,7 @@ export const ToDoListScreen = () => {
       setTodoName('');
       setForm(false);
       setTodoDescription('');
+      setTodoFrequency('');
       getTodos();
     }
   };
@@ -73,75 +87,120 @@ export const ToDoListScreen = () => {
   //   setTaskItems(itemsCopy); //removes task items from the list
   // };
 
+  const toggleComplete = (checked) => {
+    if (!checked) {
+      setChecked(true);
+      addPointToUser(auth.currentUser.uid);
+    } else {
+      setChecked(false);
+      removePointFromUser(auth.currentUser);
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
+        <Headline>Today's Tasks</Headline>
+        <Title>{auth.currentUser.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
               return (
-                <View style={styles.items} key={idx}>
-                  <Text style={styles.title}>{todo.title}:</Text>
-                  <Text>{todo.description}</Text>
-                  <Button
-                    title={'Mark as Completed'}
-                    onPress={() => console.log('Complete!')}
-                  />
-                  <Button
-                    title={'Delete'}
-                    onPress={() => handleDelete(todo.id)}
-                  />
-                </View>
+                <List.Item
+                  style={{ color: '#2c497f' }}
+                  key={idx}
+                  title={todo.title}
+                  description={todo.description}
+                  left={() => (
+                    <View style={styles.checkboxOutline}>
+                      <Checkbox
+                        style={{ borderWidth: '1px' }}
+                        status={checked ? 'checked' : 'unchecked'}
+                        onPress={() => toggleComplete(checked)}
+                        // onPress={() => {
+                        //   setChecked(!checked);
+                        // }}
+                      />
+                    </View>
+                  )}
+                  right={() => (
+                    <IconButton
+                      icon='trash-can-outline'
+                      color='#2c497f'
+                      onPress={() => handleDelete(todo.id)}
+                    />
+                  )}
+                />
               );
             })
           ) : (
-            <Text style={styles.title}> No Tasks for Today! </Text>
+            <Title style={{ color: '#2c497f' }}> No Tasks for Today! </Title>
           )}
         </View>
       </View>
-      <View style={styles.writeTaskWrapper}>
-        <Button title={'Add Task'} onPress={() => setForm(!form)} />
-        {form ? (
-          <View>
-            <TextInput
-              placeholder='task name'
-              value={todoName}
-              onChangeText={(text) => setTodoName(text)}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder='task description'
-              value={todoDescription}
-              onChangeText={(text) => setTodoDescription(text)}
-              style={styles.input}
-            />
-            <Button title={'Submit'} onPress={handleSubmit} />
-          </View>
-        ) : null}
-      </View>
-    </View>
+
+      <List.Accordion
+        style={styles.accordion}
+        title='Add Task'
+        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+      >
+        <TextInput
+          placeholder='task name'
+          value={todoName}
+          onChangeText={(text) => setTodoName(text)}
+        />
+        <TextInput
+          placeholder='task description'
+          value={todoDescription}
+          onChangeText={(text) => setTodoDescription(text)}
+        />
+        <Button
+          mode='contained'
+          onPress={handleSubmit}
+          color='#90be6d'
+          contentStyle={{ height: 45 }}
+          labelStyle={{ color: 'white', fontSize: 16 }}
+        >
+          Submit
+        </Button>
+      </List.Accordion>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8EAED",
+    backgroundColor: '#E8EAED',
+    height: '100%',
+    // paddingTop: 30,
   },
   tasksWrapper: {
-    paddingTop: '30%',
+    paddingTop: 30,
     paddingHorizontal: 20,
+  },
+  checkboxOutline: {
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+    height: 37,
+    marginRight: 10,
+    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   title: {
     fontWeight: 'bold',
   },
   items: {
     marginTop: 10,
+  },
+  accordion: {
+    // position: 'absolute',
+    // bottom: 0,
+    alignItems: 'center',
+    // justifyContent: 'space-around',
   },
   writeTaskWrapper: {
     position: 'absolute',
@@ -151,24 +210,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  input: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 60,
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
-    width: 250,
-  },
-  addWrapper: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#FFF",
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
-  },
-  addText: {},
 });
