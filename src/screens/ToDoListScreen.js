@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
 import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  getFirestore,
+} from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
+import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
 import {
   getTodosByUid,
   addTodosByUser,
-  updateTodosByUser,
   deleteTodoById,
-  addPointToUser,
+  // addPointToUser,
   removePointFromUser,
 } from '../firebase/firebaseMethods';
 import {
@@ -39,6 +37,7 @@ export const ToDoListScreen = () => {
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
   const [user, setUser] = useState({});
+  const [points, setPoints] = useState(0);
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -51,50 +50,47 @@ export const ToDoListScreen = () => {
 
   useEffect(() => {
     getUser();
+    setPoints(user.points);
   }, []);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
-    console.log(todos);
+    // console.log(todos);
     dispatch(setTodos(todos));
   };
 
+  const addPointToUser = async (id) => {
+    // const userDocRef = doc(db, 'users', id);
+    // try {
+    //   await updateDoc(userDocRef, {
+    //     points: user.points + 1,
+    //   });
+    // } catch (err) {
+    //   alert(err);
+    // }
+    const db = firebase.firestore();
+    db.collection('users')
+      .doc(id)
+      .update(() => {
+        const increase = firebase.firestore.FieldValue.increment(1);
+        return { points: increase };
+      });
+  };
+
   const handleCheckedChange = async (id, todoCompleted) => {
-    console.log('TODO ID:', id);
-    console.log('TODO COMPLETED:', todoCompleted);
     console.log('USER PTS:', user.points);
-    const taskDocRef = doc(db, 'tasks', id);
+    const taskDocRef = doc(db, 'todos', id);
     try {
       await updateDoc(taskDocRef, {
-        completed: todoCompleted,
+        completed: !todoCompleted,
       });
+      addPointToUser(auth.currentUser.uid);
+      setPoints(user.points);
     } catch (err) {
       alert(err);
     } finally {
-      console.log('TODO ID:', id);
-      console.log('TODO COMPLETED:', todoCompleted);
-      console.log('USER PTS:', user.points);
+      console.log('USER PTS:', points);
       getTodos();
-    }
-  };
-
-  const toggleComplete = async (id, todoCompleted) => {
-    // try {
-    //   await updateTodosByUser({
-    //     completed: completed,
-    //   });
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    if (!todoCompleted) {
-      // toggle to complete
-      console.log('TODO ID:', id);
-      console.log('TODO COMPLETED:', todoCompleted);
-      console.log('USER PTS:', user.points);
-      addPointToUser(auth.currentUser.uid);
-    } else {
-      // toggle to incomplete
-      // removePointFromUser(auth.currentUser);
     }
   };
 
@@ -145,7 +141,8 @@ export const ToDoListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Headline>Today's Tasks</Headline>
-        <Title>{user.points} pts</Title>
+        <Title>{points} pts</Title>
+        {/* <Title>{user.points} pts</Title> */}
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
