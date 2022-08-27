@@ -8,7 +8,13 @@ import {
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import {
   Headline,
   Title,
@@ -92,7 +98,7 @@ export const ToDoListScreen = () => {
   };
 
   const countConfetti = () => {
-    if (confettiCount >= 3) {
+    if (confettiCount >= 2) {
       explosion && explosion.start();
       setConfettiCount(1);
     } else {
@@ -179,13 +185,7 @@ export const ToDoListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.tasksWrapper}>
-        <ConfettiCannon
-          count={200}
-          origin={{ x: -10, y: 0 }}
-          autoStart={false}
-          ref={(ref) => (explosion = ref)}
-        />
+      <ScrollView style={styles.tasksWrapper}>
         <View style={styles.row}>
           <Headline>Today's Tasks</Headline>
           <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
@@ -195,7 +195,12 @@ export const ToDoListScreen = () => {
           color={getProgressColor()}
           style={styles.progressBar}
         />
-
+        <ConfettiCannon
+          count={200}
+          origin={{ x: -50, y: 0 }}
+          autoStart={false}
+          ref={(ref) => (explosion = ref)}
+        />
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -230,8 +235,7 @@ export const ToDoListScreen = () => {
             <Title style={styles.noTasks}> No Tasks for Today! </Title>
           )}
         </View>
-      </View>
-
+      </ScrollView>
       <List.Accordion
         style={styles.accordion}
         title='Add Task'

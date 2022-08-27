@@ -7,7 +7,6 @@ import { getAuth, signOut } from 'firebase/auth';
 
 export const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
-  const initial = user.userName[0];
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -27,6 +26,11 @@ export const ProfileScreen = ({ navigation }) => {
     navigation.push('Welcome');
   };
 
+  const getAvatarInitial = () => {
+    if (user.userName) return user.userName[0];
+    else return '';
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -40,7 +44,7 @@ export const ProfileScreen = ({ navigation }) => {
           ) : (
             <Avatar.Text
               size={75}
-              label={initial}
+              label={getAvatarInitial()}
               style={{ marginBottom: 30 }}
             />
           )}
