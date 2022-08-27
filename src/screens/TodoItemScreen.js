@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,19 +7,30 @@ import {
   Headline,
   Title,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodo } from '../components/todos/todoSlice';
+import { getTodoById } from '../firebase/firebaseMethods';
 
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { id } = route.params;
+  const todo = useSelector((state) => state.todos.todo);
 
+  const getTodo = async () => {
+    const todo = await getTodoById(route.params.id);
+    dispatch(setTodo(todo));
+    console.log(todo);
+  };
+
+  useEffect(() => {
+    getTodo();
+  }, []);
   //TODO: getTodoById - write in FirebaseMethods, todoSlice
   //UseEffect(getTodo)
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.taskWrapper}>
-        <Text style={styles.sectionTitle}>Your Task </Text>
+        <Text style={styles.sectionTitle}>{todo.title}</Text>
       </View>
     </SafeAreaView>
   );

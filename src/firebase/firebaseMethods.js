@@ -87,14 +87,19 @@ const getTodosByUid = async (uid) => {
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     let docBody = doc.data();
-    docBody['id'] = doc.id;
     todos.push(docBody);
   });
   return todos;
 };
 
 const getTodoById = async (id) => {
-  const todoRef = doc(db, 'todos', id);
+  const docSnap = await getDoc(doc(db, 'todos', id));
+  console.log(docSnap);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log('No such document');
+  }
 };
 
 const addTodosByUser = async (data) => {
@@ -150,4 +155,5 @@ export {
   addTodosByUser,
   updateTodosByUser,
   deleteTodoById,
+  getTodoById,
 };
