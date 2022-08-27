@@ -18,6 +18,7 @@ import {
   List,
   IconButton,
 } from 'react-native-paper';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,8 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const [confettiCount, setConfettiCount] = useState(0);
+  let explosion;
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -51,6 +54,15 @@ export const ToDoListScreen = () => {
     dispatch(setTodos(todos));
   };
 
+  const countConfetti = () => {
+    if (confettiCount >= 3) {
+      explosion && explosion.start();
+      setConfettiCount(1);
+    } else {
+      setConfettiCount(confettiCount + 1);
+    }
+  };
+
   const addPointToUser = async (id) => {
     const userDocRef = doc(db, 'users', id);
     try {
@@ -61,6 +73,7 @@ export const ToDoListScreen = () => {
       alert(err);
     } finally {
       getUser();
+      countConfetti();
     }
   };
   const removePointFromUser = async (id) => {
@@ -136,8 +149,14 @@ export const ToDoListScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
+        <ConfettiCannon
+          count={200}
+          origin={{ x: -10, y: 0 }}
+          autoStart={false}
+          ref={(ref) => (explosion = ref)}
+        />
         <Headline>Today's Tasks</Headline>
-        <Title>{user?.points} pts</Title>
+        <Title style={{ color: '#2c497f' }}>{user?.points} pts</Title>
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
