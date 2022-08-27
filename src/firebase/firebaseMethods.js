@@ -8,7 +8,6 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import {
-  getFirestore,
   query,
   doc,
   getDocs,
@@ -19,6 +18,7 @@ import {
   getDoc,
   deleteDoc,
   setDoc,
+  increment,
 } from 'firebase/firestore';
 import { app, auth, db } from './firebase';
 
@@ -78,6 +78,30 @@ const getUserByUid = async (uid) => {
   return user;
 };
 
+const addPointToUser = async (id) => {
+  const userDocRef = doc(db, 'users', id);
+  try {
+    await updateDoc(userDocRef, {
+      points: increment(1),
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const removePointFromUser = async (id) => {
+  const userDocRef = doc(db, 'users', id);
+  try {
+    await updateDoc(userDocRef, {
+      points: increment(-1),
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 // ----------------TODOs
 
 const getTodosByUid = async (uid) => {
@@ -94,7 +118,6 @@ const getTodosByUid = async (uid) => {
 
 const getTodoById = async (id) => {
   const docSnap = await getDoc(doc(db, 'todos', id));
-  console.log(docSnap);
   if (docSnap.exists()) {
     return docSnap.data();
   } else {
@@ -136,6 +159,16 @@ const updateTodosByUser = async (data) => {
   }
 };
 
+const updateTodo = async (data) => {
+  const taskDocRef = doc(db, 'todos', data.id);
+  try {
+    await setDoc(taskDocRef, data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const deleteTodoById = async (id) => {
   const taskDocRef = doc(db, 'todos', id);
   try {
@@ -156,4 +189,7 @@ export {
   updateTodosByUser,
   deleteTodoById,
   getTodoById,
+  updateTodo,
+  addPointToUser,
+  removePointFromUser,
 };
