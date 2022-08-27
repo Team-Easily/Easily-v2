@@ -7,6 +7,7 @@ import { getAuth, signOut } from 'firebase/auth';
 
 export const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
+  const initial = user.userName[0];
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -30,17 +31,26 @@ export const ProfileScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View>
         <View style={{ alignItems: 'center' }}>
-          <Avatar.Image
-            src={{ uri: 'tinyurl.com/24arcnk3' }}
-            size={100}
-            style={{ marginBottom: 30 }}
-          />
+          {user.imageUrl ? (
+            <Avatar.Image
+              src={{ uri: 'tinyurl.com/24arcnk3' }}
+              size={100}
+              style={{ marginBottom: 30 }}
+            />
+          ) : (
+            <Avatar.Text
+              size={75}
+              label={initial}
+              style={{ marginBottom: 30 }}
+            />
+          )}
+
           <Headline>{user.userName}</Headline>
           <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
         </View>
 
         <List.Section style={styles.list}>
-          {user.address ? (
+          {user.address && (
             <List.Item
               color={'#464A4E'}
               title={user?.address}
@@ -48,8 +58,6 @@ export const ProfileScreen = ({ navigation }) => {
                 <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
               )}
             />
-          ) : (
-            <></>
           )}
           <List.Item
             color={'#464A4E'}
@@ -92,8 +100,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: '15%',
-    marginRight: '15%',
+    marginLeft: '20%',
+    marginRight: '20%',
   },
   buttons: {
     alignItems: 'center',

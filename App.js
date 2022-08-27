@@ -16,6 +16,8 @@ import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore yellow warning log notifications
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();

@@ -17,6 +17,7 @@ import {
   TextInput,
   List,
   IconButton,
+  ProgressBar,
 } from 'react-native-paper';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
@@ -52,6 +53,42 @@ export const ToDoListScreen = () => {
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
     dispatch(setTodos(todos));
+  };
+
+  const getProgress = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return user.points / 10;
+      case points < 21:
+        return user.points / 10 - 1;
+      case points < 31:
+        return user.points / 10 - 2;
+      case points < 41:
+        return user.points / 10 - 3;
+      case points < 51:
+        return user.points / 10 - 4;
+      default:
+        return 0;
+    }
+  };
+
+  const getProgressColor = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return '#98dfea';
+      case points < 21:
+        return '#90be6d';
+      case points < 31:
+        return '#07beb8';
+      case points < 41:
+        return '#8f3985';
+      case points < 51:
+        return '#2c497f';
+      default:
+        return '#98dfea';
+    }
   };
 
   const countConfetti = () => {
@@ -140,12 +177,6 @@ export const ToDoListScreen = () => {
     }
   };
 
-  // const completeTask = (index) => {
-  //   let itemsCopy = [...taskItems];
-  //   itemsCopy.splice(index, 1);
-  //   setTaskItems(itemsCopy); //removes task items from the list
-  // };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -155,8 +186,16 @@ export const ToDoListScreen = () => {
           autoStart={false}
           ref={(ref) => (explosion = ref)}
         />
-        <Headline>Today's Tasks</Headline>
-        <Title style={{ color: '#2c497f' }}>{user?.points} pts</Title>
+        <View style={styles.row}>
+          <Headline>Today's Tasks</Headline>
+          <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+        </View>
+        <ProgressBar
+          progress={getProgress()}
+          color={getProgressColor()}
+          style={styles.progressBar}
+        />
+
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -188,7 +227,7 @@ export const ToDoListScreen = () => {
               );
             })
           ) : (
-            <Title style={{ color: '#2c497f' }}> No Tasks for Today! </Title>
+            <Title style={styles.noTasks}> No Tasks for Today! </Title>
           )}
         </View>
       </View>
@@ -249,15 +288,19 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
   },
+  progressBar: {
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   items: {
     marginTop: 10,
   },
-  writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 40,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  noTasks: {
+    color: '#2c497f',
+    marginBottom: 20,
   },
 });
