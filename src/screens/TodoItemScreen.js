@@ -11,20 +11,23 @@ import {
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodo } from '../components/todos/todoSlice';
-import { getTodoById, updateTodo } from '../firebase/firebaseMethods';
+import {
+  getTodoById,
+  updateTodo,
+  deleteTodoById,
+} from '../firebase/firebaseMethods';
+import { useNavigation } from '@react-navigation/native';
 
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
   const [completed, setCompleted] = useState(todo.completed);
-  const [todoDescription, setTodoDescription] = useState(
-    todo.description ? todo.description : ''
-  );
+  const [todoDescription, setTodoDescription] = useState('');
+  const nav = useNavigation();
 
   const getTodo = async () => {
     const todo = await getTodoById(route.params.id);
     dispatch(setTodo(todo));
-    console.log(todo);
   };
 
   useEffect(() => {
@@ -81,7 +84,17 @@ export const TodoItemScreen = ({ navigation, route }) => {
     } catch (err) {
       console.error(err);
     } finally {
+      setTodoDescription('');
       getTodo();
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteTodoById(id);
+      nav.navigate('TodoList');
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -91,12 +104,12 @@ export const TodoItemScreen = ({ navigation, route }) => {
         <Title style={styles.sectionTitle}>{todo.title}</Title>
         <TextInput
           style={styles.itemDescription}
-          placeholder={todoDescription}
+          placeholder={todo.description ? todo.description : ''}
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
 
-        <View style={styles.buttonContainer}>
+        <View style={styles.iconContainer}>
           <View style={styles.checkboxOutline}>
             <Checkbox
               style={{ borderWidth: '1px' }}
@@ -122,6 +135,18 @@ export const TodoItemScreen = ({ navigation, route }) => {
             }}
           >
             Submit
+          </Button>
+          <Button
+            mode="contained"
+            onPress={() => nav.navigate('TodoList')}
+            color="#07BEB8"
+            contentStyle={{ height: 54, width: 180 }}
+            labelStyle={{
+              color: 'white',
+              fontSize: 16,
+            }}
+          >
+            Back
           </Button>
         </View>
       </View>
@@ -157,6 +182,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    margin: 10,
+  },
+  iconContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
