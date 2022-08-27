@@ -12,11 +12,12 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { EditProfileScreen } from './src/screens/EditProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
-import { SignOutScreen } from './src/screens/SignOutScreen';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore yellow warning log notifications
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -37,7 +38,6 @@ const ProfileStackScreen = () => (
   >
     <ProfileStack.Screen name='Profile' component={ProfileScreen} />
     <ProfileStack.Screen name='EditProfile' component={EditProfileScreen} />
-    <ProfileStack.Screen name='SignOut' component={SignOutScreen} />
   </ProfileStack.Navigator>
 );
 

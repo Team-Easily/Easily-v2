@@ -8,7 +8,13 @@ import {
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import {
   Headline,
   Title,
@@ -17,7 +23,9 @@ import {
   TextInput,
   List,
   IconButton,
+  ProgressBar,
 } from 'react-native-paper';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -30,6 +38,8 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const [confettiCount, setConfettiCount] = useState(0);
+  let explosion;
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -51,6 +61,51 @@ export const ToDoListScreen = () => {
     dispatch(setTodos(todos));
   };
 
+  const getProgress = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return user.points / 10;
+      case points < 21:
+        return user.points / 10 - 1;
+      case points < 31:
+        return user.points / 10 - 2;
+      case points < 41:
+        return user.points / 10 - 3;
+      case points < 51:
+        return user.points / 10 - 4;
+      default:
+        return 0;
+    }
+  };
+
+  const getProgressColor = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return '#98dfea';
+      case points < 21:
+        return '#90be6d';
+      case points < 31:
+        return '#07beb8';
+      case points < 41:
+        return '#8f3985';
+      case points < 51:
+        return '#2c497f';
+      default:
+        return '#98dfea';
+    }
+  };
+
+  const countConfetti = () => {
+    if (confettiCount >= 2) {
+      explosion && explosion.start();
+      setConfettiCount(1);
+    } else {
+      setConfettiCount(confettiCount + 1);
+    }
+  };
+
   const addPointToUser = async (id) => {
     const userDocRef = doc(db, 'users', id);
     try {
@@ -61,6 +116,7 @@ export const ToDoListScreen = () => {
       alert(err);
     } finally {
       getUser();
+      countConfetti();
     }
   };
   const removePointFromUser = async (id) => {
@@ -127,17 +183,24 @@ export const ToDoListScreen = () => {
     }
   };
 
-  // const completeTask = (index) => {
-  //   let itemsCopy = [...taskItems];
-  //   itemsCopy.splice(index, 1);
-  //   setTaskItems(itemsCopy); //removes task items from the list
-  // };
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.tasksWrapper}>
-        <Headline>Today's Tasks</Headline>
-        <Title>{user?.points} pts</Title>
+      <ScrollView style={styles.tasksWrapper}>
+        <View style={styles.row}>
+          <Headline>Today's Tasks</Headline>
+          <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+        </View>
+        <ProgressBar
+          progress={getProgress()}
+          color={getProgressColor()}
+          style={styles.progressBar}
+        />
+        <ConfettiCannon
+          count={200}
+          origin={{ x: -50, y: 0 }}
+          autoStart={false}
+          ref={(ref) => (explosion = ref)}
+        />
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -169,11 +232,10 @@ export const ToDoListScreen = () => {
               );
             })
           ) : (
-            <Title style={{ color: '#2c497f' }}> No Tasks for Today! </Title>
+            <Title style={styles.noTasks}> No Tasks for Today! </Title>
           )}
         </View>
-      </View>
-
+      </ScrollView>
       <List.Accordion
         style={styles.accordion}
         title='Add Task'
@@ -230,15 +292,19 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
   },
+  progressBar: {
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   items: {
     marginTop: 10,
   },
-  writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 40,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  noTasks: {
+    color: '#2c497f',
+    marginBottom: 20,
   },
 });
