@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { updateDoc, doc, increment } from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Headline,
+  Checkbox,
+  TextInput,
+  Button,
   Title,
-} from 'react-native';
-import { Checkbox } from 'react-native-paper';
+  IconButton,
+} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodo } from '../components/todos/todoSlice';
 import { getTodoById, updateTodo } from '../firebase/firebaseMethods';
@@ -18,6 +17,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
   const [completed, setCompleted] = useState(todo.completed);
+  const [todoDescription, setTodoDescription] = useState(
+    todo.description ? todo.description : ''
+  );
 
   const getTodo = async () => {
     const todo = await getTodoById(route.params.id);
@@ -48,7 +50,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
       });
     } catch (err) {
       alert(err);
-    } 
+    }
   };
 
   const handleCheckedChange = async (id, todoCompleted) => {
@@ -70,17 +72,57 @@ export const TodoItemScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      await updateTodo(todo.id, {
+        description: todoDescription,
+      });
+      alert('Updated!');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      getTodo();
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.taskWrapper}>
-        <Text style={styles.sectionTitle}>{todo.title}</Text>
-        <Text style={styles.items}>{todo.description}</Text>
-        <View style={styles.checkboxOutline}>
-          <Checkbox
-            style={{ borderWidth: '1px' }}
-            status={todo.completed ? 'checked' : 'unchecked'}
-            onPress={() => handleCheckedChange(todo.id, todo.completed)}
+        <Title style={styles.sectionTitle}>{todo.title}</Title>
+        <TextInput
+          style={styles.itemDescription}
+          placeholder={todoDescription}
+          value={todoDescription}
+          onChangeText={(text) => setTodoDescription(text)}
+        />
+
+        <View style={styles.buttonContainer}>
+          <View style={styles.checkboxOutline}>
+            <Checkbox
+              style={{ borderWidth: '1px' }}
+              status={todo.completed ? 'checked' : 'unchecked'}
+              onPress={() => handleCheckedChange(todo.id, todo.completed)}
+            />
+          </View>
+          <IconButton
+            icon="trash-can-outline"
+            color="#2c497f"
+            onPress={() => handleDelete(todo.id)}
           />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            onPress={handleSubmit}
+            color="#90be6d"
+            contentStyle={{ height: 54, width: 180 }}
+            labelStyle={{
+              color: 'white',
+              fontSize: 16,
+            }}
+          >
+            Submit
+          </Button>
         </View>
       </View>
     </SafeAreaView>
@@ -113,5 +155,19 @@ const styles = StyleSheet.create({
   },
   items: {
     marginTop: 10,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  button: {
+    marginTop: 5,
+    justifyContent: 'center',
+  },
+  itemDescription: {
+    height: 100,
   },
 });

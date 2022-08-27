@@ -115,7 +115,6 @@ export const ToDoListScreen = () => {
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
-      Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {

@@ -159,10 +159,11 @@ const updateTodosByUser = async (data) => {
   }
 };
 
-const updateTodo = async (data) => {
-  const taskDocRef = doc(db, 'todos', data.id);
+const updateTodo = async (id, data) => {
+  const taskDocRef = doc(db, 'todos', id);
   try {
-    await setDoc(taskDocRef, data);
+    console.log(taskDocRef, 'DATA', data);
+    await updateDoc(taskDocRef, data);
   } catch (err) {
     console.error(err);
     throw err;
