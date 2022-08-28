@@ -52,11 +52,6 @@ export const ToDoListScreen = ({ navigation }) => {
     }
   };
 
-  // useEffect(() => {
-  //   getUser();
-  //   getTodos();
-  // }, []);
-
   useEffect(() => {
     const updateTodos = navigation.addListener('focus', () => {
       getTodos();
