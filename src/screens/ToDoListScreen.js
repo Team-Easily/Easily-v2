@@ -25,6 +25,7 @@ import {
   IconButton,
   ProgressBar,
 } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 export const ToDoListScreen = () => {
@@ -38,6 +39,7 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const nav = useNavigation();
   const [confettiCount, setConfettiCount] = useState(0);
   let explosion;
 
@@ -53,7 +55,6 @@ export const ToDoListScreen = () => {
   useEffect(() => {
     getUser();
     getTodos();
-    // dispatch(setUser());
   }, []);
 
   const getTodos = async () => {
@@ -170,7 +171,6 @@ export const ToDoListScreen = () => {
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
-      Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {
@@ -222,11 +222,22 @@ export const ToDoListScreen = () => {
                     </View>
                   )}
                   right={() => (
-                    <IconButton
-                      icon='trash-can-outline'
-                      color='#2c497f'
-                      onPress={() => handleDelete(todo.id)}
-                    />
+                    <View style={styles.buttonContainer}>
+                      <IconButton
+                        icon="trash-can-outline"
+                        color="#2c497f"
+                        onPress={() => handleDelete(todo.id)}
+                      />
+                      <IconButton
+                        icon="pencil-outline"
+                        color="#2c497f"
+                        onPress={() =>
+                          nav.navigate('TodoItem', {
+                            id: todo.id,
+                          })
+                        }
+                      />
+                    </View>
                   )}
                 />
               );
@@ -238,23 +249,23 @@ export const ToDoListScreen = () => {
       </ScrollView>
       <List.Accordion
         style={styles.accordion}
-        title='Add Task'
-        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+        title="Add Task"
+        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
       >
         <TextInput
-          placeholder='task name'
+          placeholder="task name"
           value={todoName}
           onChangeText={(text) => setTodoName(text)}
         />
         <TextInput
-          placeholder='task description'
+          placeholder="task description"
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
         <Button
-          mode='contained'
+          mode="contained"
           onPress={handleSubmit}
-          color='#90be6d'
+          color="#90be6d"
           contentStyle={{ height: 45, width: 290 }}
           labelStyle={{
             color: 'white',
@@ -306,5 +317,8 @@ const styles = StyleSheet.create({
   noTasks: {
     color: '#2c497f',
     marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
 });
