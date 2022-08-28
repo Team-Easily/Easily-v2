@@ -8,7 +8,13 @@ import {
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
-import { StyleSheet, View, SafeAreaView, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import {
   Headline,
   Title,
@@ -17,9 +23,12 @@ import {
   TextInput,
   List,
   IconButton,
+  ProgressBar,
 } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
-export const ToDoListScreen = () => {
+export const ToDoListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   // const user = useSelector((state) => state.auth.currentUser);
@@ -30,6 +39,9 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const nav = useNavigation();
+  const [confettiCount, setConfettiCount] = useState(0);
+  let explosion;
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -41,14 +53,61 @@ export const ToDoListScreen = () => {
   };
 
   useEffect(() => {
-    getUser();
-    getTodos();
-    // dispatch(setUser());
-  }, []);
+    const updateTodos = navigation.addListener('focus', () => {
+      getTodos();
+      getUser();
+    });
+    return updateTodos;
+  }, [navigation]);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
     dispatch(setTodos(todos));
+  };
+
+  const getProgress = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return user.points / 10;
+      case points < 21:
+        return user.points / 10 - 1;
+      case points < 31:
+        return user.points / 10 - 2;
+      case points < 41:
+        return user.points / 10 - 3;
+      case points < 51:
+        return user.points / 10 - 4;
+      default:
+        return 0;
+    }
+  };
+
+  const getProgressColor = () => {
+    const points = user.points;
+    switch (true) {
+      case points < 11:
+        return '#98dfea';
+      case points < 21:
+        return '#90be6d';
+      case points < 31:
+        return '#07beb8';
+      case points < 41:
+        return '#8f3985';
+      case points < 51:
+        return '#2c497f';
+      default:
+        return '#98dfea';
+    }
+  };
+
+  const countConfetti = () => {
+    if (confettiCount >= 2) {
+      explosion && explosion.start();
+      setConfettiCount(1);
+    } else {
+      setConfettiCount(confettiCount + 1);
+    }
   };
 
   const addPointToUser = async (id) => {
@@ -61,6 +120,7 @@ export const ToDoListScreen = () => {
       alert(err);
     } finally {
       getUser();
+      countConfetti();
     }
   };
   const removePointFromUser = async (id) => {
@@ -114,7 +174,6 @@ export const ToDoListScreen = () => {
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
-      Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {
@@ -127,17 +186,24 @@ export const ToDoListScreen = () => {
     }
   };
 
-  // const completeTask = (index) => {
-  //   let itemsCopy = [...taskItems];
-  //   itemsCopy.splice(index, 1);
-  //   setTaskItems(itemsCopy); //removes task items from the list
-  // };
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.tasksWrapper}>
-        <Headline>Today's Tasks</Headline>
-        <Title>{user?.points} pts</Title>
+      <ScrollView style={styles.tasksWrapper}>
+        <View style={styles.row}>
+          <Headline>Today's Tasks</Headline>
+          <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+        </View>
+        <ProgressBar
+          progress={getProgress()}
+          color={getProgressColor()}
+          style={styles.progressBar}
+        />
+        <ConfettiCannon
+          count={200}
+          origin={{ x: -50, y: 0 }}
+          autoStart={false}
+          ref={(ref) => (explosion = ref)}
+        />
         <View style={styles.items}>
           {todos.length > 0 ? (
             todos.map((todo, idx) => {
@@ -159,40 +225,50 @@ export const ToDoListScreen = () => {
                     </View>
                   )}
                   right={() => (
-                    <IconButton
-                      icon='trash-can-outline'
-                      color='#2c497f'
-                      onPress={() => handleDelete(todo.id)}
-                    />
+                    <View style={styles.buttonContainer}>
+                      <IconButton
+                        icon="trash-can-outline"
+                        color="#2c497f"
+                        onPress={() => handleDelete(todo.id)}
+                      />
+                      <IconButton
+                        icon="pencil-outline"
+                        color="#2c497f"
+                        onPress={() =>
+                          nav.navigate('TodoItem', {
+                            id: todo.id,
+                          })
+                        }
+                      />
+                    </View>
                   )}
                 />
               );
             })
           ) : (
-            <Title style={{ color: '#2c497f' }}> No Tasks for Today! </Title>
+            <Title style={styles.noTasks}> No Tasks for Today! </Title>
           )}
         </View>
-      </View>
-
+      </ScrollView>
       <List.Accordion
         style={styles.accordion}
-        title='Add Task'
-        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+        title="Add Task"
+        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
       >
         <TextInput
-          placeholder='task name'
+          placeholder="task name"
           value={todoName}
           onChangeText={(text) => setTodoName(text)}
         />
         <TextInput
-          placeholder='task description'
+          placeholder="task description"
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
         <Button
-          mode='contained'
+          mode="contained"
           onPress={handleSubmit}
-          color='#90be6d'
+          color="#90be6d"
           contentStyle={{ height: 45, width: 290 }}
           labelStyle={{
             color: 'white',
@@ -230,15 +306,22 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
   },
+  progressBar: {
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   items: {
     marginTop: 10,
   },
-  writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 40,
-    width: '100%',
+  noTasks: {
+    color: '#2c497f',
+    marginBottom: 20,
+  },
+  buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
   },
 });
