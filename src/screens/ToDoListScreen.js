@@ -31,9 +31,10 @@ import {
   Modal,
   Text,
 } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-export const ToDoListScreen = () => {
+export const ToDoListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   // const user = useSelector((state) => state.auth.currentUser);
@@ -44,6 +45,7 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const nav = useNavigation();
   const [confettiCount, setConfettiCount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   let explosion;
@@ -58,10 +60,12 @@ export const ToDoListScreen = () => {
   };
 
   useEffect(() => {
-    getUser();
-    getTodos();
-    // dispatch(setUser());
-  }, []);
+    const updateTodos = navigation.addListener('focus', () => {
+      getTodos();
+      getUser();
+    });
+    return updateTodos;
+  }, [navigation]);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
@@ -189,7 +193,6 @@ export const ToDoListScreen = () => {
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
-      Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {
@@ -257,26 +260,37 @@ export const ToDoListScreen = () => {
                         />
                       </View>
                     )}
-                    right={() => (
+                  right={() => (
+                    <View style={styles.buttonContainer}>
                       <IconButton
-                        icon='trash-can-outline'
-                        color='#2c497f'
+                        icon="trash-can-outline"
+                        color="#2c497f"
                         onPress={() => handleDelete(todo.id)}
                       />
-                    )}
-                  />
-                );
-              })
-            ) : (
-              <Title style={styles.noTasks}> No Tasks for Today! </Title>
-            )}
-          </View>
-        </ScrollView>
-        <List.Accordion
-          style={styles.accordion}
-          title='Add Task'
-          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
-        >
+                      <IconButton
+                        icon="pencil-outline"
+                        color="#2c497f"
+                        onPress={() =>
+                          nav.navigate('TodoItem', {
+                            id: todo.id,
+                          })
+                        }
+                      />
+                    </View>
+                  )}
+                />
+              );
+            })
+          ) : (
+            <Title style={styles.noTasks}> No Tasks for Today! </Title>
+          )}
+        </View>
+      </ScrollView>
+      <List.Accordion
+        style={styles.accordion}
+        title="Add Task"
+        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
+      >
           <TextInput
             placeholder='task name'
             value={todoName}
