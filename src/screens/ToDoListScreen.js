@@ -32,8 +32,6 @@ import {
   Text,
 } from 'react-native-paper';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { getModalText } from '../components/modal';
-import CoffeeMakerModal from '../components';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -107,35 +105,22 @@ export const ToDoListScreen = () => {
   };
 
   const countConfetti = () => {
-    console.log('CONFETTI COUNT: ', confettiCount);
-    // if (confettiCount >= 2) {
-
-    //   setConfettiCount(1);
-    // } else {
-    //   setConfettiCount(confettiCount + 1);
-    // }
     explosion && explosion.start();
   };
 
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
 
-  const getModalImage = (points) => {
-    switch (points) {
-      case points === 10:
-        return '../assets/coffee-maker.gif';
-      //   return '../assets/coffee-maker.gif';
-      case points === 20:
-        return '../assets/scooter.gif';
-      case points === 30:
-        return '../assets/sunshine.gif';
-      case points === 40:
-        return '../assets/flags-garland.gif';
-      case points === 50:
-        return '../assets/polar-bear.gif';
-      default:
-        return '../assets/coffee-maker.gif';
-    }
+  const checkModal = () => {
+    const points = user.points;
+    if (
+      points === 9 ||
+      points === 19 ||
+      points === 29 ||
+      points === 39 ||
+      points === 49
+    )
+      showModal();
   };
 
   const addPointToUser = async (id) => {
@@ -147,6 +132,7 @@ export const ToDoListScreen = () => {
     } catch (err) {
       alert(err);
     } finally {
+      checkModal();
       getUser();
       countConfetti();
     }
@@ -179,7 +165,6 @@ export const ToDoListScreen = () => {
     } catch (err) {
       alert(err);
     } finally {
-      // showModal();
       getTodos();
     }
   };
@@ -222,7 +207,20 @@ export const ToDoListScreen = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.tasksWrapper}>
           <Portal>
-            <CoffeeMakerModal />
+            <Modal
+              visible={modalVisible}
+              onDismiss={hideModal}
+              contentContainerStyle={styles.modalContainerStyle}
+            >
+              <Title style={{ textAlign: 'center' }}>
+                You're doing great!
+                <br /> Keep up the momentum!
+              </Title>
+              <Image
+                style={styles.coffeeMaker}
+                source={require('../assets/coffee-maker.gif')}
+              />
+            </Modal>
           </Portal>
           <View style={styles.row}>
             <Headline>Today's Tasks</Headline>
@@ -322,13 +320,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingHorizontal: 20,
   },
-  // checkboxOutline: {
-  //   borderWidth: 1,
-  //   borderColor: 'lightgrey',
-  //   height: 37,
-  //   marginRight: 10,
-  //   marginTop: 8,
-  // },
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
