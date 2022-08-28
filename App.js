@@ -16,8 +16,7 @@ import { Provider as StoreProvider } from 'react-redux';
 import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']); // Ignore yellow warning log notifications
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -102,26 +101,28 @@ function App() {
   return (
     <SafeAreaProvider>
       <StoreProvider store={store}>
-        <NavigationContainer>
-          {auth ? (
-            <MainStack.Navigator
-              initialRouteName='Welcome'
-              screenOptions={{ headerShown: false }}
-            >
-              <MainStack.Screen name='Welcome' component={WelcomeScreen} />
-              <MainStack.Screen name='Login' component={LoginScreen} />
-              <MainStack.Screen name='Register' component={Register} />
-              <MainStack.Screen name='Nav Bar' component={NavBar} />
-            </MainStack.Navigator>
-          ) : (
-            <MainStack.Navigator
-              initialRouteName='Nav Bar'
-              screenOptions={{ headerShown: false }}
-            >
-              <MainStack.Screen name='Nav Bar' component={NavBar} />
-            </MainStack.Navigator>
-          )}
-        </NavigationContainer>
+        <PaperProvider theme={DefaultTheme}>
+          <NavigationContainer>
+            {auth ? (
+              <MainStack.Navigator
+                initialRouteName='Welcome'
+                screenOptions={{ headerShown: false }}
+              >
+                <MainStack.Screen name='Welcome' component={WelcomeScreen} />
+                <MainStack.Screen name='Login' component={LoginScreen} />
+                <MainStack.Screen name='Register' component={Register} />
+                <MainStack.Screen name='Nav Bar' component={NavBar} />
+              </MainStack.Navigator>
+            ) : (
+              <MainStack.Navigator
+                initialRouteName='Nav Bar'
+                screenOptions={{ headerShown: false }}
+              >
+                <MainStack.Screen name='Nav Bar' component={NavBar} />
+              </MainStack.Navigator>
+            )}
+          </NavigationContainer>
+        </PaperProvider>
       </StoreProvider>
     </SafeAreaProvider>
   );

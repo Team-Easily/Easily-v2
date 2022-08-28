@@ -14,8 +14,10 @@ import {
   SafeAreaView,
   Keyboard,
   ScrollView,
+  Image,
 } from 'react-native';
 import {
+  DefaultTheme,
   Headline,
   Title,
   Checkbox,
@@ -24,8 +26,14 @@ import {
   List,
   IconButton,
   ProgressBar,
+  Provider,
+  Portal,
+  Modal,
+  Text,
 } from 'react-native-paper';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import { getModalText } from '../components/modal';
+import CoffeeMakerModal from '../components';
 
 export const ToDoListScreen = () => {
   const dispatch = useDispatch();
@@ -39,6 +47,7 @@ export const ToDoListScreen = () => {
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
   const [confettiCount, setConfettiCount] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
   let explosion;
 
   const getUser = async () => {
@@ -98,11 +107,34 @@ export const ToDoListScreen = () => {
   };
 
   const countConfetti = () => {
-    if (confettiCount >= 2) {
-      explosion && explosion.start();
-      setConfettiCount(1);
-    } else {
-      setConfettiCount(confettiCount + 1);
+    console.log('CONFETTI COUNT: ', confettiCount);
+    // if (confettiCount >= 2) {
+
+    //   setConfettiCount(1);
+    // } else {
+    //   setConfettiCount(confettiCount + 1);
+    // }
+    explosion && explosion.start();
+  };
+
+  const showModal = () => setModalVisible(true);
+  const hideModal = () => setModalVisible(false);
+
+  const getModalImage = (points) => {
+    switch (points) {
+      case points === 10:
+        return '../assets/coffee-maker.gif';
+      //   return '../assets/coffee-maker.gif';
+      case points === 20:
+        return '../assets/scooter.gif';
+      case points === 30:
+        return '../assets/sunshine.gif';
+      case points === 40:
+        return '../assets/flags-garland.gif';
+      case points === 50:
+        return '../assets/polar-bear.gif';
+      default:
+        return '../assets/coffee-maker.gif';
     }
   };
 
@@ -119,6 +151,7 @@ export const ToDoListScreen = () => {
       countConfetti();
     }
   };
+
   const removePointFromUser = async (id) => {
     const userDocRef = doc(db, 'users', id);
     try {
@@ -146,6 +179,7 @@ export const ToDoListScreen = () => {
     } catch (err) {
       alert(err);
     } finally {
+      // showModal();
       getTodos();
     }
   };
@@ -184,87 +218,92 @@ export const ToDoListScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.tasksWrapper}>
-        <View style={styles.row}>
-          <Headline>Today's Tasks</Headline>
-          <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
-        </View>
-        <ProgressBar
-          progress={getProgress()}
-          color={getProgressColor()}
-          style={styles.progressBar}
-        />
-        <ConfettiCannon
-          count={200}
-          origin={{ x: -50, y: 0 }}
-          autoStart={false}
-          ref={(ref) => (explosion = ref)}
-        />
-        <View style={styles.items}>
-          {todos.length > 0 ? (
-            todos.map((todo, idx) => {
-              return (
-                <List.Item
-                  style={{ color: '#2c497f' }}
-                  key={idx}
-                  title={todo.title}
-                  description={todo.description}
-                  left={() => (
-                    <View style={styles.checkboxOutline}>
-                      <Checkbox
-                        style={{ borderWidth: '1px' }}
-                        status={todo.completed ? 'checked' : 'unchecked'}
-                        onPress={() =>
-                          handleCheckedChange(todo.id, todo.completed)
-                        }
+    <Provider theme={DefaultTheme}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.tasksWrapper}>
+          <Portal>
+            <CoffeeMakerModal />
+          </Portal>
+          <View style={styles.row}>
+            <Headline>Today's Tasks</Headline>
+            <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+          </View>
+          <ProgressBar
+            progress={getProgress()}
+            color={getProgressColor()}
+            style={styles.progressBar}
+          />
+          <ConfettiCannon
+            count={200}
+            origin={{ x: -50, y: 0 }}
+            autoStart={false}
+            ref={(ref) => (explosion = ref)}
+          />
+          <View style={styles.items}>
+            {todos.length > 0 ? (
+              todos.map((todo, idx) => {
+                return (
+                  <List.Item
+                    style={{ color: '#2c497f' }}
+                    key={idx}
+                    title={todo.title}
+                    description={todo.description}
+                    left={() => (
+                      <View style={styles.checkboxOutline}>
+                        <Checkbox
+                          style={{ borderWidth: '1px' }}
+                          status={todo.completed ? 'checked' : 'unchecked'}
+                          onPress={() =>
+                            handleCheckedChange(todo.id, todo.completed)
+                          }
+                        />
+                      </View>
+                    )}
+                    right={() => (
+                      <IconButton
+                        icon='trash-can-outline'
+                        color='#2c497f'
+                        onPress={() => handleDelete(todo.id)}
                       />
-                    </View>
-                  )}
-                  right={() => (
-                    <IconButton
-                      icon='trash-can-outline'
-                      color='#2c497f'
-                      onPress={() => handleDelete(todo.id)}
-                    />
-                  )}
-                />
-              );
-            })
-          ) : (
-            <Title style={styles.noTasks}> No Tasks for Today! </Title>
-          )}
-        </View>
-      </ScrollView>
-      <List.Accordion
-        style={styles.accordion}
-        title='Add Task'
-        left={(props) => <List.Icon {...props} icon='playlist-plus' />}
-      >
-        <TextInput
-          placeholder='task name'
-          value={todoName}
-          onChangeText={(text) => setTodoName(text)}
-        />
-        <TextInput
-          placeholder='task description'
-          value={todoDescription}
-          onChangeText={(text) => setTodoDescription(text)}
-        />
-        <Button
-          mode='contained'
-          onPress={handleSubmit}
-          color='#90be6d'
-          contentStyle={{ height: 45, width: 290 }}
-          labelStyle={{
-            color: 'white',
-            fontSize: 16,
-          }}
+                    )}
+                  />
+                );
+              })
+            ) : (
+              <Title style={styles.noTasks}> No Tasks for Today! </Title>
+            )}
+          </View>
+        </ScrollView>
+        <List.Accordion
+          style={styles.accordion}
+          title='Add Task'
+          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
         >
-          Submit
-        </Button>
-      </List.Accordion>
-    </SafeAreaView>
+          <TextInput
+            placeholder='task name'
+            value={todoName}
+            onChangeText={(text) => setTodoName(text)}
+          />
+          <TextInput
+            placeholder='task description'
+            value={todoDescription}
+            onChangeText={(text) => setTodoDescription(text)}
+          />
+          <Button
+            mode='contained'
+            onPress={handleSubmit}
+            color='#90be6d'
+            contentStyle={styles.submitButton}
+            labelStyle={{
+              color: 'white',
+              fontSize: 16,
+            }}
+          >
+            Submit
+          </Button>
+        </List.Accordion>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
@@ -274,17 +313,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
     height: '100%',
   },
+  modalContainerStyle: {
+    backgroundColor: 'white',
+    padding: 20,
+    margin: 20,
+  },
   tasksWrapper: {
     paddingTop: 30,
     paddingHorizontal: 20,
   },
-  checkboxOutline: {
-    borderWidth: 1,
-    borderColor: 'lightgrey',
-    height: 37,
-    marginRight: 10,
-    marginTop: 8,
-  },
+  // checkboxOutline: {
+  //   borderWidth: 1,
+  //   borderColor: 'lightgrey',
+  //   height: 37,
+  //   marginRight: 10,
+  //   marginTop: 8,
+  // },
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -306,5 +350,18 @@ const styles = StyleSheet.create({
   noTasks: {
     color: '#2c497f',
     marginBottom: 20,
+  },
+  submitButton: {
+    height: 45,
+    width: 265,
+  },
+  coffeeMaker: {
+    width: 200,
+    height: 200,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  title: {
+    textAlign: 'center',
   },
 });
