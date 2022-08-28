@@ -28,7 +28,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-export const ToDoListScreen = () => {
+export const ToDoListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   // const user = useSelector((state) => state.auth.currentUser);
@@ -52,10 +52,18 @@ export const ToDoListScreen = () => {
     }
   };
 
+  // useEffect(() => {
+  //   getUser();
+  //   getTodos();
+  // }, []);
+
   useEffect(() => {
-    getUser();
-    getTodos();
-  }, []);
+    const updateTodos = navigation.addListener('focus', () => {
+      getTodos();
+      getUser();
+    });
+    return updateTodos;
+  }, [navigation]);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
