@@ -12,7 +12,6 @@ export const ProfileScreen = ({ navigation }) => {
   const [avatarInitial, setAvatarInitial] = useState(' ');
 
   const getUser = async () => {
-    console.log('USERUID: ' + userUid);
     const docSnap = await getDoc(doc(db, 'users', userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
@@ -59,6 +58,8 @@ export const ProfileScreen = ({ navigation }) => {
           )}
 
           <Headline>{user.userName}</Headline>
+          {user.firstName && <Headline>{user.firstName}</Headline>}
+          {user.lastName && <Headline>{user.lastName}</Headline>}
           <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
         </View>
 
