@@ -12,7 +12,6 @@ import {
   StyleSheet,
   View,
   SafeAreaView,
-  Keyboard,
   ScrollView,
   Image,
 } from 'react-native';
@@ -29,11 +28,11 @@ import {
   Provider,
   Portal,
   Modal,
-  Text,
 } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-export const ToDoListScreen = () => {
+export const ToDoListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   // const user = useSelector((state) => state.auth.currentUser);
@@ -44,6 +43,7 @@ export const ToDoListScreen = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
+  const nav = useNavigation();
   const [confettiCount, setConfettiCount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   let explosion;
@@ -58,10 +58,12 @@ export const ToDoListScreen = () => {
   };
 
   useEffect(() => {
-    getUser();
-    getTodos();
-    // dispatch(setUser());
-  }, []);
+    const updateTodos = navigation.addListener('focus', () => {
+      getTodos();
+      getUser();
+    });
+    return updateTodos;
+  }, [navigation]);
 
   const getTodos = async () => {
     const todos = await getTodosByUid(auth.currentUser.uid);
@@ -189,7 +191,6 @@ export const ToDoListScreen = () => {
         frequency: 'once',
         // createdAt: Timestamp.now(),
       });
-      Keyboard.dismiss();
     } catch (err) {
       console.error(err);
     } finally {
@@ -258,11 +259,22 @@ export const ToDoListScreen = () => {
                       </View>
                     )}
                     right={() => (
-                      <IconButton
-                        icon='trash-can-outline'
-                        color='#2c497f'
-                        onPress={() => handleDelete(todo.id)}
-                      />
+                      <View style={styles.buttonContainer}>
+                        <IconButton
+                          icon='trash-can-outline'
+                          color='#2c497f'
+                          onPress={() => handleDelete(todo.id)}
+                        />
+                        <IconButton
+                          icon='pencil-outline'
+                          color='#2c497f'
+                          onPress={() =>
+                            nav.navigate('TodoItem', {
+                              id: todo.id,
+                            })
+                          }
+                        />
+                      </View>
                     )}
                   />
                 );
@@ -354,5 +366,8 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
 });
