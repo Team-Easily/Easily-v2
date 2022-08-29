@@ -8,15 +8,16 @@ import { useSelector } from "react-redux";
 export const EditProfileScreen = ({ navigation }) => {
   const userUid = useSelector((state) => state.auth.currentUserUid);
   const [user, setUser] = useState({});
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [userName, setUserName] = useState(user.userName);
-  const [address, setAddress] = useState(user.address);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [address, setAddress] = useState("");
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, "users", userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
+      console.log(docSnap.data());
     } else {
       console.log("No such document!");
     }
@@ -26,16 +27,19 @@ export const EditProfileScreen = ({ navigation }) => {
   }, [userUid]);
 
   const handleUpdate = async () => {
-    console.log(firstName);
-    console.log("before", firstName);
     try {
-      await setDoc(doc(db, "users", auth.currentUser.uid), {
-        userName: userName,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-      });
-      console.log("after", firstName);
+      if (userName !== "") {
+        await updateDoc(doc(db, "users", userUid), { userName: userName });
+      }
+      if (firstName !== "") {
+        await updateDoc(doc(db, "users", userUid), { firstName: firstName });
+      }
+      if (lastName !== "") {
+        await updateDoc(doc(db, "users", userUid), { lastName: lastName });
+      }
+      if (address !== "") {
+        await updateDoc(doc(db, "users", userUid), { address: address });
+      }
     } catch (error) {
       console.error(error);
     } finally {
