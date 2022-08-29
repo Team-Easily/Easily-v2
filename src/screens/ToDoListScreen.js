@@ -14,8 +14,10 @@ import {
   SafeAreaView,
   Keyboard,
   ScrollView,
+  Image,
 } from 'react-native';
 import {
+  DefaultTheme,
   Headline,
   Title,
   Checkbox,
@@ -24,6 +26,10 @@ import {
   List,
   IconButton,
   ProgressBar,
+  Provider,
+  Portal,
+  Modal,
+  Text,
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -41,6 +47,7 @@ export const ToDoListScreen = ({ navigation }) => {
   const [completed, setCompleted] = useState(false);
   const nav = useNavigation();
   const [confettiCount, setConfettiCount] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
   let explosion;
 
   const getUser = async () => {
@@ -102,12 +109,22 @@ export const ToDoListScreen = ({ navigation }) => {
   };
 
   const countConfetti = () => {
-    if (confettiCount >= 2) {
-      explosion && explosion.start();
-      setConfettiCount(1);
-    } else {
-      setConfettiCount(confettiCount + 1);
-    }
+    explosion && explosion.start();
+  };
+
+  const showModal = () => setModalVisible(true);
+  const hideModal = () => setModalVisible(false);
+
+  const checkModal = () => {
+    const points = user.points;
+    if (
+      points === 9 ||
+      points === 19 ||
+      points === 29 ||
+      points === 39 ||
+      points === 49
+    )
+      showModal();
   };
 
   const addPointToUser = async (id) => {
@@ -119,10 +136,12 @@ export const ToDoListScreen = ({ navigation }) => {
     } catch (err) {
       alert(err);
     } finally {
+      checkModal();
       getUser();
       countConfetti();
     }
   };
+
   const removePointFromUser = async (id) => {
     const userDocRef = doc(db, 'users', id);
     try {
@@ -187,43 +206,60 @@ export const ToDoListScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.tasksWrapper}>
-        <View style={styles.row}>
-          <Headline>Today's Tasks</Headline>
-          <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
-        </View>
-        <ProgressBar
-          progress={getProgress()}
-          color={getProgressColor()}
-          style={styles.progressBar}
-        />
-        <ConfettiCannon
-          count={200}
-          origin={{ x: -50, y: 0 }}
-          autoStart={false}
-          ref={(ref) => (explosion = ref)}
-        />
-        <View style={styles.items}>
-          {todos.length > 0 ? (
-            todos.map((todo, idx) => {
-              return (
-                <List.Item
-                  style={{ color: '#2c497f' }}
-                  key={idx}
-                  title={todo.title}
-                  description={todo.description}
-                  left={() => (
-                    <View style={styles.checkboxOutline}>
-                      <Checkbox
-                        style={{ borderWidth: '1px' }}
-                        status={todo.completed ? 'checked' : 'unchecked'}
-                        onPress={() =>
-                          handleCheckedChange(todo.id, todo.completed)
-                        }
-                      />
-                    </View>
-                  )}
+    <Provider theme={DefaultTheme}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.tasksWrapper}>
+          <Portal>
+            <Modal
+              visible={modalVisible}
+              onDismiss={hideModal}
+              contentContainerStyle={styles.modalContainerStyle}
+            >
+              <Title style={{ textAlign: 'center' }}>
+                You're doing great!
+                <br /> Keep up the momentum!
+              </Title>
+              <Image
+                style={styles.coffeeMaker}
+                source={require('../assets/coffee-maker.gif')}
+              />
+            </Modal>
+          </Portal>
+          <View style={styles.row}>
+            <Headline>Today's Tasks</Headline>
+            <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+          </View>
+          <ProgressBar
+            progress={getProgress()}
+            color={getProgressColor()}
+            style={styles.progressBar}
+          />
+          <ConfettiCannon
+            count={200}
+            origin={{ x: -50, y: 0 }}
+            autoStart={false}
+            ref={(ref) => (explosion = ref)}
+          />
+          <View style={styles.items}>
+            {todos.length > 0 ? (
+              todos.map((todo, idx) => {
+                return (
+                  <List.Item
+                    style={{ color: '#2c497f' }}
+                    key={idx}
+                    title={todo.title}
+                    description={todo.description}
+                    left={() => (
+                      <View style={styles.checkboxOutline}>
+                        <Checkbox
+                          style={{ borderWidth: '1px' }}
+                          status={todo.completed ? 'checked' : 'unchecked'}
+                          onPress={() =>
+                            handleCheckedChange(todo.id, todo.completed)
+                          }
+                        />
+                      </View>
+                    )}
                   right={() => (
                     <View style={styles.buttonContainer}>
                       <IconButton
@@ -255,30 +291,31 @@ export const ToDoListScreen = ({ navigation }) => {
         title="Add Task"
         left={(props) => <List.Icon {...props} icon="playlist-plus" />}
       >
-        <TextInput
-          placeholder="task name"
-          value={todoName}
-          onChangeText={(text) => setTodoName(text)}
-        />
-        <TextInput
-          placeholder="task description"
-          value={todoDescription}
-          onChangeText={(text) => setTodoDescription(text)}
-        />
-        <Button
-          mode="contained"
-          onPress={handleSubmit}
-          color="#90be6d"
-          contentStyle={{ height: 45, width: 290 }}
-          labelStyle={{
-            color: 'white',
-            fontSize: 16,
-          }}
-        >
-          Submit
-        </Button>
-      </List.Accordion>
-    </SafeAreaView>
+          <TextInput
+            placeholder='task name'
+            value={todoName}
+            onChangeText={(text) => setTodoName(text)}
+          />
+          <TextInput
+            placeholder='task description'
+            value={todoDescription}
+            onChangeText={(text) => setTodoDescription(text)}
+          />
+          <Button
+            mode='contained'
+            onPress={handleSubmit}
+            color='#90be6d'
+            contentStyle={styles.submitButton}
+            labelStyle={{
+              color: 'white',
+              fontSize: 16,
+            }}
+          >
+            Submit
+          </Button>
+        </List.Accordion>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
@@ -288,16 +325,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
     height: '100%',
   },
+  modalContainerStyle: {
+    backgroundColor: 'white',
+    padding: 20,
+    margin: 20,
+  },
   tasksWrapper: {
     paddingTop: 30,
     paddingHorizontal: 20,
-  },
-  checkboxOutline: {
-    borderWidth: 1,
-    borderColor: 'lightgrey',
-    height: 37,
-    marginRight: 10,
-    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 24,
@@ -321,7 +356,17 @@ const styles = StyleSheet.create({
     color: '#2c497f',
     marginBottom: 20,
   },
-  buttonContainer: {
-    flexDirection: 'row',
+  submitButton: {
+    height: 45,
+    width: 265,
+  },
+  coffeeMaker: {
+    width: 200,
+    height: 200,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  title: {
+    textAlign: 'center',
   },
 });
