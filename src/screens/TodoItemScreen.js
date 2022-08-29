@@ -76,16 +76,20 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    try {
-      await updateTodo(todo.id, {
-        description: todoDescription,
-      });
-      alert('Updated!');
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setTodoDescription('');
-      getTodo();
+    if (todoDescription !== '') {
+      try {
+        await updateTodo(todo.id, {
+          description: todoDescription,
+        });
+        alert('Updated!');
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setTodoDescription('');
+        getTodo();
+      }
+    } else {
+      return;
     }
   };
 
