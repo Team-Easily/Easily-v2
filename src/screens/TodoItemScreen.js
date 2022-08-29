@@ -91,12 +91,11 @@ export const TodoItemScreen = ({ navigation, route }) => {
       await updateTodo(todo.id, {
         description: todoDescription,
       });
-      alert('Updated!');
     } else {
       await updateTodo(todo.id, {
         frequency: value,
       });
-    }
+    } 
     setTodoDescription('');
     setValue(null);
     nav.navigate('TodoList');
