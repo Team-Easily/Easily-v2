@@ -1,18 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
   currentUser: {},
-  currentUserUid: '',
+  currentUserUid: "",
 };
 
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setIsLoggedIn(state, action) {
       state.isLoggedIn = action.payload;
     },
+    //JR: fetch this user from collection(db, 'users') instead of from auth
     setUser(state, action) {
       state.currentUser = action.payload;
     },

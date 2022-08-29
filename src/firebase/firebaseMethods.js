@@ -1,12 +1,10 @@
-import { FirebaseError } from 'firebase/app';
+import { FirebaseError } from "firebase/app";
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-  onAuthStateChanged,
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   getFirestore,
   query,
@@ -19,8 +17,8 @@ import {
   getDoc,
   deleteDoc,
   setDoc,
-} from 'firebase/firestore';
-import { app, auth, db } from './firebase';
+} from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 const logInWithEmailAndPassword = async (email, password) => {
   try {
@@ -44,7 +42,7 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
       email,
       password
     );
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       userName: userName,
       email: email,
       points: 0,
@@ -64,8 +62,8 @@ const logout = async () => {
 
 const getUserByUid = async (uid) => {
   let user;
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('uid', '==', uid));
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc, i) => {
     user = doc.data();
@@ -77,12 +75,12 @@ const getUserByUid = async (uid) => {
 
 const getTodosByUid = async (uid) => {
   const todos = [];
-  const todosRef = collection(db, 'todos');
-  const q = query(todosRef, where('author', '==', uid));
+  const todosRef = collection(db, "todos");
+  const q = query(todosRef, where("author", "==", uid));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     let docBody = doc.data();
-    docBody['id'] = doc.id;
+    docBody["id"] = doc.id;
     todos.push(docBody);
   });
   return todos;
@@ -90,7 +88,7 @@ const getTodosByUid = async (uid) => {
 
 const addTodosByUser = async (data) => {
   try {
-    await addDoc(collection(db, 'todos'), data);
+    await addDoc(collection(db, "todos"), data);
   } catch (err) {
     console.error(err);
     throw err;
@@ -99,7 +97,7 @@ const addTodosByUser = async (data) => {
 
 const updateTodosByUser = async (data) => {
   try {
-    await setDoc(collection(db, 'todos'), data);
+    await setDoc(collection(db, "todos"), data);
   } catch (err) {
     console.error(err);
     throw err;
@@ -107,8 +105,8 @@ const updateTodosByUser = async (data) => {
 };
 
 const deleteTodoById = async (id) => {
-  const taskDocRef = doc(db, 'todos', id);
-  console.log('FIRESTORE TASKDOCREF:', taskDocRef);
+  const taskDocRef = doc(db, "todos", id);
+  console.log("FIRESTORE TASKDOCREF:", taskDocRef);
   try {
     await deleteDoc(taskDocRef);
   } catch (err) {
@@ -126,7 +124,7 @@ const addPointToUser = async (uid) => {
   const increment = getFirestore.FieldValue.increment(1);
 
   // Document reference
-  const userRef = db.collection('users').doc(uid);
+  const userRef = db.collection("users").doc(uid);
 
   // Update read count
   userRef.update({ points: increment });

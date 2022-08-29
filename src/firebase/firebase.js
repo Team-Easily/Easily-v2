@@ -1,20 +1,20 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyCjwwUfOFR95aTaf_Zch-TlEEyS-pTRYxM',
-  authDomain: 'easily-app.firebaseapp.com',
-  projectId: 'easily-app',
-  storageBucket: 'easily-app.appspot.com',
-  messagingSenderId: '650975721235',
-  appId: '1:650975721235:web:e225f630702ec4be298ce6',
-  measurementId: 'G-E9K3XQDZLT',
+  apiKey: "AIzaSyCjwwUfOFR95aTaf_Zch-TlEEyS-pTRYxM",
+  authDomain: "easily-app.firebaseapp.com",
+  projectId: "easily-app",
+  storageBucket: "easily-app.appspot.com",
+  messagingSenderId: "650975721235",
+  appId: "1:650975721235:web:e225f630702ec4be298ce6",
+  measurementId: "G-E9K3XQDZLT",
 };
 
 // Initialize Firebase

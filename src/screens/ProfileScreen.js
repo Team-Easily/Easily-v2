@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { StyleSheet, SafeAreaView, View } from 'react-native';
-import { Avatar, Headline, Title, List, Button } from 'react-native-paper';
-import { auth, db } from '../firebase/firebase';
-import { getAuth, signOut } from 'firebase/auth';
+import React, { useEffect, useState } from "react";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { StyleSheet, SafeAreaView, View } from "react-native";
+import { Avatar, Headline, Title, List, Button } from "react-native-paper";
+import { auth, db } from "../firebase/firebase";
+import { signOut, getAuth } from "firebase/auth";
+import useAuth from "../components/auth/AuthProvider";
 
 export const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
+  const { signOutUser } = useAuth();
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
     } else {
-      console.log('No such document!');
+      console.log("No such document!");
     }
   };
 
@@ -22,63 +24,63 @@ export const ProfileScreen = ({ navigation }) => {
   }, []);
 
   const handleSignOut = () => {
-    signOut(getAuth());
-    navigation.push('Welcome');
+    signOutUser();
+    navigation.push("Welcome");
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: "center" }}>
           <Avatar.Image
-            src={{ uri: 'tinyurl.com/24arcnk3' }}
+            src={{ uri: "tinyurl.com/24arcnk3" }}
             size={100}
             style={{ marginBottom: 30 }}
           />
           <Headline>{user.userName}</Headline>
-          <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
+          <Title style={{ color: "grey" }}>Points: {user?.points}</Title>
         </View>
 
         <List.Section style={styles.list}>
           {user.address ? (
             <List.Item
-              color={'#464A4E'}
+              color={"#464A4E"}
               title={user?.address}
               left={() => (
-                <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
+                <List.Icon color={"#A3A4A6"} icon="map-marker-star-outline" />
               )}
             />
           ) : (
             <></>
           )}
           <List.Item
-            color={'#464A4E'}
+            color={"#464A4E"}
             title={user?.email}
-            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
+            left={() => <List.Icon color={"#A3A4A6"} icon="email" />}
           />
         </List.Section>
 
         <View style={styles.buttons}>
           <Button
             style={styles.button}
-            icon='account-cog-outline'
-            mode='contained'
-            onPress={() => navigation.push('EditProfile')}
-            color='#90be6d'
+            icon="account-cog-outline"
+            mode="contained"
+            onPress={() => navigation.push("EditProfile")}
+            color="#90be6d"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 16 }}
+            labelStyle={{ color: "white", fontSize: 16 }}
           >
             Edit Profile
           </Button>
           <Button
             style={styles.button}
-            icon='exit-to-app'
+            icon="exit-to-app"
             // icon='hand-wave'
-            mode='contained'
+            mode="contained"
             onPress={handleSignOut}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 16 }}
+            labelStyle={{ color: "white", fontSize: 16 }}
           >
             Sign Out
           </Button>
@@ -91,12 +93,12 @@ export const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    marginLeft: '15%',
-    marginRight: '15%',
+    justifyContent: "center",
+    marginLeft: "15%",
+    marginRight: "15%",
   },
   buttons: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   button: {
     minWidth: 180,
