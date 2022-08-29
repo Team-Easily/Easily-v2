@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { auth, db } from "../firebase/firebase";
-import { NavigationHelpersContext } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
-export const EditProfileScreen = () => {
+export const EditProfileScreen = ({ navigation }) => {
+  const userUid = useSelector((state) => state.auth.currentUserUid);
   const [user, setUser] = useState({});
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [address, setAddress] = useState("");
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [userName, setUserName] = useState(user.userName);
+  const [address, setAddress] = useState(user.address);
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, "users", userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
     } else {
@@ -22,22 +23,24 @@ export const EditProfileScreen = () => {
   };
   useEffect(() => {
     getUser();
-  }, []);
-
-  console.log(user);
+  }, [userUid]);
 
   const handleUpdate = async () => {
+    console.log(firstName);
+    console.log("before", firstName);
     try {
-      await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
         userName: userName,
         firstName: firstName,
         lastName: lastName,
         address: address,
       });
+      console.log("after", firstName);
     } catch (error) {
       console.error(error);
     } finally {
       getUser();
+      navigation.push("Profile");
     }
   };
 
@@ -46,29 +49,29 @@ export const EditProfileScreen = () => {
       <Text>Edit Profile</Text>
       <View>
         <TextInput
-          value={user.userName}
-          placeholder={userName ? userName : "username"}
-          onChangeText={(text) => {
-            setUserName(text);
-          }}
-        />
-        {/* <TextInput
-          value={user.firstName}
-          placeholder="firstName"
+          value={userName}
+          placeholder={user.userName ? user.userName : "username"}
           onChangeText={(text) => {
             setUserName(text);
           }}
         />
         <TextInput
-          value={user.lastName}
-          placeholder="lastName"
+          value={firstName}
+          placeholder={user.firstName ? user.firstName : "First Name"}
           onChangeText={(text) => {
-            setUserName(text);
+            setFirstName(text);
           }}
-        /> */}
+        />
         <TextInput
-          value={user.address}
-          placeholder={address ? address : "address"}
+          value={lastName}
+          placeholder={user.lastName ? user.lastName : "Last Name"}
+          onChangeText={(text) => {
+            setLastName(text);
+          }}
+        />
+        <TextInput
+          value={address}
+          placeholder={user.address ? user.address : "Address"}
           onChangeText={(text) => {
             setAddress(text);
           }}
