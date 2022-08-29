@@ -58,7 +58,6 @@ export const TodoItemScreen = ({ navigation, route }) => {
 
   const handleCheckedChange = async (id, todoCompleted) => {
     const taskDocRef = doc(db, 'todos', id);
-    console.log(todo.id);
     try {
       await updateDoc(taskDocRef, {
         completed: !todoCompleted,
@@ -122,16 +121,16 @@ export const TodoItemScreen = ({ navigation, route }) => {
             />
           </View>
           <IconButton
-            icon="trash-can-outline"
-            color="#2c497f"
+            icon='trash-can-outline'
+            color='#2c497f'
             onPress={() => handleDelete(todo.id)}
           />
         </View>
         <View style={styles.buttonContainer}>
           <Button
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 54, width: 180 }}
             labelStyle={{
               color: 'white',
@@ -141,9 +140,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
             Submit
           </Button>
           <Button
-            mode="contained"
+            mode='contained'
             onPress={() => nav.navigate('TodoList')}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 54, width: 180 }}
             labelStyle={{
               color: 'white',
