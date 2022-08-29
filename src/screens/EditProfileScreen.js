@@ -36,10 +36,9 @@ export const EditProfileScreen = () => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      getUser();
     }
-    // finally {
-    //   getUser();
-    // }
   };
 
   return (
@@ -48,7 +47,7 @@ export const EditProfileScreen = () => {
       <View>
         <TextInput
           value={user.userName}
-          placeholder="userName"
+          placeholder={userName ? userName : "username"}
           onChangeText={(text) => {
             setUserName(text);
           }}
@@ -69,7 +68,7 @@ export const EditProfileScreen = () => {
         /> */}
         <TextInput
           value={user.address}
-          placeholder="address"
+          placeholder={address ? address : "address"}
           onChangeText={(text) => {
             setAddress(text);
           }}
