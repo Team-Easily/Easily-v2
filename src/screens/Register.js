@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -10,6 +12,9 @@ const Register = ({ navigation }) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [usernameError, setUsernameError] = useState('');
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  const db = getFirestore();
 
   const validate = () => {
     if (email === '') {
@@ -40,6 +45,44 @@ const Register = ({ navigation }) => {
         Alert.alert('Sign up failed', 'Please try again.');
       }
     }
+  };
+
+  const googleSignInWithPopup = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const googleUser = result.user;
+        console.dir;
+
+        // get user points, if user is not already in db then register
+        if (!googleUser.points) {
+          setDoc(doc(db, 'users', googleUser.uid), {
+            userName: googleUser.displayName,
+            email: googleUser.email,
+            points: 0,
+            uid: googleUser.uid,
+            imageUrl: googleUser.photoURL,
+          });
+          console.log('GMAIL USER REGISTERED!', googleUser);
+        }
+
+        console.log('GMAIL USER LOGGED IN!', googleUser);
+        navigation.push('Nav Bar');
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage, errorCode);
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   };
 
   return (
@@ -77,6 +120,15 @@ const Register = ({ navigation }) => {
         >
           Register
         </Button>
+
+        <FontAwesome.Button
+          name='google'
+          backgroundColor='#4285F4'
+          style={(styles.button, styles.googleButton)}
+          onPress={googleSignInWithPopup}
+        >
+          Login with Google
+        </FontAwesome.Button>
 
         <Button
           style={{ marginTop: 15 }}
