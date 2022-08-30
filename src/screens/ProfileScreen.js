@@ -9,12 +9,13 @@ import { useSelector } from 'react-redux';
 export const ProfileScreen = ({ navigation }) => {
   const userUid = useSelector((state) => state.auth.currentUserUid);
   const [user, setUser] = useState({});
-  const [avatarInitial, setAvatarInitial] = useState(' ');
+  const [avatarInitial, setAvatarInitial] = useState('');
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
+      console.log('USER: ', user);
     } else {
       console.log('No such document!');
     }
@@ -34,8 +35,9 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const getAvatarInitial = () => {
+    console.log(user);
     if (user.userName) setAvatarInitial(user.userName[0]);
-    else return '';
+    else setAvatarInitial('');
   };
 
   return (
