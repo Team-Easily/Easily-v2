@@ -2,29 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
-import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import Weather from './Weather';
 
 export const DashboardScreen = () => {
+  const [currentUser, setcurrentUser] = useState({});
   const auth = getAuth();
   const user = auth.currentUser;
-  const nav = useNavigation();
+
+  useEffect(() => {
+    setcurrentUser(user);
+  }, []);
 
   return (
     <View style={styles.layout}>
-      <Headline>Dashboard</Headline>
-      {user ? (
-        <View>
-          <Text>{user.email}</Text>
-          <Text>{user?.points}</Text>
-          <Text>{user.userName}</Text>
-        </View>
-      ) : (
-        'No user'
-      )}
-      <Button mode="contained" onPress={() => nav.navigate('Weather')}>
-        Weather
-      </Button>
+      <View>
+        <Headline>Welcome{currentUser?.displayName}!</Headline>
+        <Weather />
+      </View>
     </View>
   );
 };

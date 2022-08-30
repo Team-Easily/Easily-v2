@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import DateTime from '../components/weather/DateTime';
 import * as Location from 'expo-location';
 const API_key = '797224bcfbcb0b21363635cdf99ddbba';
 
-const WeatherScreen = () => {
+const Weather = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -41,19 +40,21 @@ const WeatherScreen = () => {
   return (
     <View>
       {loading ? (
-        <Text>Loading</Text>
+        <Text>Loading...</Text>
       ) : (
         <View style={styles.layout}>
-          <DateTime />
           <View style={styles.weatherItemContainer}>
             <Text style={styles.title}>Today's Weather</Text>
-            <Text>{data?.city.name}</Text>
+            <Text style={styles.subtitle}>{data?.city.name}</Text>
+            <Text>
+              {data?.city.coord.lat}, {data?.city.coord.lon}
+            </Text>
             <Text>Current Temperature: {data?.list[0].main.temp}°F</Text>
             <Text>Feels Like: {data?.list[0].main.feels_like}°F</Text>
-            <Text>Min Temp: {data?.list[0].main.temp_min}°F</Text>
-            <Text>Max Temp: {data?.list[0].main.temp_max}°F</Text>
-            <Text>{data?.list[0].main.humidity}% </Text>
-            <Text>{data?.list[0].weather[0].description}</Text>
+            <Text>Humidity: {data?.list[0].main.humidity}% </Text>
+            <Text>
+              Current Conditions: {data?.list[0].weather[0].description}
+            </Text>
           </View>
         </View>
       )}
@@ -65,20 +66,23 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     backgroundColor: '#E8EAED',
-    height: '100%',
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   weatherItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   weatherItemContainer: {
-    paddingTop: '30%',
+    paddingTop: '10%',
     paddingHorizontal: 20,
   },
 });
 
-export default WeatherScreen;
+export default Weather;

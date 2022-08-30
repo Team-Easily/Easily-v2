@@ -10,7 +10,6 @@ import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { EditProfileScreen } from './src/screens/EditProfileScreen';
-import WeatherScreen from './src/screens/WeatherScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import Register from './src/screens/Register';
 import { Provider as StoreProvider } from 'react-redux';
@@ -116,7 +115,6 @@ function App() {
                 <MainStack.Screen name="Login" component={LoginScreen} />
                 <MainStack.Screen name="Register" component={Register} />
                 <MainStack.Screen name="Nav Bar" component={NavBar} />
-                <MainStack.Screen name="Weather" component={WeatherScreen} />
               </MainStack.Navigator>
             ) : (
               <MainStack.Navigator
