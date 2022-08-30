@@ -6,33 +6,26 @@ const WeatherScreen = () => {
 
   const API_key = '797224bcfbcb0b21363635cdf99ddbba';
 
-  const fetchDatafromApi = (lat, lon) => {
-    fetch(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${API_key}`
+  const fetchDatafromApi = async (lat, lon) => {
+    await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&exclude={part}&appid=${API_key}&units=imperial`
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log('FETCH DATA', data);
         setData(data);
       });
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (success) => {
-        let { lat, lon } = success.coords;
-        fetchDatafromApi(lat, lon);
-      },
-      (err) => {
-        //will just show NYC data as default
-        if (err) fetchDatafromApi('40.7128', '-74.0060');
-      }
-    );
+    fetchDatafromApi('41.8781', '-87.6298');
+    console.log('USE EFFECT DATA', data);
   }, []);
 
   return (
     <View style={styles.layout}>
       <Text>Welcome</Text>
+      {/* <Text>{data ? data.city.name : 'Loading!'}</Text> */}
     </View>
   );
 };
