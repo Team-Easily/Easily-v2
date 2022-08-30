@@ -1,31 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import DateTime from '../components/weather/DateTime';
+import * as Location from 'expo-location';
+const API_key = '797224bcfbcb0b21363635cdf99ddbba';
 
 const WeatherScreen = () => {
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const API_key = '797224bcfbcb0b21363635cdf99ddbba';
-
-  const fetchDatafromApi = async (lat, lon) => {
-    await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&exclude={part}&appid=${API_key}&units=imperial`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('FETCH DATA', data);
-        setData(data);
-      });
+  const fetchDatafromApi = async (latitude, longitude) => {
+    if (latitude && longitude) {
+      await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${API_key}&units=imperial`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('FETCH DATA', data);
+          setData(data);
+        });
+    }
   };
 
   useEffect(() => {
-    fetchDatafromApi('41.8781', '-87.6298');
-    console.log('USE EFFECT DATA', data);
-  }, []);
+    loading
+      ? ((async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            fetchDatafromApi('40.7128', '-74.0060');
+            return;
+          }
+
+          let location = await Location.getLastKnownPositionAsync({});
+          fetchDatafromApi(location.coords.latitude, location.coords.longitude);
+        })(),
+        console.log('USE EFFECT DATA', data))
+      : null;
+  }, [loading]);
+
+  useEffect(() => {
+    data.city ? setLoading(false) : null;
+  }, [data]);
 
   return (
-    <View style={styles.layout}>
-      <Text>Welcome</Text>
-      {/* <Text>{data ? data.city.name : 'Loading!'}</Text> */}
+    <View>
+      {loading ? (
+        <Text>Loading</Text>
+      ) : (
+        <View style={styles.layout}>
+          <DateTime />
+          <View style={styles.weatherItemContainer}>
+            <Text style={styles.title}>Today's Weather</Text>
+            <Text>{data?.city.name}</Text>
+            <Text>Current Temperature: {data?.list[0].main.temp}°F</Text>
+            <Text>Feels Like: {data?.list[0].main.feels_like}°F</Text>
+            <Text>Min Temp: {data?.list[0].main.temp_min}°F</Text>
+            <Text>Max Temp: {data?.list[0].main.temp_max}°F</Text>
+            <Text>{data?.list[0].main.humidity}% </Text>
+            <Text>{data?.list[0].weather[0].description}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -33,12 +67,20 @@ const WeatherScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#E8EAED',
+    height: '100%',
   },
   title: {
     fontSize: 32,
     marginBottom: 16,
+  },
+  weatherItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  weatherItemContainer: {
+    paddingTop: '30%',
+    paddingHorizontal: 20,
   },
 });
 
