@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Headline } from "react-native-paper";
-import { getAuth } from "firebase/auth";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Headline } from 'react-native-paper';
+import { getAuth } from 'firebase/auth';
 
 export const DashboardScreen = () => {
   const auth = getAuth();
@@ -17,7 +17,7 @@ export const DashboardScreen = () => {
           <Text>{user.userName}</Text>
         </View>
       ) : (
-        "No user"
+        'No user'
       )}
     </View>
   );
@@ -26,8 +26,8 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,

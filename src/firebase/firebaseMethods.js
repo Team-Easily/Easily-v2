@@ -1,4 +1,3 @@
-import { FirebaseError } from 'firebase/app';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -20,12 +19,14 @@ import {
   setDoc,
   increment,
 } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app, auth, db } from './firebase';
+import { v4 as uuidv4 } from 'uuid';
 
 // Table of contents
 // --AUTH
 // --TODOs
-// --POINTS
+// --IMAGE UPLOAD
 
 const logInWithEmailAndPassword = async (email, password) => {
   try {
@@ -184,6 +185,34 @@ const deleteTodoById = async (id) => {
     throw err;
   }
 };
+
+// ----------------IMAGE UPLOAD
+const storage = getStorage(app);
+const storageRef = ref(storage);
+
+export async function uploadImageAsync(uri) {
+  const blob = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function (e) {
+      console.log(e);
+      reject(new TypeError('Network request failed'));
+    };
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  });
+
+  const fileRef = ref(getStorage(), uuidv4());
+  const result = await uploadBytes(fileRef, blob);
+
+  // We're done with the blob, close and release it
+  blob.close();
+
+  return await getDownloadURL(fileRef);
+}
 
 export {
   getUserByUid,

@@ -5,6 +5,7 @@ import { Headline, Button, TextInput } from 'react-native-paper';
 import { auth, db } from '../firebase/firebase';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
+import { uploadImageAsync } from '../firebase/firebaseMethods';
 
 export const EditProfileScreen = ({ navigation }) => {
   const userUid = useSelector((state) => state.auth.currentUserUid);
@@ -13,7 +14,7 @@ export const EditProfileScreen = ({ navigation }) => {
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [address, setAddress] = useState('');
-  const [image, setImage] = useState(' ');
+  const [image, setImage] = useState('');
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', userUid));
@@ -38,9 +39,6 @@ export const EditProfileScreen = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
-    console.log('ImageUrl:', result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -48,12 +46,10 @@ export const EditProfileScreen = ({ navigation }) => {
 
   const handleUpdate = async () => {
     try {
-      if (imageUrl !== '') {
-        await setDoc(
-          doc(db, 'users', userUid),
-          { imageUrl: image },
-          { merge: true }
-        );
+      if (image !== '') {
+        const photoURL = await uploadImageAsync(image);
+        console.log('PHOTO URL: ', photoURL);
+        await updateDoc(doc(db, 'users', userUid), { imageUrl: photoURL });
       }
       if (userName !== '') {
         await updateDoc(doc(db, 'users', userUid), { userName: userName });
@@ -75,17 +71,26 @@ export const EditProfileScreen = ({ navigation }) => {
     }
   };
 
+  const ImageComponent = () => {
+    if (image !== '') {
+      return (
+        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ paddingHorizontal: 30 }}>
         <View style={{ alignItems: 'center' }}>
           <Headline>Edit Profile</Headline>
-          {image && (
+          <ImageComponent />
+          {/* {image && (
             <Image
               source={{ uri: image }}
               style={{ width: 150, height: 150 }}
             />
-          )}
+          )} */}
         </View>
         <View>
           <Button
