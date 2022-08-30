@@ -1,4 +1,4 @@
-import { FirebaseError } from 'firebase/app';
+import { FirebaseError } from "firebase/app";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -6,7 +6,7 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   query,
   doc,
@@ -49,7 +49,7 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
       email,
       password
     );
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       userName: userName,
       email: email,
       points: 0,
@@ -69,8 +69,8 @@ const logout = async () => {
 
 const getUserByUid = async (uid) => {
   let user;
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('uid', '==', uid));
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc, i) => {
     user = doc.data();
@@ -106,11 +106,12 @@ const removePointFromUser = async (id) => {
 
 const getTodosByUid = async (uid) => {
   const todos = [];
-  const todosRef = collection(db, 'todos');
-  const q = query(todosRef, where('author', '==', uid));
+  const todosRef = collection(db, "todos");
+  const q = query(todosRef, where("author", "==", uid));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     let docBody = doc.data();
+    docBody["id"] = doc.id;
     todos.push(docBody);
   });
   return todos;
@@ -127,21 +128,21 @@ const getTodoById = async (id) => {
 
 const addTodosByUser = async (data) => {
   try {
-    await addDoc(collection(db, 'todos'), data);
+    await addDoc(collection(db, "todos"), data);
     const { title, completed } = data;
     let id;
-    const todosRef = collection(db, 'todos');
+    const todosRef = collection(db, "todos");
     const q = query(
       todosRef,
-      where('author', '==', data.author),
-      where('title', '==', title),
-      where('completed', '==', completed)
+      where("author", "==", data.author),
+      where("title", "==", title),
+      where("completed", "==", completed)
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((todo) => {
       let docBody = todo.data();
       if (!docBody.id) {
-        updateDoc(doc(db, 'todos', todo.id), { id: todo.id });
+        updateDoc(doc(db, "todos", todo.id), { id: todo.id });
       }
     });
   } catch (err) {
@@ -152,7 +153,7 @@ const addTodosByUser = async (data) => {
 
 const updateTodosByUser = async (data) => {
   try {
-    await setDoc(collection(db, 'todos'), data);
+    await setDoc(collection(db, "todos"), data);
   } catch (err) {
     console.error(err);
     throw err;
@@ -171,7 +172,7 @@ const updateTodo = async (id, data) => {
 };
 
 const deleteTodoById = async (id) => {
-  const taskDocRef = doc(db, 'todos', id);
+  const taskDocRef = doc(db, "todos", id);
   try {
     await deleteDoc(taskDocRef);
   } catch (err) {
