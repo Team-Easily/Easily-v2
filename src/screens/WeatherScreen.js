@@ -22,19 +22,18 @@ const WeatherScreen = () => {
   };
 
   useEffect(() => {
-    loading
-      ? ((async () => {
-          let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-            fetchDatafromApi('40.7128', '-74.0060');
-            return;
-          }
-
-          let location = await Location.getLastKnownPositionAsync({});
-          fetchDatafromApi(location.coords.latitude, location.coords.longitude);
-        })(),
-        console.log('USE EFFECT DATA', data))
-      : null;
+    navigator.geolocation.getCurrentPosition(
+      async (success) => {
+        let { latitude, longitude } = success.cords;
+        console.log(success.coords);
+        await fetchDatafromApi(latitude, longitude);
+      },
+      (err) => {
+        if (err) fetchDatafromApi('40.7128', '-74.0060');
+        console.log('GEOLOCATION FAILED');
+      },
+      console.log('USE EFFECT DATA', data)
+    );
   }, [loading]);
 
   useEffect(() => {
