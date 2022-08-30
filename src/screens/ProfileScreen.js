@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Image } from 'react-native';
 import { Avatar, Headline, Title, List, Button } from 'react-native-paper';
 import { auth, db } from '../firebase/firebase';
 import { getAuth, signOut } from 'firebase/auth';
+import { useSelector } from 'react-redux';
 
 export const ProfileScreen = ({ navigation }) => {
+  const userUid = useSelector((state) => state.auth.currentUserUid);
   const [user, setUser] = useState({});
+  const [avatarInitial, setAvatarInitial] = useState('');
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, 'users', userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
     } else {
@@ -19,7 +22,11 @@ export const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [userUid]);
+
+  useEffect(() => {
+    getAvatarInitial();
+  }, [user]);
 
   const handleSignOut = () => {
     signOut(getAuth());
@@ -27,8 +34,8 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const getAvatarInitial = () => {
-    if (user.userName) return user.userName[0];
-    else return '';
+    if (user.userName) setAvatarInitial(user.userName[0]);
+    else setAvatarInitial('');
   };
 
   return (
@@ -36,20 +43,23 @@ export const ProfileScreen = ({ navigation }) => {
       <View>
         <View style={{ alignItems: 'center' }}>
           {user.imageUrl ? (
-            <Avatar.Image
-              src={{ uri: 'tinyurl.com/24arcnk3' }}
-              size={100}
-              style={{ marginBottom: 30 }}
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: user.imageUrl,
+              }}
             />
           ) : (
             <Avatar.Text
-              size={75}
-              label={getAvatarInitial()}
+              size={100}
+              label={avatarInitial}
               style={{ marginBottom: 30 }}
             />
           )}
 
           <Headline>{user.userName}</Headline>
+          {user.firstName && <Headline>{user.firstName}</Headline>}
+          {user.lastName && <Headline>{user.lastName}</Headline>}
           <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
         </View>
 
@@ -115,7 +125,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   list: {
-    marginTop: 30,
+    marginTop: 15,
+    marginBottom: 30,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 30,
   },
 });

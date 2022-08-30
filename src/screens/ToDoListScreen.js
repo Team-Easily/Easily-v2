@@ -12,7 +12,6 @@ import {
   StyleSheet,
   View,
   SafeAreaView,
-  Keyboard,
   ScrollView,
   Image,
 } from 'react-native';
@@ -29,7 +28,6 @@ import {
   Provider,
   Portal,
   Modal,
-  Text,
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -46,7 +44,6 @@ export const ToDoListScreen = ({ navigation }) => {
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
   const nav = useNavigation();
-  const [confettiCount, setConfettiCount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   let explosion;
 
@@ -250,7 +247,7 @@ export const ToDoListScreen = ({ navigation }) => {
                     title={todo.title}
                     description={todo.description}
                     left={() => (
-                      <View style={styles.checkboxOutline}>
+                      <View style={{ paddingTop: 5 }}>
                         <Checkbox
                           style={{ borderWidth: '1px' }}
                           status={todo.completed ? 'checked' : 'unchecked'}
@@ -260,37 +257,37 @@ export const ToDoListScreen = ({ navigation }) => {
                         />
                       </View>
                     )}
-                  right={() => (
-                    <View style={styles.buttonContainer}>
-                      <IconButton
-                        icon="trash-can-outline"
-                        color="#2c497f"
-                        onPress={() => handleDelete(todo.id)}
-                      />
-                      <IconButton
-                        icon="pencil-outline"
-                        color="#2c497f"
-                        onPress={() =>
-                          nav.navigate('TodoItem', {
-                            id: todo.id,
-                          })
-                        }
-                      />
-                    </View>
-                  )}
-                />
-              );
-            })
-          ) : (
-            <Title style={styles.noTasks}> No Tasks for Today! </Title>
-          )}
-        </View>
-      </ScrollView>
-      <List.Accordion
-        style={styles.accordion}
-        title="Add Task"
-        left={(props) => <List.Icon {...props} icon="playlist-plus" />}
-      >
+                    right={() => (
+                      <View style={styles.buttonContainer}>
+                        <IconButton
+                          icon='pencil-outline'
+                          color='#2c497f'
+                          onPress={() =>
+                            nav.navigate('TodoItem', {
+                              id: todo.id,
+                            })
+                          }
+                        />
+                        <IconButton
+                          icon='trash-can-outline'
+                          color='#8f3985'
+                          onPress={() => handleDelete(todo.id)}
+                        />
+                      </View>
+                    )}
+                  />
+                );
+              })
+            ) : (
+              <Title style={styles.noTasks}> No Tasks for Today! </Title>
+            )}
+          </View>
+        </ScrollView>
+        <List.Accordion
+          style={styles.accordion}
+          title='Add Task'
+          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+        >
           <TextInput
             placeholder='task name'
             value={todoName}
@@ -368,5 +365,8 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
 });
