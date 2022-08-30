@@ -90,8 +90,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
       await updateTodo(todo.id, {
         description: todoDescription,
       });
-    }
-    if (value) {
+    } else {
       await updateTodo(todo.id, {
         frequency: value,
       });
@@ -113,9 +112,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.taskWrapper}>
-        <View style={styles.titleRow}>
-          <Title style={styles.sectionTitle}>{todo.title}</Title>
-        </View>
+        <Title style={styles.sectionTitle}>{todo.title}</Title>
         <TextInput
           style={styles.itemDescription}
           placeholder={todo.description ? todo.description : ''}
@@ -134,23 +131,17 @@ export const TodoItemScreen = ({ navigation, route }) => {
             setValue={setValue}
             setItems={setItems}
             schema={{ selectable: 'selectable' }}
-            containerStyle={{ width: 100 }}
-            textStyle={{
-              fontSize: 15,
-            }}
           />
-          <View style={styles.icons}>
-            <Checkbox
-              style={styles.checkboxOutline}
-              status={todo.completed ? 'checked' : 'unchecked'}
-              onPress={() => handleCheckedChange(todo.id, todo.completed)}
-            />
-            <IconButton
-              icon='trash-can-outline'
-              color='#8f3985'
-              onPress={() => handleDelete(todo.id)}
-            />
-          </View>
+          <Checkbox
+            style={styles.checkboxOutline}
+            status={todo.completed ? 'checked' : 'unchecked'}
+            onPress={() => handleCheckedChange(todo.id, todo.completed)}
+          />
+          <IconButton
+            icon='trash-can-outline'
+            color='#8f3985'
+            onPress={() => handleDelete(todo.id)}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <Button
@@ -193,9 +184,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   taskWrapper: {
+    // paddingTop: '30%',
     paddingHorizontal: 20,
   },
   checkboxOutline: {
+    // borderWidth: 1,
+    // borderColor: 'lightgrey',
     height: 37,
     marginRight: 10,
     marginTop: 20,
@@ -212,19 +206,26 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
+    //   flex: 1,
+    //   flexDirection: 'column',
+    //   alignItems: 'center',
+    //   justifyContent: 'center',
+    //   padding: 10,
+    //   margin: 10,
   },
   iconContainer: {
     flex: 1,
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    zIndex: 1000,
-    paddingVertical: 20,
-    paddingLeft: 10,
+    justifyContent: 'center',
+    padding: 10,
   },
   button: {
-    margin: 0,
+    // marginTop: 15,
+    // justifyContent: 'center',
+    // height: 54,
+    // width: 180,
     minWidth: 180,
     marginBottom: 15,
   },
@@ -232,14 +233,9 @@ const styles = StyleSheet.create({
     height: 100,
   },
   dropDown: {
-    borderColor: '#999999',
-    justifyContent: 'flex-start',
-    fontSize: 12,
-  },
-  icons: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    // paddingLeft: 10,
+    maxWidth: 100,
+    // mode: 'contained',
+    // color: '#90be6d',
   },
 });

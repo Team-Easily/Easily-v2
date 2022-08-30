@@ -44,7 +44,6 @@ export const ToDoListScreen = ({ navigation }) => {
   const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
   const nav = useNavigation();
-  const [confettiCount, setConfettiCount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   let explosion;
 
@@ -248,7 +247,7 @@ export const ToDoListScreen = ({ navigation }) => {
                     title={todo.title}
                     description={todo.description}
                     left={() => (
-                      <View style={styles.checkboxOutline}>
+                      <View style={{ paddingTop: 5 }}>
                         <Checkbox
                           style={{ borderWidth: '1px' }}
                           status={todo.completed ? 'checked' : 'unchecked'}
@@ -261,11 +260,6 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon='trash-can-outline'
-                          color='#2c497f'
-                          onPress={() => handleDelete(todo.id)}
-                        />
-                        <IconButton
                           icon='pencil-outline'
                           color='#2c497f'
                           onPress={() =>
@@ -273,6 +267,11 @@ export const ToDoListScreen = ({ navigation }) => {
                               id: todo.id,
                             })
                           }
+                        />
+                        <IconButton
+                          icon='trash-can-outline'
+                          color='#8f3985'
+                          onPress={() => handleDelete(todo.id)}
                         />
                       </View>
                     )}

@@ -15,7 +15,6 @@ export const ProfileScreen = ({ navigation }) => {
     const docSnap = await getDoc(doc(db, 'users', userUid));
     if (docSnap.exists()) {
       setUser(docSnap.data());
-      console.log('USER: ', user);
     } else {
       console.log('No such document!');
     }
@@ -35,7 +34,6 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const getAvatarInitial = () => {
-    console.log(user);
     if (user.userName) setAvatarInitial(user.userName[0]);
     else setAvatarInitial('');
   };
