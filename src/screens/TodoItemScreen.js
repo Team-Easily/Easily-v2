@@ -17,12 +17,20 @@ import {
   deleteTodoById,
 } from '../firebase/firebaseMethods';
 import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
   const [completed, setCompleted] = useState(todo.completed);
   const [todoDescription, setTodoDescription] = useState('');
+  const [value, setValue] = useState(todo.frequency);
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState([
+    { label: 'once', value: 'once' },
+    { label: 'weekly', value: 'weekly' },
+    { label: 'monthly', value: 'monthly' },
+  ]);
   const nav = useNavigation();
 
   const getTodo = async () => {
@@ -31,7 +39,10 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    getTodo();
+    const updateTodo = navigation.addListener('focus', () => {
+      getTodo();
+    });
+    return updateTodo;
   }, []);
 
   const addPointToUser = async (id) => {
@@ -76,20 +87,17 @@ export const TodoItemScreen = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     if (todoDescription !== '') {
-      try {
-        await updateTodo(todo.id, {
-          description: todoDescription,
-        });
-        alert('Updated!');
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setTodoDescription('');
-        getTodo();
-      }
+      await updateTodo(todo.id, {
+        description: todoDescription,
+      });
     } else {
-      return;
-    }
+      await updateTodo(todo.id, {
+        frequency: value,
+      });
+    } 
+    setTodoDescription('');
+    setValue(null);
+    nav.navigate('TodoList');
   };
 
   const handleDelete = async (id) => {
@@ -113,6 +121,17 @@ export const TodoItemScreen = ({ navigation, route }) => {
         />
 
         <View style={styles.iconContainer}>
+          <DropDownPicker
+            style={styles.dropDown}
+            placeholder={todo.frequency}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            schema={{ selectable: 'selectable' }}
+          />
           <View style={styles.checkboxOutline}>
             <Checkbox
               style={{ borderWidth: '1px' }}
@@ -195,7 +214,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'space-between',
     justifyContent: 'center',
     padding: 10,
   },
@@ -205,5 +224,11 @@ const styles = StyleSheet.create({
   },
   itemDescription: {
     height: 100,
+  },
+  dropDown: {
+    paddingLeft: 10,
+    width: 100,
+    mode: 'contained',
+    color: '#90be6d',
   },
 });
