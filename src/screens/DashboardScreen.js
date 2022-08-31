@@ -4,7 +4,6 @@ import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
 import Weather from './Weather';
 
-
 export const DashboardScreen = () => {
   const [currentUser, setcurrentUser] = useState({});
   const auth = getAuth();
@@ -17,7 +16,7 @@ export const DashboardScreen = () => {
   return (
     <View style={styles.layout}>
       <View>
-        <Headline>Welcome{currentUser?.displayName}!</Headline>
+        <Headline>Welcome {currentUser?.displayName}!</Headline>
         <Weather />
       </View>
     </View>

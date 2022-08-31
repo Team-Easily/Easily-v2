@@ -61,8 +61,9 @@ export const ProfileScreen = ({ navigation }) => {
         <View style={{ alignItems: 'center' }}>
           <AvatarComponent user={user} />
           <Headline>{user.userName}</Headline>
-          <Headline>{user?.firstName}</Headline>
-          <Headline>{user?.lastName}</Headline>
+          <Headline>
+            {user?.firstName} {user?.lastName}
+          </Headline>
           <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
         </View>
 
@@ -110,8 +111,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: '20%',
-    marginRight: '20%',
+    marginLeft: 20,
+    marginRight: 20,
   },
   buttons: {
     alignItems: 'center',
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
   list: {
     marginTop: 15,
     marginBottom: 15,
+    alignItems: 'center',
   },
   listItem: {
     margin: 0,
