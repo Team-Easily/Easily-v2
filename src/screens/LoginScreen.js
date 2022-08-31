@@ -1,36 +1,39 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { setUserUid } from '../components/auth/authSlice';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import useAuth from '../authProvider';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import useAuth from "../authProvider";
 
 const LoginScreen = ({ navigation }) => {
   const { authUser, signInManually, signInWithGoogle } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isError, setIsError] = useState(false);
-  const [errMessage, setErrMessage] = useState('');
+  const [errMessage, setErrMessage] = useState("");
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const db = getFirestore();
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.push("Nav Bar");
+    }
+  }, [isLoggedIn]);
+
   // React States
   const resetStates = () => {
-    setEmail('');
-    setPassword('');
+    setEmail("");
+    setPassword("");
   };
 
   const submitGoToRegister = () => {
-    navigation.push('Register');
+    navigation.push("Register");
   };
 
   const submitLogin = async () => {
     try {
-      const user = await signInManually(email, password);
-      console.log(user);
-      //      dispatch(user.uid);
-      navigation.push('Nav Bar');
+      signInManually(email, password);
       resetStates();
     } catch (error) {
       setIsError(true);
@@ -40,8 +43,6 @@ const LoginScreen = ({ navigation }) => {
 
   const googleSignInWithPopup = () => {
     signInWithGoogle();
-    // get user points, if user is not already in db then register
-    navigation.push('Nav Bar');
   };
 
   return (
@@ -69,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
             onPress={submitLogin}
             color="#07BEB8"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 18 }}
+            labelStyle={{ color: "white", fontSize: 18 }}
           >
             Login
           </Button>
@@ -78,13 +79,10 @@ const LoginScreen = ({ navigation }) => {
             style={{ marginTop: 15 }}
             icon="google"
             mode="contained"
-            onPress={() => {
-              googleSignInWithPopup();
-              console.log(authUser);
-            }}
+            onPress={googleSignInWithPopup}
             color="#4285F4"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 18 }}
+            labelStyle={{ color: "white", fontSize: 18 }}
           >
             Login with Google
           </Button>
@@ -96,7 +94,7 @@ const LoginScreen = ({ navigation }) => {
               submitGoToRegister();
             }}
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: '#2c497f', fontSize: 18 }}
+            labelStyle={{ color: "#2c497f", fontSize: 18 }}
           >
             Create New Account
           </Button>
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   googleButton: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
   },
 });
 

@@ -4,22 +4,24 @@ import React, {
   createContext,
   useContext,
   useMemo,
-} from 'react';
+} from "react";
 import {
-  getAuth,
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
   signInWithEmailAndPassword,
-} from 'firebase/auth';
-import { auth } from './firebase/firebase';
+} from "firebase/auth";
+import { auth } from "./firebase/firebase";
+import { setIsLoggedIn } from "./components/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export const AuthContext = createContext({});
 const provider = new GoogleAuthProvider();
 
 export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(
     () =>
@@ -32,16 +34,12 @@ export const AuthProvider = ({ children }) => {
 
   const signInManually = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      return user;
+      signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
       throw err;
+    } finally {
+      dispatch(setIsLoggedIn(true));
     }
   };
 
@@ -58,6 +56,9 @@ export const AuthProvider = ({ children }) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage, errorCode);
+      })
+      .finally(() => {
+        dispatch(setIsLoggedIn(true));
       });
     //   console.log(user);
     //   return user;
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
+    setIsLoggedIn(false);
   };
 
   const memo = useMemo(

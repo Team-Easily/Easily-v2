@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import {
   getTodosByUid,
   addTodosByUser,
   deleteTodoById,
-} from '../firebase/firebaseMethods';
-import { auth, db } from '../firebase/firebase';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+} from "../firebase/firebaseMethods";
+import { auth, db } from "../firebase/firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { setTodos, addToTodos } from "../components/todos/todoSlice";
+import { setCurrentUser } from "../components/auth/authSlice";
 import {
   StyleSheet,
   View,
   SafeAreaView,
   ScrollView,
   Image,
-} from 'react-native';
+} from "react-native";
 import {
   DefaultTheme,
   Headline,
@@ -28,44 +29,46 @@ import {
   Provider,
   Portal,
   Modal,
-} from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import ConfettiCannon from 'react-native-confetti-cannon';
+} from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import ConfettiCannon from "react-native-confetti-cannon";
 
 export const ToDoListScreen = ({ navigation }) => {
+  const nav = useNavigation();
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
-  // const user = useSelector((state) => state.auth.currentUser);
-  const [user, setUser] = useState(auth.currentUser);
-  // JR: using user from redux, not making a db fetch
-  const [todoName, setTodoName] = useState('');
+  const user = useSelector((state) => state.auth.currentUser);
+
+  //form details
+  const [todoName, setTodoName] = useState("");
+  const [todoDescription, setTodoDescription] = useState("");
+  const [todoFrequency, setTodoFrequency] = useState("");
+
+  //flags
   const [form, setForm] = useState(false);
-  const [todoDescription, setTodoDescription] = useState('');
-  const [todoFrequency, setTodoFrequency] = useState('');
   const [completed, setCompleted] = useState(false);
-  const nav = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+
   let explosion;
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, "users", user.uid));
     if (docSnap.exists()) {
-      setUser(docSnap.data());
+      dispatch(setCurrentUser(docSnap.data()));
     } else {
-      console.log('No such document!');
+      console.log("No such document!");
     }
   };
 
   useEffect(() => {
-    const updateTodos = navigation.addListener('focus', () => {
+    const updateTodos = navigation.addListener("focus", () => {
       getTodos();
-      getUser();
     });
     return updateTodos;
   }, [navigation]);
 
   const getTodos = async () => {
-    const todos = await getTodosByUid(auth.currentUser.uid);
+    const todos = await getTodosByUid(user.uid);
     dispatch(setTodos(todos));
   };
 
@@ -91,17 +94,17 @@ export const ToDoListScreen = ({ navigation }) => {
     const points = user.points;
     switch (true) {
       case points < 11:
-        return '#98dfea';
+        return "#98dfea";
       case points < 21:
-        return '#90be6d';
+        return "#90be6d";
       case points < 31:
-        return '#07beb8';
+        return "#07beb8";
       case points < 41:
-        return '#8f3985';
+        return "#8f3985";
       case points < 51:
-        return '#2c497f';
+        return "#2c497f";
       default:
-        return '#98dfea';
+        return "#98dfea";
     }
   };
 
@@ -125,7 +128,7 @@ export const ToDoListScreen = ({ navigation }) => {
   };
 
   const addPointToUser = async (id) => {
-    const userDocRef = doc(db, 'users', id);
+    const userDocRef = doc(db, "users", id);
     try {
       await updateDoc(userDocRef, {
         points: increment(1),
@@ -140,7 +143,7 @@ export const ToDoListScreen = ({ navigation }) => {
   };
 
   const removePointFromUser = async (id) => {
-    const userDocRef = doc(db, 'users', id);
+    const userDocRef = doc(db, "users", id);
     try {
       await updateDoc(userDocRef, {
         points: increment(-1),
@@ -153,7 +156,7 @@ export const ToDoListScreen = ({ navigation }) => {
   };
 
   const handleCheckedChange = async (id, todoCompleted) => {
-    const taskDocRef = doc(db, 'todos', id);
+    const taskDocRef = doc(db, "todos", id);
     try {
       await updateDoc(taskDocRef, {
         completed: !todoCompleted,
@@ -187,16 +190,16 @@ export const ToDoListScreen = ({ navigation }) => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: completed,
-        frequency: 'once',
+        frequency: "once",
         // createdAt: Timestamp.now(),
       });
     } catch (err) {
       console.error(err);
     } finally {
-      setTodoName('');
+      setTodoName("");
       setForm(false);
-      setTodoDescription('');
-      setTodoFrequency('');
+      setTodoDescription("");
+      setTodoFrequency("");
       setCompleted(false);
       getTodos();
     }
@@ -212,19 +215,19 @@ export const ToDoListScreen = ({ navigation }) => {
               onDismiss={hideModal}
               contentContainerStyle={styles.modalContainerStyle}
             >
-              <Title style={{ textAlign: 'center' }}>
+              <Title style={{ textAlign: "center" }}>
                 You're doing great!
                 <br /> Keep up the momentum!
               </Title>
               <Image
                 style={styles.coffeeMaker}
-                source={require('../assets/coffee-maker.gif')}
+                source={require("../assets/coffee-maker.gif")}
               />
             </Modal>
           </Portal>
           <View style={styles.row}>
             <Headline>Today's Tasks</Headline>
-            <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+            <Title style={{ color: "#2c497f" }}>{user.points} pts</Title>
           </View>
           <ProgressBar
             progress={getProgress()}
@@ -242,15 +245,15 @@ export const ToDoListScreen = ({ navigation }) => {
               todos.map((todo, idx) => {
                 return (
                   <List.Item
-                    style={{ color: '#2c497f' }}
+                    style={{ color: "#2c497f" }}
                     key={idx}
                     title={todo.title}
                     description={todo.description}
                     left={() => (
                       <View style={{ paddingTop: 5 }}>
                         <Checkbox
-                          style={{ borderWidth: '1px' }}
-                          status={todo.completed ? 'checked' : 'unchecked'}
+                          style={{ borderWidth: "1px" }}
+                          status={todo.completed ? "checked" : "unchecked"}
                           onPress={() =>
                             handleCheckedChange(todo.id, todo.completed)
                           }
@@ -260,17 +263,17 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon='pencil-outline'
-                          color='#2c497f'
+                          icon="pencil-outline"
+                          color="#2c497f"
                           onPress={() =>
-                            nav.navigate('TodoItem', {
+                            nav.navigate("TodoItem", {
                               id: todo.id,
                             })
                           }
                         />
                         <IconButton
-                          icon='trash-can-outline'
-                          color='#8f3985'
+                          icon="trash-can-outline"
+                          color="#8f3985"
                           onPress={() => handleDelete(todo.id)}
                         />
                       </View>
@@ -285,26 +288,26 @@ export const ToDoListScreen = ({ navigation }) => {
         </ScrollView>
         <List.Accordion
           style={styles.accordion}
-          title='Add Task'
-          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+          title="Add Task"
+          left={(props) => <List.Icon {...props} icon="playlist-plus" />}
         >
           <TextInput
-            placeholder='task name'
+            placeholder="task name"
             value={todoName}
             onChangeText={(text) => setTodoName(text)}
           />
           <TextInput
-            placeholder='task description'
+            placeholder="task description"
             value={todoDescription}
             onChangeText={(text) => setTodoDescription(text)}
           />
           <Button
-            mode='contained'
+            mode="contained"
             onPress={handleSubmit}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={styles.submitButton}
             labelStyle={{
-              color: 'white',
+              color: "white",
               fontSize: 16,
             }}
           >
@@ -319,11 +322,11 @@ export const ToDoListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
-    height: '100%',
+    backgroundColor: "#E8EAED",
+    height: "100%",
   },
   modalContainerStyle: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     margin: 20,
   },
@@ -333,24 +336,24 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   progressBar: {
     marginTop: 15,
     marginBottom: 10,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   items: {
     marginTop: 10,
   },
   noTasks: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 20,
   },
   submitButton: {
@@ -360,13 +363,13 @@ const styles = StyleSheet.create({
   coffeeMaker: {
     width: 200,
     height: 200,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
