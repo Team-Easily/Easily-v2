@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
-import { weatherConditions } from '../utils/WeatherConditions';
-
 const API_key = '797224bcfbcb0b21363635cdf99ddbba';
 
 const Weather = () => {
@@ -39,19 +37,12 @@ const Weather = () => {
     data.city ? setLoading(false) : null;
   }, [data]);
 
-  const currentConditions = data?.list[0].weather[0].description;
-
   return (
     <View>
       {loading ? (
         <Text>Loading...</Text>
       ) : (
-        <View
-          style={[
-            styles.weatherContainer,
-            { backgroundColor: weatherConditions[currentConditions].color },
-          ]}
-        >
+        <View style={styles.layout}>
           <View style={styles.weatherItemContainer}>
             <Text style={styles.title}>Today's Weather</Text>
             <Text style={styles.subtitle}>{data?.city.name}</Text>
