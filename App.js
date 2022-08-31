@@ -6,7 +6,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
-import {ToDoListScreen} from './src/screens/ToDoListScreen';
+import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { EditProfileScreen } from './src/screens/EditProfileScreen';
@@ -38,8 +38,8 @@ const ProfileStackScreen = () => (
     initialRouteName="Profile"
     screenOptions={{ headerShown: false }}
   >
-    <ProfileStack.Screen name='Profile' component={ProfileScreen} />
-    <ProfileStack.Screen name='EditProfile' component={EditProfileScreen} />
+    <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+    <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
   </ProfileStack.Navigator>
 );
 
@@ -108,20 +108,20 @@ function App() {
           <NavigationContainer>
             {auth ? (
               <MainStack.Navigator
-                initialRouteName='Welcome'
+                initialRouteName="Welcome"
                 screenOptions={{ headerShown: false }}
               >
-                <MainStack.Screen name='Welcome' component={WelcomeScreen} />
-                <MainStack.Screen name='Login' component={LoginScreen} />
-                <MainStack.Screen name='Register' component={Register} />
-                <MainStack.Screen name='Nav Bar' component={NavBar} />
+                <MainStack.Screen name="Welcome" component={WelcomeScreen} />
+                <MainStack.Screen name="Login" component={LoginScreen} />
+                <MainStack.Screen name="Register" component={Register} />
+                <MainStack.Screen name="Nav Bar" component={NavBar} />
               </MainStack.Navigator>
             ) : (
               <MainStack.Navigator
-                initialRouteName='Nav Bar'
+                initialRouteName="Nav Bar"
                 screenOptions={{ headerShown: false }}
               >
-                <MainStack.Screen name='Nav Bar' component={NavBar} />
+                <MainStack.Screen name="Nav Bar" component={NavBar} />
               </MainStack.Navigator>
             )}
           </NavigationContainer>
