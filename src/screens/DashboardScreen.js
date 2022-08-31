@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
 import Weather from './Weather';
+import Calendars from './Calendar';
 
 export const DashboardScreen = () => {
   const [currentUser, setcurrentUser] = useState({});
@@ -18,6 +19,7 @@ export const DashboardScreen = () => {
       <View>
         <Headline>Welcome {currentUser?.displayName}!</Headline>
         <Weather />
+        <Calendars />
       </View>
     </View>
   );
