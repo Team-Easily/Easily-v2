@@ -209,6 +209,7 @@ export async function uploadImageAsync(uri) {
   const result = await uploadBytes(fileRef, blob);
 
   // We're done with the blob, close and release it
+  // TypeError
   blob.close();
 
   return await getDownloadURL(fileRef);

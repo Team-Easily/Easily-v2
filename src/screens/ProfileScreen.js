@@ -40,6 +40,7 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const Address = () => {
+    console.log('USER ADDRESS: ', user.address);
     if (user.address !== '') {
       return (
         <List.Item
