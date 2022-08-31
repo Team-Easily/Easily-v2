@@ -51,16 +51,17 @@ const LoginScreen = ({ navigation }) => {
         // get user points, if user is not already in db then register
         if (!googleUser.points) {
           setDoc(doc(db, 'users', googleUser.uid), {
-            userName: googleUser.displayName,
+            address: '',
             email: googleUser.email,
+            firstName: '',
+            imageUrl: googleUser.photoURL,
+            lastName: '',
             points: 0,
             uid: googleUser.uid,
-            imageUrl: googleUser.photoURL,
+            userName: googleUser.displayName,
           });
-          console.log('GMAIL USER REGISTERED!', googleUser);
         }
 
-        console.log('GMAIL USER LOGGED IN!', googleUser);
         dispatch(setUserUid(googleUser.uid));
         navigation.push('Nav Bar');
       })

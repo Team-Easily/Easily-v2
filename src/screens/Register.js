@@ -141,7 +141,7 @@ const Register = ({ navigation }) => {
             submitGoToLogin();
           }}
           contentStyle={{ height: 45 }}
-          labelStyle={{ color: '#07BEB8', fontSize: 18 }}
+          labelStyle={{ color: '#2c497f', fontSize: 18 }}
         >
           Login
         </Button>

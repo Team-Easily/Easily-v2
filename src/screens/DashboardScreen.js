@@ -16,7 +16,7 @@ export const DashboardScreen = () => {
   return (
     <View style={styles.layout}>
       <View>
-        <Headline>Welcome{currentUser?.displayName}!</Headline>
+        <Headline>Welcome {currentUser?.displayName}!</Headline>
         <Weather />
       </View>
     </View>

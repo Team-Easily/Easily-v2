@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
-import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Image, StyleSheet } from 'react-native';
 import { Headline, Button, TextInput } from 'react-native-paper';
 import { auth, db } from '../firebase/firebase';
 import { useSelector } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
+import { uploadImageAsync } from '../firebase/firebaseMethods';
 
 export const EditProfileScreen = ({ navigation }) => {
   const userUid = useSelector((state) => state.auth.currentUserUid);
@@ -12,6 +14,7 @@ export const EditProfileScreen = ({ navigation }) => {
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [address, setAddress] = useState('');
+  const [image, setImage] = useState('');
 
   const getUser = async () => {
     const docSnap = await getDoc(doc(db, 'users', userUid));
@@ -22,12 +25,32 @@ export const EditProfileScreen = ({ navigation }) => {
       console.log('No such document!');
     }
   };
+
   useEffect(() => {
     getUser();
   }, [userUid]);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   const handleUpdate = async () => {
     try {
+      if (image !== '') {
+        const photoURL = await uploadImageAsync(image);
+        console.log('PHOTO URL: ', photoURL);
+        await updateDoc(doc(db, 'users', userUid), { imageUrl: photoURL });
+      }
       if (userName !== '') {
         await updateDoc(doc(db, 'users', userUid), { userName: userName });
       }
@@ -48,13 +71,42 @@ export const EditProfileScreen = ({ navigation }) => {
     }
   };
 
+  const ImageComponent = () => {
+    if (image !== '') {
+      return (
+        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ paddingHorizontal: 30 }}>
         <View style={{ alignItems: 'center' }}>
           <Headline>Edit Profile</Headline>
+          <ImageComponent />
+          {/* {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 150, height: 150 }}
+            />
+          )} */}
         </View>
         <View>
+          <Button
+            style={styles.button}
+            mode='contained'
+            onPress={pickImage}
+            color='#90be6d'
+            contentStyle={{ height: 45 }}
+            labelStyle={{
+              color: 'white',
+              fontSize: 18,
+            }}
+          >
+            Set Avatar Image
+          </Button>
+
           <TextInput
             style={styles.textInput}
             value={userName}
