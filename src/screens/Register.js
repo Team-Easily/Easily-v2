@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, Image } from 'react-native';
 import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
@@ -89,6 +89,9 @@ const Register = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View>
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.logo} source={require('../assets/logo.png')} />
+        </View>
         <TextInput
           placeholder='name'
           value={userName}
@@ -152,9 +155,15 @@ const Register = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 300,
+    marginTop: 100,
+    flex: 1,
     marginLeft: 40,
     marginRight: 40,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    margin: 30,
   },
 });
 

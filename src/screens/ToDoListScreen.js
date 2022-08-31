@@ -188,7 +188,6 @@ export const ToDoListScreen = ({ navigation }) => {
         author: auth.currentUser.uid,
         completed: completed,
         frequency: 'once',
-        // createdAt: Timestamp.now(),
       });
     } catch (err) {
       console.error(err);

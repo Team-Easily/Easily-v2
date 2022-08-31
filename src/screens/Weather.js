@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Title, ActivityIndicator } from 'react-native-paper';
 import * as Location from 'expo-location';
-import { weatherConditions } from '../utils/WeatherConditions';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { WeatherConditions } from '../utils/WeatherConditions';
 
 const API_key = '797224bcfbcb0b21363635cdf99ddbba';
 
@@ -39,31 +41,52 @@ const Weather = () => {
     data.city ? setLoading(false) : null;
   }, [data]);
 
-  const currentConditions = data?.list[0].weather[0].description;
-
   return (
     <View>
       {loading ? (
-        <Text>Loading...</Text>
+        <ActivityIndicator animating={true} color={'#90be6d'} size={'large'} />
       ) : (
         <View
           style={[
             styles.weatherContainer,
-            { backgroundColor: weatherConditions[currentConditions].color },
+            {
+              backgroundColor:
+                WeatherConditions[data?.list[0].weather[0].main].color,
+            },
           ]}
         >
           <View style={styles.weatherItemContainer}>
-            <Text style={styles.title}>Today's Weather</Text>
-            <Text style={styles.subtitle}>{data?.city.name}</Text>
-            <Text>
-              {data?.city.coord.lat}, {data?.city.coord.lon}
-            </Text>
-            <Text>Current Temperature: {data?.list[0].main.temp}°F</Text>
-            <Text>Feels Like: {data?.list[0].main.feels_like}°F</Text>
-            <Text>Humidity: {data?.list[0].main.humidity}% </Text>
-            <Text>
-              Current Conditions: {data?.list[0].weather[0].description}
-            </Text>
+            <View style={styles.headerContainer}>
+              <MaterialCommunityIcons
+                size={65}
+                name={WeatherConditions[data?.list[0].weather[0].main].icon}
+                color={'#fff'}
+              />
+              <Text style={styles.tempText}>
+                {Math.round(data?.list[0].main.temp)}˚
+              </Text>
+            </View>
+            <View style={styles.weatherRow2}>
+              <Title style={styles.city}>{data?.city.name}</Title>
+              <Title style={styles.textUppercase}>
+                {data?.list[0].weather[0].description}
+              </Title>
+            </View>
+            <View style={styles.weatherRow3}>
+              <Text style={styles.bottomRowText}>
+                Feels Like: {Math.round(data?.list[0].main.feels_like)}°F
+              </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <MaterialCommunityIcons
+                  size={20}
+                  name={'water-percent'}
+                  color={'#fff'}
+                />
+                <Text style={styles.bottomRowText}>
+                  {data?.list[0].main.humidity}%
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       )}
@@ -72,25 +95,55 @@ const Weather = () => {
 };
 
 const styles = StyleSheet.create({
-  layout: {
-    flex: 1,
-    backgroundColor: '#E8EAED',
+  weatherContainer: {
+    padding: 25,
+    borderRadius: 10,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
+  tempText: {
+    fontSize: 55,
+    color: '#fff',
   },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  weatherItem: {
+  headerContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 20,
+    height: 'auto',
+    color: '#fff',
+  },
+  weatherRow2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    height: 15,
+    color: '#fff',
+  },
+  weatherRow3: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 15,
+    color: '#fff',
+  },
+  fontColor: {
+    color: '#fff',
+  },
+  city: {
+    color: '#fff',
+    textTransform: 'uppercase',
+    fontSize: 17,
+  },
+  textUppercase: {
+    color: '#fff',
+    textTransform: 'uppercase',
+  },
+  bottomRowText: {
+    color: '#fff',
+    fontSize: 17,
   },
   weatherItemContainer: {
-    paddingTop: '10%',
-    paddingHorizontal: 20,
+    flexDirection: 'column',
   },
 });
 

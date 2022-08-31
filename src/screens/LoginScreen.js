@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
@@ -75,6 +75,9 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View>
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.logo} source={require('../assets/logo.png')} />
+        </View>
         <TextInput
           placeholder='email'
           value={email}
@@ -134,9 +137,15 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 300,
+    marginTop: 100,
+    flex: 1,
     marginLeft: 40,
     marginRight: 40,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    margin: 30,
   },
   googleButton: {
     fontFamily: 'Roboto',

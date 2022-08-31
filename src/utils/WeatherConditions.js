@@ -1,4 +1,4 @@
-export const weatherConditions = {
+export const WeatherConditions = {
   Rain: {
     color: '#005BEA',
     title: 'Raining',
