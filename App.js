@@ -17,6 +17,7 @@ import store from './src/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { AuthProvider } from './src/authProvider';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -94,38 +95,34 @@ const NavBar = () => (
 
 function App() {
   const auth = getAuth();
-  const currentUser = auth.currentUser;
-  const [user, setUser] = useState([]);
-
-  useEffect(() => {
-    setUser(currentUser);
-  }, [currentUser]);
 
   return (
     <SafeAreaProvider>
       <StoreProvider store={store}>
-        <PaperProvider theme={DefaultTheme}>
-          <NavigationContainer>
-            {auth ? (
-              <MainStack.Navigator
-                initialRouteName="Welcome"
-                screenOptions={{ headerShown: false }}
-              >
-                <MainStack.Screen name="Welcome" component={WelcomeScreen} />
-                <MainStack.Screen name="Login" component={LoginScreen} />
-                <MainStack.Screen name="Register" component={Register} />
-                <MainStack.Screen name="Nav Bar" component={NavBar} />
-              </MainStack.Navigator>
-            ) : (
-              <MainStack.Navigator
-                initialRouteName="Nav Bar"
-                screenOptions={{ headerShown: false }}
-              >
-                <MainStack.Screen name="Nav Bar" component={NavBar} />
-              </MainStack.Navigator>
-            )}
-          </NavigationContainer>
-        </PaperProvider>
+        <AuthProvider>
+          <PaperProvider theme={DefaultTheme}>
+            <NavigationContainer>
+              {auth ? (
+                <MainStack.Navigator
+                  initialRouteName="Welcome"
+                  screenOptions={{ headerShown: false }}
+                >
+                  <MainStack.Screen name="Welcome" component={WelcomeScreen} />
+                  <MainStack.Screen name="Login" component={LoginScreen} />
+                  <MainStack.Screen name="Register" component={Register} />
+                  <MainStack.Screen name="Nav Bar" component={NavBar} />
+                </MainStack.Navigator>
+              ) : (
+                <MainStack.Navigator
+                  initialRouteName="Nav Bar"
+                  screenOptions={{ headerShown: false }}
+                >
+                  <MainStack.Screen name="Nav Bar" component={NavBar} />
+                </MainStack.Navigator>
+              )}
+            </NavigationContainer>
+          </PaperProvider>
+        </AuthProvider>
       </StoreProvider>
     </SafeAreaProvider>
   );

@@ -28,21 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 // --TODOs
 // --IMAGE UPLOAD
 
-const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    return user;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
 const registerWithEmailAndPassword = async (userName, email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -66,10 +51,6 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
     console.error(err);
     throw err;
   }
-};
-
-const logout = async () => {
-  await signOut(auth);
 };
 
 const getUserByUid = async (uid) => {
@@ -218,8 +199,6 @@ export async function uploadImageAsync(uri) {
 export {
   getUserByUid,
   registerWithEmailAndPassword,
-  logInWithEmailAndPassword,
-  logout,
   getTodosByUid,
   addTodosByUser,
   updateTodosByUser,
