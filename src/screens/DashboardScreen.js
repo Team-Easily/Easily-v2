@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Headline } from "react-native-paper";
-import { getAuth } from "firebase/auth";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Headline } from 'react-native-paper';
+import { getAuth } from 'firebase/auth';
+import Weather from './Weather';
 
 export const DashboardScreen = () => {
+  const [currentUser, setcurrentUser] = useState({});
   const auth = getAuth();
   const user = auth.currentUser;
 
+  useEffect(() => {
+    setcurrentUser(user);
+  }, []);
+
   return (
     <View style={styles.layout}>
-      <Headline>Dashboard</Headline>
-      {user ? (
-        <View>
-          <Text>{user.email}</Text>
-          <Text>{user?.points}</Text>
-          <Text>{user.userName}</Text>
-        </View>
-      ) : (
-        "No user"
-      )}
+      <View>
+        <Headline>Welcome{currentUser?.displayName}!</Headline>
+        <Weather />
+      </View>
     </View>
   );
 };
@@ -26,8 +26,8 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,
