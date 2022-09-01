@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
+    "@google-cloud/local-auth": "^2.1.0",
     "@react-native-async-storage/async-storage": "^1.17.9",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/material-bottom-tabs": "^6.2.2",
@@ -18,9 +19,11 @@
     "@reduxjs/toolkit": "^1.8.4",
     "expo": "~46.0.8",
     "expo-image-picker": "~13.3.1",
+    "expo-location": "~14.3.0",
     "expo-splash-screen": "~0.16.1",
     "expo-status-bar": "~1.4.0",
     "firebase": "^9.9.3",
+    "googleapis": "^105.0.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
     "native-base": "^3.4.13",
@@ -36,8 +39,7 @@
     "react-native-webview": "^11.23.0",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
-    "uuid": "^8.3.2",
-    "expo-location": "~14.3.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
