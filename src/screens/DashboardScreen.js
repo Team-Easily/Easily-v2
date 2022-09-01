@@ -15,6 +15,7 @@ export const DashboardScreen = () => {
 
   useEffect(() => {
     const getUserOrCreate = async () => {
+      console.log('AUTH USER', authUser);
       const docSnap = await getDoc(doc(db, 'users', authUser.uid));
       if (docSnap.exists()) {
         dispatch(setCurrentUser(docSnap.data()));
