@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, Image } from 'react-native';
 import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { setUserUid } from '../components/auth/authSlice';
+import useAuth from '../authProvider';
 
 const Register = ({ navigation }) => {
+  const { signInManually, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userName, setUserName] = useState('');
@@ -15,9 +14,6 @@ const Register = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const dispatch = useDispatch();
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const db = getFirestore();
 
   const validate = () => {
     if (email === '') {
@@ -47,7 +43,7 @@ const Register = ({ navigation }) => {
           email,
           password
         );
-        dispatch(setUserUid(user.uid));
+        // dispatch(setUserUid(user.uid));
         navigation.push('Nav Bar');
       } catch (error) {
         Alert.alert('Sign up failed', 'Please try again.');
@@ -56,66 +52,44 @@ const Register = ({ navigation }) => {
   };
 
   const googleSignInWithPopup = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API. We'll probably want to add it to the store.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const googleUser = result.user;
-
-        // get user points, if user is not already in db then register
-        if (!googleUser.points) {
-          setDoc(doc(db, 'users', googleUser.uid), {
-            userName: googleUser.displayName,
-            email: googleUser.email,
-            points: 0,
-            uid: googleUser.uid,
-            imageUrl: googleUser.photoURL,
-          });
-          console.log('GMAIL USER REGISTERED!', googleUser);
-        }
-
-        console.log('GMAIL USER LOGGED IN!', googleUser);
-        navigation.push('Nav Bar');
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage, errorCode);
-      });
+    signInWithGoogle();
+    // get user points, if user is not already in db then register
+    navigation.push('Nav Bar');
   };
 
   return (
     <View style={styles.container}>
       <View>
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.logo} source={require('../assets/logo.png')} />
+        </View>
         <TextInput
-          placeholder='name'
+          placeholder="name"
           value={userName}
           onChangeText={(text) => setUserName(text)}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <Button
           style={{ marginTop: 15 }}
-          icon='send'
-          mode='contained'
+          icon="send"
+          mode="contained"
           onPress={submitRegister}
-          color='#07BEB8'
+          color="#07BEB8"
           contentStyle={{ height: 45 }}
           labelStyle={{ color: 'white', fontSize: 18 }}
         >
@@ -124,10 +98,10 @@ const Register = ({ navigation }) => {
 
         <Button
           style={{ marginTop: 15 }}
-          icon='google'
-          mode='contained'
+          icon="google"
+          mode="contained"
           onPress={googleSignInWithPopup}
-          color='#4285F4'
+          color="#4285F4"
           contentStyle={{ height: 45 }}
           labelStyle={{ color: 'white', fontSize: 18 }}
         >
@@ -136,12 +110,12 @@ const Register = ({ navigation }) => {
 
         <Button
           style={{ marginTop: 15 }}
-          mode='text'
+          mode="text"
           onPress={() => {
             submitGoToLogin();
           }}
           contentStyle={{ height: 45 }}
-          labelStyle={{ color: '#07BEB8', fontSize: 18 }}
+          labelStyle={{ color: '#2c497f', fontSize: 18 }}
         >
           Login
         </Button>
@@ -152,9 +126,15 @@ const Register = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 300,
+    marginTop: 100,
+    flex: 1,
     marginLeft: 40,
     marginRight: 40,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    margin: 30,
   },
 });
 

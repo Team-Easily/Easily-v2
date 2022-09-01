@@ -36,6 +36,10 @@
     "react-native-webview": "^11.23.0",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
+<<<<<<< HEAD
+=======
+    "uuid": "^8.3.2",
+>>>>>>> a2dc51b50325d35cb22fad0d29278aa0633ae1e3
     "expo-location": "~14.3.0"
   },
   "devDependencies": {
