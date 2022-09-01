@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
@@ -13,8 +13,6 @@ const LoginScreen = ({ navigation }) => {
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const dispatch = useDispatch();
-  const db = getFirestore();
 
   useEffect(() => {
     if (isLoggedIn) {

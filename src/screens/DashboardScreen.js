@@ -14,11 +14,9 @@ export const DashboardScreen = () => {
   const { authUser } = useAuth();
 
   useEffect(() => {
-    console.log('AUTH USER', authUser);
     const getUserOrCreate = async () => {
       const docSnap = await getDoc(doc(db, 'users', authUser.uid));
       if (docSnap.exists()) {
-        console.log('DOC SNAP', docSnap);
         dispatch(setCurrentUser(docSnap.data()));
       } else {
         const user = {
@@ -51,9 +49,7 @@ export const DashboardScreen = () => {
     <SafeAreaView>
       <View style={styles.layout}>
         <Headline style={styles.headline1}>Welcome,</Headline>
-        <Headline style={styles.headline2}>
-          {currentUser?.displayName}!
-        </Headline>
+        <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
       </View>
     </SafeAreaView>

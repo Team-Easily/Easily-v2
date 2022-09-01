@@ -1,35 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { updateDoc, doc, increment } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { updateDoc, doc, increment } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   Checkbox,
   TextInput,
   Button,
   Title,
   IconButton,
-} from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { setTodo } from "../components/todos/todoSlice";
+} from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodo } from '../components/todos/todoSlice';
 import {
   getTodoById,
   updateTodo,
   deleteTodoById,
-} from "../firebase/firebaseMethods";
-import { useNavigation } from "@react-navigation/native";
-import DropDownPicker from "react-native-dropdown-picker";
+} from '../firebase/firebaseMethods';
+import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
+  const user = useSelector((state) => state.auth.currentUser);
   const [completed, setCompleted] = useState(todo.completed);
-  const [todoDescription, setTodoDescription] = useState("");
+  const [todoDescription, setTodoDescription] = useState('');
   const [value, setValue] = useState(todo.frequency);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
-    { label: "once", value: "once" },
-    { label: "weekly", value: "weekly" },
-    { label: "monthly", value: "monthly" },
+    { label: 'once', value: 'once' },
+    { label: 'weekly', value: 'weekly' },
+    { label: 'monthly', value: 'monthly' },
   ]);
   const nav = useNavigation();
 
@@ -43,7 +44,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   }, []);
 
   const addPointToUser = async (id) => {
-    const userDocRef = doc(db, "users", id);
+    const userDocRef = doc(db, 'users', id);
     try {
       await updateDoc(userDocRef, {
         points: increment(1),
@@ -54,7 +55,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const removePointFromUser = async (id) => {
-    const userDocRef = doc(db, "users", id);
+    const userDocRef = doc(db, 'users', id);
     try {
       await updateDoc(userDocRef, {
         points: increment(-1),
@@ -65,15 +66,15 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const handleCheckedChange = async (id, todoCompleted) => {
-    const taskDocRef = doc(db, "todos", id);
+    const taskDocRef = doc(db, 'todos', id);
     try {
       await updateDoc(taskDocRef, {
         completed: !todoCompleted,
       });
       if (todoCompleted) {
-        removePointFromUser(auth.currentUser.uid);
+        removePointFromUser(user.uid);
       } else {
-        addPointToUser(auth.currentUser.uid);
+        addPointToUser(user.uid);
       }
     } catch (err) {
       alert(err);
@@ -83,7 +84,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    if (todoDescription !== "") {
+    if (todoDescription !== '') {
       await updateTodo(todo.id, {
         description: todoDescription,
       });
@@ -96,15 +97,15 @@ export const TodoItemScreen = ({ navigation, route }) => {
     //   ...(todoDescription !== '' && {description: todoDescription}), frequency: value}
     // }
     // ))
-    setTodoDescription("");
+    setTodoDescription('');
     setValue(null);
-    nav.navigate("TodoList");
+    nav.navigate('TodoList');
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteTodoById(id);
-      nav.navigate("TodoList");
+      nav.navigate('TodoList');
     } catch (err) {
       console.error(err);
     }
@@ -118,7 +119,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
         </View>
         <TextInput
           style={styles.itemDescription}
-          placeholder={todo.description ? todo.description : ""}
+          placeholder={todo.description ? todo.description : ''}
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
         />
@@ -133,7 +134,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
-            schema={{ selectable: "selectable" }}
+            schema={{ selectable: 'selectable' }}
             containerStyle={{ width: 100 }}
             textStyle={{
               fontSize: 15,
@@ -142,7 +143,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
           <View style={styles.icons}>
             <Checkbox
               style={styles.checkboxOutline}
-              status={todo.completed ? "checked" : "unchecked"}
+              status={todo.completed ? 'checked' : 'unchecked'}
               onPress={() => handleCheckedChange(todo.id, todo.completed)}
             />
             <IconButton
@@ -160,7 +161,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
             color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{
-              color: "white",
+              color: 'white',
               fontSize: 18,
             }}
           >
@@ -169,11 +170,11 @@ export const TodoItemScreen = ({ navigation, route }) => {
           <Button
             style={styles.button}
             mode="contained"
-            onPress={() => nav.navigate("TodoList")}
+            onPress={() => nav.navigate('TodoList')}
             color="#07BEB8"
             contentStyle={{ height: 45 }}
             labelStyle={{
-              color: "white",
+              color: 'white',
               fontSize: 18,
             }}
           >
@@ -188,9 +189,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8EAED",
-    height: "100%",
-    justifyContent: "center",
+    backgroundColor: '#E8EAED',
+    height: '100%',
+    justifyContent: 'center',
   },
   taskWrapper: {
     paddingHorizontal: 20,
@@ -202,23 +203,23 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   items: {
     marginTop: 10,
   },
   buttonContainer: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   iconContainer: {
     flex: 1,
-    flexDirection: "row",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     zIndex: 1000,
     paddingVertical: 20,
     paddingLeft: 10,
@@ -232,14 +233,14 @@ const styles = StyleSheet.create({
     height: 100,
   },
   dropDown: {
-    borderColor: "#999999",
-    justifyContent: "flex-start",
+    borderColor: '#999999',
+    justifyContent: 'flex-start',
     fontSize: 12,
   },
   icons: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 });
