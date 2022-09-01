@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { setUserUid } from '../components/auth/authSlice';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import useAuth from '../authProvider';
 
 const LoginScreen = ({ navigation }) => {
+  const { signInManually, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
-  const dispatch = useDispatch();
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const db = getFirestore();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.push('Nav Bar');
+    }
+  }, [isLoggedIn]);
 
   // React States
   const resetStates = () => {
@@ -29,9 +32,7 @@ const LoginScreen = ({ navigation }) => {
 
   const submitLogin = async () => {
     try {
-      const user = await logInWithEmailAndPassword(email, password);
-      dispatch(setUserUid(user.uid));
-      navigation.push('Nav Bar');
+      signInManually(email, password);
       resetStates();
     } catch (error) {
       setIsError(true);
@@ -40,36 +41,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const googleSignInWithPopup = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API. We'll probably want to add it to the store.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const googleUser = result.user;
-
-        // get user points, if user is not already in db then register
-        if (!googleUser.points) {
-          setDoc(doc(db, 'users', googleUser.uid), {
-            address: '',
-            email: googleUser.email,
-            firstName: '',
-            imageUrl: googleUser.photoURL,
-            lastName: '',
-            points: 0,
-            uid: googleUser.uid,
-            userName: googleUser.displayName,
-          });
-        }
-
-        dispatch(setUserUid(googleUser.uid));
-        navigation.push('Nav Bar');
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage, errorCode);
-      });
+    signInWithGoogle();
   };
 
   return (
@@ -79,26 +51,26 @@ const LoginScreen = ({ navigation }) => {
           <Image style={styles.logo} source={require('../assets/logo.png')} />
         </View>
         <TextInput
-          placeholder='email'
+          placeholder="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          mode='flat'
+          mode="flat"
         />
         <TextInput
-          placeholder='password'
+          placeholder="password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode='flat'
+          mode="flat"
         />
         <View>
           <Button
             style={{ marginTop: 15 }}
-            icon='send'
-            mode='contained'
+            icon="send"
+            mode="contained"
             onPress={submitLogin}
-            color='#07BEB8'
+            color="#07BEB8"
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -107,10 +79,10 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            icon='google'
-            mode='contained'
+            icon="google"
+            mode="contained"
             onPress={googleSignInWithPopup}
-            color='#4285F4'
+            color="#4285F4"
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -119,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            mode='text'
+            mode="text"
             onPress={() => {
               submitGoToRegister();
             }}
