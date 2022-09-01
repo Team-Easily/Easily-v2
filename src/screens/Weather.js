@@ -44,7 +44,12 @@ const Weather = () => {
   return (
     <View>
       {loading ? (
-        <ActivityIndicator animating={true} color={'#90be6d'} size={'large'} />
+        <ActivityIndicator
+          style={styles.loading}
+          animating={true}
+          color={'#90be6d'}
+          size={'large'}
+        />
       ) : (
         <View
           style={[
@@ -68,7 +73,7 @@ const Weather = () => {
             </View>
             <View style={styles.weatherRow2}>
               <Title style={styles.city}>{data?.city.name}</Title>
-              <Title style={styles.textUppercase}>
+              <Title style={styles.description}>
                 {data?.list[0].weather[0].description}
               </Title>
             </View>
@@ -98,6 +103,15 @@ const styles = StyleSheet.create({
   weatherContainer: {
     padding: 25,
     borderRadius: 10,
+    marginBottom: 40,
+    shadowColor: '#64646F',
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.2,
+    shadowRadius: 29,
+  },
+  loading: {
+    padding: 25,
+    marginBottom: 40,
   },
   tempText: {
     fontSize: 55,
@@ -115,7 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
     height: 15,
     color: '#fff',
   },
@@ -125,6 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 15,
     color: '#fff',
+    marginTop: 20,
   },
   fontColor: {
     color: '#fff',
@@ -134,9 +148,10 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 17,
   },
-  textUppercase: {
+  description: {
     color: '#fff',
     textTransform: 'uppercase',
+    textAlign: 'right',
   },
   bottomRowText: {
     color: '#fff',

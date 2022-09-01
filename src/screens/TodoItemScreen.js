@@ -122,6 +122,8 @@ export const TodoItemScreen = ({ navigation, route }) => {
           placeholder={todo.description ? todo.description : ''}
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
+          multiline={true}
+          numberOfLines={3}
         />
 
         <View style={styles.iconContainer}>
@@ -147,8 +149,8 @@ export const TodoItemScreen = ({ navigation, route }) => {
               onPress={() => handleCheckedChange(todo.id, todo.completed)}
             />
             <IconButton
-              icon="trash-can-outline"
-              color="#8f3985"
+              icon='trash-can-outline'
+              color='#8f3985'
               onPress={() => handleDelete(todo.id)}
             />
           </View>
@@ -156,9 +158,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -169,9 +171,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
           </Button>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={() => nav.navigate('TodoList')}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -205,6 +207,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  titleRow: {
+    marginBottom: 20,
+  },
   title: {
     fontWeight: 'bold',
   },
@@ -229,9 +234,9 @@ const styles = StyleSheet.create({
     minWidth: 180,
     marginBottom: 15,
   },
-  itemDescription: {
-    height: 100,
-  },
+  // itemDescription: {
+  //   height: 100,
+  // },
   dropDown: {
     borderColor: '#999999',
     justifyContent: 'flex-start',
