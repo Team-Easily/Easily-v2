@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import Weather from './Weather';
-<<<<<<< HEAD
 import Calendars from './Calendar';
-=======
 import useAuth from '../authProvider';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
->>>>>>> a2dc51b50325d35cb22fad0d29278aa0633ae1e3
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
