@@ -28,21 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 // --TODOs
 // --IMAGE UPLOAD
 
-const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    return user;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
 const registerWithEmailAndPassword = async (userName, email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -66,10 +51,6 @@ const registerWithEmailAndPassword = async (userName, email, password) => {
     console.error(err);
     throw err;
   }
-};
-
-const logout = async () => {
-  await signOut(auth);
 };
 
 const getUserByUid = async (uid) => {
@@ -208,18 +189,12 @@ export async function uploadImageAsync(uri) {
   const fileRef = ref(getStorage(), uuidv4());
   const result = await uploadBytes(fileRef, blob);
 
-  // We're done with the blob, close and release it
-  // TypeError: blob.close is not a function
-  // blob.close();
-
   return await getDownloadURL(fileRef);
 }
 
 export {
   getUserByUid,
   registerWithEmailAndPassword,
-  logInWithEmailAndPassword,
-  logout,
   getTodosByUid,
   addTodosByUser,
   updateTodosByUser,
