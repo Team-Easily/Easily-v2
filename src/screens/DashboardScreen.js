@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import { getAuth } from 'firebase/auth';
 import Weather from './Weather';
@@ -14,20 +14,34 @@ export const DashboardScreen = () => {
   }, []);
 
   return (
-    <View style={styles.layout}>
-      <View>
-        <Headline>Welcome {currentUser?.displayName}!</Headline>
+    <SafeAreaView>
+      <View style={styles.layout}>
+        <Headline style={styles.headline1}>Welcome,</Headline>
+        <Headline style={styles.headline2}>
+          {currentUser?.displayName}!
+        </Headline>
         <Weather />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 30,
+  },
+  headline1: {
+    color: '#2c497f',
+    marginBottom: 20,
+    fontSize: 35,
+    fontWeight: '500',
+  },
+  headline2: {
+    color: '#2c497f',
+    marginBottom: 40,
+    fontSize: 35,
+    fontWeight: '800',
   },
   title: {
     fontSize: 32,
