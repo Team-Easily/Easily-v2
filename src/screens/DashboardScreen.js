@@ -1,36 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Headline } from "react-native-paper";
-import Weather from "./Weather";
-import useAuth from "../authProvider";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { setCurrentUser } from "../components/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Headline } from 'react-native-paper';
+import Weather from './Weather';
+import useAuth from '../authProvider';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
+import { setCurrentUser } from '../components/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const DashboardScreen = () => {
-  const currentUser = useSelector((state) => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
   const { authUser } = useAuth();
 
   useEffect(() => {
-    console.log(authUser);
+    console.log('AUTH USER', authUser);
     const getUserOrCreate = async () => {
-      const docSnap = await getDoc(doc(db, "users", authUser.uid));
+      const docSnap = await getDoc(doc(db, 'users', authUser.uid));
       if (docSnap.exists()) {
+        console.log('DOC SNAP', docSnap);
         dispatch(setCurrentUser(docSnap.data()));
       } else {
         const user = {
-          address: "",
+          address: '',
           email: authUser.email,
-          firstName: "",
+          firstName: '',
           imageUrl: authUser.photoURL,
-          lastName: "",
+          lastName: '',
           points: 0,
           uid: authUser.uid,
           userName: authUser.displayName,
         };
-        setDoc(doc(db, "users", authUser.uid));
+        setDoc(doc(db, 'users', authUser.uid), {
+          address: '',
+          email: authUser.email,
+          firstName: '',
+          imageUrl: authUser.photoURL,
+          lastName: '',
+          points: 0,
+          uid: authUser.uid,
+          userName: authUser.displayName,
+        });
         dispatch(setCurrentUser(user));
       }
     };
@@ -40,7 +50,7 @@ export const DashboardScreen = () => {
   return (
     <View style={styles.layout}>
       <View>
-        <Headline>Welcome! {currentUser?.userName}</Headline>
+        <Headline>Welcome! {user?.userName}</Headline>
         <Weather />
       </View>
     </View>
@@ -50,8 +60,8 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,

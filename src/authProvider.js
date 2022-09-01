@@ -4,17 +4,17 @@ import React, {
   createContext,
   useContext,
   useMemo,
-} from "react";
+} from 'react';
 import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
   signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth } from "./firebase/firebase";
-import { setIsLoggedIn } from "./components/auth/authSlice";
-import { useDispatch } from "react-redux";
+} from 'firebase/auth';
+import { auth } from './firebase/firebase';
+import { setCurrentUser, setIsLoggedIn } from './components/auth/authSlice';
+import { useDispatch } from 'react-redux';
 
 export const AuthContext = createContext({});
 const provider = new GoogleAuthProvider();

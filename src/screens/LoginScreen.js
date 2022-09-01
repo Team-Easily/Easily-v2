@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { TextInput, Button } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import useAuth from "../authProvider";
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import useAuth from '../authProvider';
 
 const LoginScreen = ({ navigation }) => {
-  const { authUser, signInManually, signInWithGoogle } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { signInManually, signInWithGoogle } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
-  const [errMessage, setErrMessage] = useState("");
+  const [errMessage, setErrMessage] = useState('');
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const db = getFirestore();
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigation.push("Nav Bar");
+      navigation.push('Nav Bar');
     }
   }, [isLoggedIn]);
 
   // React States
   const resetStates = () => {
-    setEmail("");
-    setPassword("");
+    setEmail('');
+    setPassword('');
   };
 
   const submitGoToRegister = () => {
-    navigation.push("Register");
+    navigation.push('Register');
   };
 
   const submitLogin = async () => {
@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
             onPress={submitLogin}
             color="#07BEB8"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: "white", fontSize: 18 }}
+            labelStyle={{ color: 'white', fontSize: 18 }}
           >
             Login
           </Button>
@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
             onPress={googleSignInWithPopup}
             color="#4285F4"
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: "white", fontSize: 18 }}
+            labelStyle={{ color: 'white', fontSize: 18 }}
           >
             Login with Google
           </Button>
@@ -94,7 +94,7 @@ const LoginScreen = ({ navigation }) => {
               submitGoToRegister();
             }}
             contentStyle={{ height: 45 }}
-            labelStyle={{ color: "#2c497f", fontSize: 18 }}
+            labelStyle={{ color: '#2c497f', fontSize: 18 }}
           >
             Create New Account
           </Button>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   googleButton: {
-    fontFamily: "Roboto",
+    fontFamily: 'Roboto',
   },
 });
 
