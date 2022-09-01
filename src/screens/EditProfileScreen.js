@@ -167,8 +167,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    // paddingHorizontal: 30,
-    // alignContent: "center",
   },
   textInput: {
     marginTop: 15,
@@ -177,15 +175,4 @@ const styles = StyleSheet.create({
     minWidth: 180,
     marginTop: 15,
   },
-  // buttons: {
-  //   alignItems: 'center',
-  // },
-  // button: {
-  //   minWidth: 180,
-  //   marginBottom: 15,
-  // },
-  // list: {
-  //   marginTop: 30,
-  //   marginBottom: 30,
-  // },
 });

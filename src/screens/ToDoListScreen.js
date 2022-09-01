@@ -190,8 +190,7 @@ export const ToDoListScreen = ({ navigation }) => {
         description: todoDescription,
         author: auth.currentUser.uid,
         completed: completed,
-        frequency: "once",
-        // createdAt: Timestamp.now(),
+        frequency: 'once',
       });
     } catch (err) {
       console.error(err);

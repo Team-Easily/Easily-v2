@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Alert } from "react-native";
-import { registerWithEmailAndPassword } from "../firebase/firebaseMethods";
-import { TextInput, Button } from "react-native-paper";
-import { useDispatch } from "react-redux";
-import useAuth from "../authProvider";
+import React, { useState } from 'react';
+import { View, StyleSheet, Alert, Image } from 'react-native';
+import { registerWithEmailAndPassword } from '../firebase/firebaseMethods';
+import { TextInput, Button } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import useAuth from '../authProvider';
 
 const Register = ({ navigation }) => {
   const { signInManually, signInWithGoogle } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userName, setUserName] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
   const dispatch = useDispatch();
 
   const validate = () => {
-    if (email === "") {
-      setEmailError("Please enter a valid email.");
+    if (email === '') {
+      setEmailError('Please enter a valid email.');
     }
-    if (password === "") {
-      setPasswordError("Please enter your password.");
+    if (password === '') {
+      setPasswordError('Please enter your password.');
     }
-    if (userName === "") {
-      setUsernameError("Please enter a valid username.");
+    if (userName === '') {
+      setUsernameError('Please enter a valid username.');
     }
     if (emailError || passwordError || usernameError) {
       return false;
@@ -32,7 +32,7 @@ const Register = ({ navigation }) => {
   };
 
   const submitGoToLogin = () => {
-    navigation.push("Login");
+    navigation.push('Login');
   };
 
   const submitRegister = async () => {
@@ -44,9 +44,9 @@ const Register = ({ navigation }) => {
           password
         );
         // dispatch(setUserUid(user.uid));
-        navigation.push("Nav Bar");
+        navigation.push('Nav Bar');
       } catch (error) {
-        Alert.alert("Sign up failed", "Please try again.");
+        Alert.alert('Sign up failed', 'Please try again.');
       }
     }
   };
@@ -54,12 +54,15 @@ const Register = ({ navigation }) => {
   const googleSignInWithPopup = () => {
     signInWithGoogle();
     // get user points, if user is not already in db then register
-    navigation.push("Nav Bar");
+    navigation.push('Nav Bar');
   };
 
   return (
     <View style={styles.container}>
       <View>
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.logo} source={require('../assets/logo.png')} />
+        </View>
         <TextInput
           placeholder="name"
           value={userName}
@@ -88,7 +91,7 @@ const Register = ({ navigation }) => {
           onPress={submitRegister}
           color="#07BEB8"
           contentStyle={{ height: 45 }}
-          labelStyle={{ color: "white", fontSize: 18 }}
+          labelStyle={{ color: 'white', fontSize: 18 }}
         >
           Register
         </Button>
@@ -100,7 +103,7 @@ const Register = ({ navigation }) => {
           onPress={googleSignInWithPopup}
           color="#4285F4"
           contentStyle={{ height: 45 }}
-          labelStyle={{ color: "white", fontSize: 18 }}
+          labelStyle={{ color: 'white', fontSize: 18 }}
         >
           Login with Google
         </Button>
@@ -112,7 +115,7 @@ const Register = ({ navigation }) => {
             submitGoToLogin();
           }}
           contentStyle={{ height: 45 }}
-          labelStyle={{ color: "#2c497f", fontSize: 18 }}
+          labelStyle={{ color: '#2c497f', fontSize: 18 }}
         >
           Login
         </Button>
@@ -123,9 +126,15 @@ const Register = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 300,
+    marginTop: 100,
+    flex: 1,
     marginLeft: 40,
     marginRight: 40,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    margin: 30,
   },
 });
 

@@ -95,9 +95,9 @@ export const ProfileScreen = ({ navigation }) => {
           </Button>
           <Button
             style={styles.button}
-            icon="exit-to-app"
-            // icon='hand-wave'
-            mode="contained"
+            // icon='exit-to-app'
+            icon='hand-wave'
+            mode='contained'
             onPress={handleSignOut}
             color="#90be6d"
             contentStyle={{ height: 45 }}
