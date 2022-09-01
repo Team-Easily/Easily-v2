@@ -7,11 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../firebase/firebaseMethods';
 import { setCurrentUser } from '../components/auth/authSlice';
-import useAuth from '../authProvider';
 
 export const EditProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { authUser, logout } = useAuth();
   const user = useSelector((state) => state.auth.currentUser);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -20,7 +18,7 @@ export const EditProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState('');
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', authUser.uid));
+    const docSnap = await getDoc(doc(db, 'users', user.uid));
     if (docSnap.exists()) {
       dispatch(setCurrentUser(docSnap.data()));
       console.log(docSnap.data());
@@ -28,10 +26,6 @@ export const EditProfileScreen = ({ navigation }) => {
       console.log('No such document!');
     }
   };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -51,7 +45,6 @@ export const EditProfileScreen = ({ navigation }) => {
     try {
       if (image !== '') {
         const photoURL = await uploadImageAsync(image);
-        console.log('PHOTO URL: ', photoURL);
         await updateDoc(doc(db, 'users', user.uid), { imageUrl: photoURL });
       }
       if (userName !== '') {
@@ -90,12 +83,6 @@ export const EditProfileScreen = ({ navigation }) => {
         <View style={{ alignItems: 'center' }}>
           <Headline>Edit Profile</Headline>
           <ImageComponent />
-          {/* {image && (
-            <Image
-              source={{ uri: image }}
-              style={{ width: 150, height: 150 }}
-            />
-          )} */}
         </View>
         <View>
           <Button

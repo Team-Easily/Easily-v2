@@ -2,31 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { StyleSheet, SafeAreaView, View, Image } from 'react-native';
 import { Headline, Title, List, Button } from 'react-native-paper';
-import { db } from '../firebase/firebase';
 import { useSelector, useDispatch } from 'react-redux';
 import { AvatarComponent } from '../components/AvatarComponent';
-import { setIsLoggedIn } from '../components/auth/authSlice';
-import { setCurrentUser } from '../components/auth/authSlice';
 import useAuth from '../authProvider';
 
 export const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { authUser, logout } = useAuth();
+  const { logout } = useAuth();
   const user = useSelector((state) => state.auth.currentUser);
   const [avatarInitial, setAvatarInitial] = useState('');
-
-  const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', authUser.uid));
-    if (docSnap.exists()) {
-      dispatch(setCurrentUser(docSnap.data()));
-    } else {
-      console.log('No such document!');
-    }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, [user.uid]);
 
   useEffect(() => {
     getAvatarInitial();
@@ -34,7 +18,6 @@ export const ProfileScreen = ({ navigation }) => {
 
   const handleSignOut = () => {
     logout();
-    dispatch(setIsLoggedIn(false));
     navigation.push('Welcome');
   };
 
@@ -44,7 +27,6 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const Address = () => {
-    console.log('USER ADDRESS: ', user.address);
     if (user.address !== '') {
       return (
         <List.Item
@@ -96,8 +78,8 @@ export const ProfileScreen = ({ navigation }) => {
           <Button
             style={styles.button}
             // icon='exit-to-app'
-            icon='hand-wave'
-            mode='contained'
+            icon="hand-wave"
+            mode="contained"
             onPress={handleSignOut}
             color="#90be6d"
             contentStyle={{ height: 45 }}

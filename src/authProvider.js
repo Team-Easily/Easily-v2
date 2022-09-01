@@ -49,8 +49,6 @@ export const AuthProvider = ({ children }) => {
         // This gives you a Google Access Token. You can use it to access the Google API. We'll probably want to add it to the store.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
-        const googleUser = result.user;
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -60,13 +58,11 @@ export const AuthProvider = ({ children }) => {
       .finally(() => {
         dispatch(setIsLoggedIn(true));
       });
-    //   console.log(user);
-    //   return user;
   };
 
-  const logout = async () => {
-    await signOut(auth);
-    setIsLoggedIn(false);
+  const logout = () => {
+    dispatch(setIsLoggedIn(false));
+    signOut(auth);
   };
 
   const memo = useMemo(
