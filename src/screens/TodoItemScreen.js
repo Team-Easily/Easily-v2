@@ -10,7 +10,7 @@ import {
   IconButton,
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodo } from '../components/todos/todoSlice';
+import { setTodo, setTodos, editTodo } from '../components/todos/todoSlice';
 import {
   getTodoById,
   updateTodo,
@@ -22,10 +22,11 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
+  const todos = useSelector((state) => state.todos.todos);
   const user = useSelector((state) => state.auth.currentUser);
   const [completed, setCompleted] = useState(todo.completed);
   const [todoDescription, setTodoDescription] = useState('');
-  const [value, setValue] = useState(todo.frequency);
+  const [value, setValue] = useState(value);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
     { label: 'once', value: 'once' },
@@ -36,6 +37,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
 
   const getTodo = async () => {
     const todo = await getTodoById(route.params.id);
+    console.log('GET TODO', todo);
     dispatch(setTodo(todo));
   };
 
@@ -84,22 +86,15 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    if (todoDescription !== '') {
-      await updateTodo(todo.id, {
-        description: todoDescription,
-      });
-    }
-    updateTodo(todo.id, {
-      frequency: value,
+    await updateTodo(todo.id, {
+      ...(todoDescription !== '' && { description: todoDescription }),
+      ...(!!value && { frequency: value }),
     });
-    // dispatch(updateTodo(id,
-    //   {
-    //   ...(todoDescription !== '' && {description: todoDescription}), frequency: value}
-    // }
-    // ))
-    setTodoDescription('');
-    setValue(null);
+    // dispatch(editTodo(todo.id));
+    getTodo();
     nav.navigate('TodoList');
+    setTodoDescription('');
+    setValue(value);
   };
 
   const handleDelete = async (id) => {
@@ -122,6 +117,8 @@ export const TodoItemScreen = ({ navigation, route }) => {
           placeholder={todo.description ? todo.description : ''}
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
+          multiline={true}
+          numberOfLines={3}
         />
 
         <View style={styles.iconContainer}>
@@ -147,8 +144,8 @@ export const TodoItemScreen = ({ navigation, route }) => {
               onPress={() => handleCheckedChange(todo.id, todo.completed)}
             />
             <IconButton
-              icon="trash-can-outline"
-              color="#8f3985"
+              icon='trash-can-outline'
+              color='#8f3985'
               onPress={() => handleDelete(todo.id)}
             />
           </View>
@@ -156,9 +153,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -169,9 +166,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
           </Button>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={() => nav.navigate('TodoList')}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -205,6 +202,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  titleRow: {
+    marginBottom: 20,
+  },
   title: {
     fontWeight: 'bold',
   },
@@ -229,9 +229,9 @@ const styles = StyleSheet.create({
     minWidth: 180,
     marginBottom: 15,
   },
-  itemDescription: {
-    height: 100,
-  },
+  // itemDescription: {
+  //   height: 100,
+  // },
   dropDown: {
     borderColor: '#999999',
     justifyContent: 'flex-start',

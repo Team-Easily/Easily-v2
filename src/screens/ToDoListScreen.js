@@ -7,7 +7,7 @@ import {
 } from '../firebase/firebaseMethods';
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { setTodos } from '../components/todos/todoSlice';
 import { setCurrentUser } from '../components/auth/authSlice';
 import {
   StyleSheet,
@@ -37,6 +37,7 @@ export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
+  const todo = useSelector((state) => state.todos.todo);
   const user = useSelector((state) => state.auth.currentUser);
 
   //form details
@@ -60,28 +61,29 @@ export const ToDoListScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getTodos();
-  }, [navigation]);
-
   const getTodos = async () => {
     const todos = await getTodosByUid(user.uid);
     dispatch(setTodos(todos));
   };
 
+  useEffect(() => {
+    getTodos();
+    console.log('GETTING TODOS');
+  }, [todo]);
+
   const getProgress = () => {
     const points = user.points;
     switch (true) {
+      case points < 6:
+        return user.points / 5;
       case points < 11:
-        return user.points / 10;
+        return user.points / 5 - 1;
+      case points < 16:
+        return user.points / 5 - 2;
       case points < 21:
-        return user.points / 10 - 1;
-      case points < 31:
-        return user.points / 10 - 2;
-      case points < 41:
-        return user.points / 10 - 3;
-      case points < 51:
-        return user.points / 10 - 4;
+        return user.points / 5 - 3;
+      case points < 26:
+        return user.points / 5 - 4;
       default:
         return 0;
     }
@@ -259,8 +261,8 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon="pencil-outline"
-                          color="#2c497f"
+                          icon='pencil-outline'
+                          color='#2c497f'
                           onPress={() =>
                             nav.navigate('TodoItem', {
                               id: todo.id,
@@ -268,8 +270,8 @@ export const ToDoListScreen = ({ navigation }) => {
                           }
                         />
                         <IconButton
-                          icon="trash-can-outline"
-                          color="#8f3985"
+                          icon='trash-can-outline'
+                          color='#8f3985'
                           onPress={() => handleDelete(todo.id)}
                         />
                       </View>
@@ -284,23 +286,23 @@ export const ToDoListScreen = ({ navigation }) => {
         </ScrollView>
         <List.Accordion
           style={styles.accordion}
-          title="Add Task"
-          left={(props) => <List.Icon {...props} icon="playlist-plus" />}
+          title='Add Task'
+          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
         >
           <TextInput
-            placeholder="task name"
+            placeholder='task name'
             value={todoName}
             onChangeText={(text) => setTodoName(text)}
           />
           <TextInput
-            placeholder="task description"
+            placeholder='task description'
             value={todoDescription}
             onChangeText={(text) => setTodoDescription(text)}
           />
           <Button
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={styles.submitButton}
             labelStyle={{
               color: 'white',
@@ -353,8 +355,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   submitButton: {
-    height: 45,
     width: 265,
+    height: 50,
+  },
+  accordion: {
+    bottom: 0,
+    position: 'absolute',
+    backgroundColor: '#fff',
+    width: '100%',
   },
   coffeeMaker: {
     width: 200,
