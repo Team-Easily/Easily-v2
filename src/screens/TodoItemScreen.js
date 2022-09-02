@@ -26,7 +26,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   const user = useSelector((state) => state.auth.currentUser);
   const [completed, setCompleted] = useState(todo.completed);
   const [todoDescription, setTodoDescription] = useState('');
-  const [value, setValue] = useState(todo.frequency);
+  const [value, setValue] = useState(value);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
     { label: 'once', value: 'once' },
@@ -91,10 +91,10 @@ export const TodoItemScreen = ({ navigation, route }) => {
       ...(!!value && { frequency: value }),
     });
     // dispatch(editTodo(todo.id));
-    getTodo()
+    getTodo();
     nav.navigate('TodoList');
     setTodoDescription('');
-    setValue(null);
+    setValue(value);
   };
 
   const handleDelete = async (id) => {
