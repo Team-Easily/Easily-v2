@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ClockView from "./ClockView";
+import Controls from "./Controls";
 import { Vibration } from "react-native";
 
 function sleep(ms) {
@@ -14,29 +15,46 @@ class Timer extends React.Component {
     this.state = {
       current: {
         type: "Work",
-        minutes: 1,
-        seconds: 0,
+        minutes: 0,
+        seconds: 10,
       },
       config: {
         work: {
           type: "Work",
-          minutes: 1,
-          seconds: 0,
+          minutes: 0,
+          seconds: 10,
         },
         break: {
           type: "Break",
-          minutes: 1,
-          seconds: 0,
+          minutes: 0,
+          seconds: 10,
         },
       },
     };
 
     this.countdown = this.countdown.bind(this);
-    this.countdown();
+    this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
+  }
+
+  startTimer() {
+    this.setState({ timerRunning: true }, () => {
+      this.countdown();
+    });
+  }
+
+  stopTimer() {
+    console.log("Stop Timer");
+    this.setState({ timerRunning: false });
+  }
+
+  resetTimer() {
+    this.setState({ timerRunning: false, current: this.state.config.work });
   }
 
   async countdown() {
-    while (true) {
+    while (this.state.timerRunning) {
       if (
         this.state.current.seconds === 0 &&
         this.state.current.minutes === 0
