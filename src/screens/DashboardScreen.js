@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Headline } from 'react-native-paper';
-import Weather from './Weather';
-import useAuth from '../authProvider';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
-import { setCurrentUser } from '../components/auth/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Headline } from "react-native-paper";
+import Weather from "./Weather";
+import useAuth from "../authProvider";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { setCurrentUser } from "../components/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Pomodoro from "./Pomodoro";
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -15,27 +16,27 @@ export const DashboardScreen = () => {
 
   useEffect(() => {
     const getUserOrCreate = async () => {
-      console.log('AUTH USER', authUser);
-      const docSnap = await getDoc(doc(db, 'users', authUser.uid));
+      console.log("AUTH USER", authUser);
+      const docSnap = await getDoc(doc(db, "users", authUser.uid));
       if (docSnap.exists()) {
         dispatch(setCurrentUser(docSnap.data()));
       } else {
         const user = {
-          address: '',
+          address: "",
           email: authUser.email,
-          firstName: '',
+          firstName: "",
           imageUrl: authUser.photoURL,
-          lastName: '',
+          lastName: "",
           points: 0,
           uid: authUser.uid,
           userName: authUser.displayName,
         };
-        setDoc(doc(db, 'users', authUser.uid), {
-          address: '',
+        setDoc(doc(db, "users", authUser.uid), {
+          address: "",
           email: authUser.email,
-          firstName: '',
+          firstName: "",
           imageUrl: authUser.photoURL,
-          lastName: '',
+          lastName: "",
           points: 0,
           uid: authUser.uid,
           userName: authUser.displayName,
@@ -52,6 +53,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
+        <Pomodoro />
       </View>
     </SafeAreaView>
   );
@@ -63,16 +65,16 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   headline1: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 20,
     fontSize: 35,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   headline2: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 40,
     fontSize: 35,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   title: {
     fontSize: 32,
