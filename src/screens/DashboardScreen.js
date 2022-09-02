@@ -8,6 +8,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { GmailScreen } from './GmailScreen';
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -16,7 +17,7 @@ export const DashboardScreen = () => {
 
   useEffect(() => {
     const getUserOrCreate = async () => {
-      console.log('AUTH USER', authUser);
+      // console.log('AUTH USER', authUser);
       const docSnap = await getDoc(doc(db, 'users', authUser.uid));
       if (docSnap.exists()) {
         dispatch(setCurrentUser(docSnap.data()));
@@ -54,6 +55,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
+        <GmailScreen />
       </View>
     </SafeAreaView>
   );
