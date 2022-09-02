@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Headline } from 'react-native-paper';
 import Weather from './Weather';
+import Calendars from './Calendar';
 import useAuth from '../authProvider';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
@@ -52,6 +53,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
+        <Calendars />
       </View>
     </SafeAreaView>
   );
