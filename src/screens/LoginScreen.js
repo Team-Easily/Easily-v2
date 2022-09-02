@@ -51,26 +51,26 @@ const LoginScreen = ({ navigation }) => {
           <Image style={styles.logo} source={require('../assets/logo.png')} />
         </View>
         <TextInput
-          placeholder="email"
+          placeholder='email'
           value={email}
           onChangeText={(text) => setEmail(text)}
-          mode="flat"
+          mode='flat'
         />
         <TextInput
-          placeholder="password"
+          placeholder='password'
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={{ marginTop: 15 }}
-          mode="flat"
+          mode='flat'
         />
         <View>
           <Button
             style={{ marginTop: 15 }}
-            icon="send"
-            mode="contained"
+            icon='send'
+            mode='contained'
             onPress={submitLogin}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -79,10 +79,10 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            icon="google"
-            mode="contained"
+            icon='google'
+            mode='contained'
             onPress={googleSignInWithPopup}
-            color="#4285F4"
+            color='#4285F4'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 18 }}
           >
@@ -91,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
 
           <Button
             style={{ marginTop: 15 }}
-            mode="text"
+            mode='text'
             onPress={() => {
               submitGoToRegister();
             }}
@@ -109,7 +109,7 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: '25%',
     flex: 1,
     marginLeft: 40,
     marginRight: 40,

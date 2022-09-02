@@ -34,7 +34,7 @@ export const ProfileScreen = ({ navigation }) => {
           color={'#2c497f'}
           title={user.address}
           left={() => (
-            <List.Icon color={'#A3A4A6'} icon="map-marker-star-outline" />
+            <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
           )}
         />
       );
@@ -46,11 +46,11 @@ export const ProfileScreen = ({ navigation }) => {
       <View>
         <View style={{ alignItems: 'center' }}>
           <AvatarComponent user={user} />
-          <Headline>{user.userName}</Headline>
-          <Headline>
+          <Headline style={styles.headline}>{user.userName}</Headline>
+          <Headline style={styles.headline}>
             {user?.firstName} {user?.lastName}
           </Headline>
-          <Title style={{ color: 'grey' }}>Points: {user?.points}</Title>
+          <Title style={styles.points}>Points: {user?.points}</Title>
         </View>
 
         <List.Section style={styles.list}>
@@ -59,17 +59,17 @@ export const ProfileScreen = ({ navigation }) => {
             style={styles.listItem}
             color={'#2c497f'}
             title={user?.email}
-            left={() => <List.Icon color={'#A3A4A6'} icon="email" />}
+            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
           />
         </List.Section>
 
         <View style={styles.buttons}>
           <Button
             style={styles.button}
-            icon="account-cog-outline"
-            mode="contained"
+            icon='account-cog-outline'
+            mode='contained'
             onPress={() => navigation.push('EditProfile')}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 16 }}
           >
@@ -78,10 +78,10 @@ export const ProfileScreen = ({ navigation }) => {
           <Button
             style={styles.button}
             // icon='exit-to-app'
-            icon="hand-wave"
-            mode="contained"
+            icon='hand-wave'
+            mode='contained'
             onPress={handleSignOut}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 16 }}
           >
@@ -100,6 +100,15 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
+  headline: {
+    color: '#2c497f',
+    fontSize: 30,
+    fontWeight: '500',
+  },
+  points: {
+    marginTop: 10,
+    color: 'grey',
+  },
   buttons: {
     alignItems: 'center',
   },
@@ -108,9 +117,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   list: {
-    marginTop: 15,
-    marginBottom: 15,
-    alignItems: 'center',
+    marginHorizontal: '10%',
+    marginVertical: 20,
   },
   listItem: {
     margin: 0,
