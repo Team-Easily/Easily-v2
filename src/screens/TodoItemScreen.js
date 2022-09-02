@@ -10,7 +10,7 @@ import {
   IconButton,
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodo } from '../components/todos/todoSlice';
+import { setTodo, setTodos, editTodo } from '../components/todos/todoSlice';
 import {
   getTodoById,
   updateTodo,
@@ -22,6 +22,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
+  const todos = useSelector((state) => state.todos.todos);
   const user = useSelector((state) => state.auth.currentUser);
   const [completed, setCompleted] = useState(todo.completed);
   const [todoDescription, setTodoDescription] = useState('');
@@ -36,6 +37,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
 
   const getTodo = async () => {
     const todo = await getTodoById(route.params.id);
+    console.log('GET TODO', todo);
     dispatch(setTodo(todo));
   };
 
@@ -84,22 +86,15 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    if (todoDescription !== '') {
-      await updateTodo(todo.id, {
-        description: todoDescription,
-      });
-    }
-    updateTodo(todo.id, {
-      frequency: value,
+    await updateTodo(todo.id, {
+      ...(todoDescription !== '' && { description: todoDescription }),
+      ...(!!value && { frequency: value }),
     });
-    // dispatch(updateTodo(id,
-    //   {
-    //   ...(todoDescription !== '' && {description: todoDescription}), frequency: value}
-    // }
-    // ))
+    // dispatch(editTodo(todo.id));
+    getTodo()
+    nav.navigate('TodoList');
     setTodoDescription('');
     setValue(null);
-    nav.navigate('TodoList');
   };
 
   const handleDelete = async (id) => {

@@ -7,7 +7,7 @@ import {
 } from '../firebase/firebaseMethods';
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { setTodos } from '../components/todos/todoSlice';
 import { setCurrentUser } from '../components/auth/authSlice';
 import {
   StyleSheet,
@@ -37,6 +37,7 @@ export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
+  const todo = useSelector((state) => state.todos.todo);
   const user = useSelector((state) => state.auth.currentUser);
 
   //form details
@@ -60,14 +61,15 @@ export const ToDoListScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getTodos();
-  }, [navigation]);
-
   const getTodos = async () => {
     const todos = await getTodosByUid(user.uid);
     dispatch(setTodos(todos));
   };
+
+  useEffect(() => {
+    getTodos();
+    console.log('GETTING TODOS');
+  }, [todo]);
 
   const getProgress = () => {
     const points = user.points;

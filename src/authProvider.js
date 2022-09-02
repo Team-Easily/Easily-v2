@@ -32,6 +32,8 @@ export const AuthProvider = ({ children }) => {
     []
   );
 
+  
+
   const signInManually = async (email, password) => {
     try {
       signInWithEmailAndPassword(auth, email, password);
