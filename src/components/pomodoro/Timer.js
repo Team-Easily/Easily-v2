@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ClockView from "./ClockView";
+import { Vibration } from "react-native";
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,7 +41,7 @@ class Timer extends React.Component {
         this.state.current.seconds === 0 &&
         this.state.current.minutes === 0
       ) {
-        vibrate();
+        Vibration.vibrate([500, 500, 500]);
         this.setState({
           current:
             this.state.current.type === "Work"
