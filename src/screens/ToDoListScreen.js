@@ -8,6 +8,7 @@ import {
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { setCurrentUser } from '../components/auth/authSlice';
 import {
   StyleSheet,
   View,
@@ -33,39 +34,38 @@ import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 export const ToDoListScreen = ({ navigation }) => {
+  const nav = useNavigation();
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
-  // const user = useSelector((state) => state.auth.currentUser);
-  const [user, setUser] = useState(auth.currentUser);
-  // JR: using user from redux, not making a db fetch
+  const user = useSelector((state) => state.auth.currentUser);
+
+  //form details
   const [todoName, setTodoName] = useState('');
-  const [form, setForm] = useState(false);
   const [todoDescription, setTodoDescription] = useState('');
   const [todoFrequency, setTodoFrequency] = useState('');
+
+  //flags
+  const [form, setForm] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const nav = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+
   let explosion;
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const docSnap = await getDoc(doc(db, 'users', user.uid));
     if (docSnap.exists()) {
-      setUser(docSnap.data());
+      dispatch(setCurrentUser(docSnap.data()));
     } else {
       console.log('No such document!');
     }
   };
 
   useEffect(() => {
-    const updateTodos = navigation.addListener('focus', () => {
-      getTodos();
-      getUser();
-    });
-    return updateTodos;
+    getTodos();
   }, [navigation]);
 
   const getTodos = async () => {
-    const todos = await getTodosByUid(auth.currentUser.uid);
+    const todos = await getTodosByUid(user.uid);
     dispatch(setTodos(todos));
   };
 
@@ -159,9 +159,9 @@ export const ToDoListScreen = ({ navigation }) => {
         completed: !todoCompleted,
       });
       if (todoCompleted) {
-        removePointFromUser(auth.currentUser.uid);
+        removePointFromUser(user.uid);
       } else {
-        addPointToUser(auth.currentUser.uid);
+        addPointToUser(user.uid);
       }
     } catch (err) {
       alert(err);
@@ -185,7 +185,7 @@ export const ToDoListScreen = ({ navigation }) => {
       await addTodosByUser({
         title: todoName,
         description: todoDescription,
-        author: auth.currentUser.uid,
+        author: user.uid,
         completed: completed,
         frequency: 'once',
       });
@@ -259,8 +259,8 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon='pencil-outline'
-                          color='#2c497f'
+                          icon="pencil-outline"
+                          color="#2c497f"
                           onPress={() =>
                             nav.navigate('TodoItem', {
                               id: todo.id,
@@ -268,8 +268,8 @@ export const ToDoListScreen = ({ navigation }) => {
                           }
                         />
                         <IconButton
-                          icon='trash-can-outline'
-                          color='#8f3985'
+                          icon="trash-can-outline"
+                          color="#8f3985"
                           onPress={() => handleDelete(todo.id)}
                         />
                       </View>
@@ -284,23 +284,23 @@ export const ToDoListScreen = ({ navigation }) => {
         </ScrollView>
         <List.Accordion
           style={styles.accordion}
-          title='Add Task'
-          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+          title="Add Task"
+          left={(props) => <List.Icon {...props} icon="playlist-plus" />}
         >
           <TextInput
-            placeholder='task name'
+            placeholder="task name"
             value={todoName}
             onChangeText={(text) => setTodoName(text)}
           />
           <TextInput
-            placeholder='task description'
+            placeholder="task description"
             value={todoDescription}
             onChangeText={(text) => setTodoDescription(text)}
           />
           <Button
-            mode='contained'
+            mode="contained"
             onPress={handleSubmit}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={styles.submitButton}
             labelStyle={{
               color: 'white',

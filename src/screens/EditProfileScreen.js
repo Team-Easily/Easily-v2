@@ -3,13 +3,14 @@ import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { SafeAreaView, View, Image, StyleSheet } from 'react-native';
 import { Headline, Button, TextInput } from 'react-native-paper';
 import { auth, db } from '../firebase/firebase';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../firebase/firebaseMethods';
+import { setCurrentUser } from '../components/auth/authSlice';
 
 export const EditProfileScreen = ({ navigation }) => {
-  const userUid = useSelector((state) => state.auth.currentUserUid);
-  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.currentUser);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
@@ -17,18 +18,14 @@ export const EditProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState('');
 
   const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', userUid));
+    const docSnap = await getDoc(doc(db, 'users', user.uid));
     if (docSnap.exists()) {
-      setUser(docSnap.data());
+      dispatch(setCurrentUser(docSnap.data()));
       console.log(docSnap.data());
     } else {
       console.log('No such document!');
     }
   };
-
-  useEffect(() => {
-    getUser();
-  }, [userUid]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -48,20 +45,21 @@ export const EditProfileScreen = ({ navigation }) => {
     try {
       if (image !== '') {
         const photoURL = await uploadImageAsync(image);
-        console.log('PHOTO URL: ', photoURL);
-        await updateDoc(doc(db, 'users', userUid), { imageUrl: photoURL });
+        await updateDoc(doc(db, 'users', user.uid), { imageUrl: photoURL });
       }
       if (userName !== '') {
-        await updateDoc(doc(db, 'users', userUid), { userName: userName });
+        await updateDoc(doc(db, 'users', user.uid), { userName: userName });
       }
       if (firstName !== '') {
-        await updateDoc(doc(db, 'users', userUid), { firstName: firstName });
+        await updateDoc(doc(db, 'users', user.uid), {
+          firstName: firstName,
+        });
       }
       if (lastName !== '') {
-        await updateDoc(doc(db, 'users', userUid), { lastName: lastName });
+        await updateDoc(doc(db, 'users', user.uid), { lastName: lastName });
       }
       if (address !== '') {
-        await updateDoc(doc(db, 'users', userUid), { address: address });
+        await updateDoc(doc(db, 'users', user.uid), { address: address });
       }
     } catch (error) {
       console.error(error);
@@ -85,19 +83,13 @@ export const EditProfileScreen = ({ navigation }) => {
         <View style={{ alignItems: 'center' }}>
           <Headline>Edit Profile</Headline>
           <ImageComponent />
-          {/* {image && (
-            <Image
-              source={{ uri: image }}
-              style={{ width: 150, height: 150 }}
-            />
-          )} */}
         </View>
         <View>
           <Button
             style={styles.button}
-            mode='contained'
+            mode="contained"
             onPress={pickImage}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -141,9 +133,9 @@ export const EditProfileScreen = ({ navigation }) => {
           />
           <Button
             style={styles.button}
-            mode='contained'
+            mode="contained"
             onPress={handleUpdate}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',

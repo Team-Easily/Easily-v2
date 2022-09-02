@@ -2,35 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { StyleSheet, SafeAreaView, View, Image } from 'react-native';
 import { Headline, Title, List, Button } from 'react-native-paper';
-import { auth, db } from '../firebase/firebase';
-import { getAuth, signOut } from 'firebase/auth';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AvatarComponent } from '../components/AvatarComponent';
+import useAuth from '../authProvider';
 
 export const ProfileScreen = ({ navigation }) => {
-  const userUid = useSelector((state) => state.auth.currentUserUid);
-  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+  const { logout } = useAuth();
+  const user = useSelector((state) => state.auth.currentUser);
   const [avatarInitial, setAvatarInitial] = useState('');
-
-  const getUser = async () => {
-    const docSnap = await getDoc(doc(db, 'users', userUid));
-    if (docSnap.exists()) {
-      setUser(docSnap.data());
-    } else {
-      console.log('No such document!');
-    }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, [userUid]);
 
   useEffect(() => {
     getAvatarInitial();
   }, [user]);
 
   const handleSignOut = () => {
-    signOut(getAuth());
+    logout();
     navigation.push('Welcome');
   };
 
@@ -40,7 +27,6 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const Address = () => {
-    console.log('USER ADDRESS: ', user.address);
     if (user.address !== '') {
       return (
         <List.Item
@@ -48,7 +34,7 @@ export const ProfileScreen = ({ navigation }) => {
           color={'#2c497f'}
           title={user.address}
           left={() => (
-            <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
+            <List.Icon color={'#A3A4A6'} icon="map-marker-star-outline" />
           )}
         />
       );
@@ -73,17 +59,17 @@ export const ProfileScreen = ({ navigation }) => {
             style={styles.listItem}
             color={'#2c497f'}
             title={user?.email}
-            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
+            left={() => <List.Icon color={'#A3A4A6'} icon="email" />}
           />
         </List.Section>
 
         <View style={styles.buttons}>
           <Button
             style={styles.button}
-            icon='account-cog-outline'
-            mode='contained'
+            icon="account-cog-outline"
+            mode="contained"
             onPress={() => navigation.push('EditProfile')}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 16 }}
           >
@@ -92,10 +78,10 @@ export const ProfileScreen = ({ navigation }) => {
           <Button
             style={styles.button}
             // icon='exit-to-app'
-            icon='hand-wave'
-            mode='contained'
+            icon="hand-wave"
+            mode="contained"
             onPress={handleSignOut}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{ color: 'white', fontSize: 16 }}
           >

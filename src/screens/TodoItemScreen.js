@@ -22,6 +22,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export const TodoItemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
+  const user = useSelector((state) => state.auth.currentUser);
   const [completed, setCompleted] = useState(todo.completed);
   const [todoDescription, setTodoDescription] = useState('');
   const [value, setValue] = useState(todo.frequency);
@@ -39,10 +40,7 @@ export const TodoItemScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    const updateTodo = navigation.addListener('focus', () => {
-      getTodo();
-    });
-    return updateTodo;
+    getTodo();
   }, []);
 
   const addPointToUser = async (id) => {
@@ -74,9 +72,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
         completed: !todoCompleted,
       });
       if (todoCompleted) {
-        removePointFromUser(auth.currentUser.uid);
+        removePointFromUser(user.uid);
       } else {
-        addPointToUser(auth.currentUser.uid);
+        addPointToUser(user.uid);
       }
     } catch (err) {
       alert(err);
@@ -91,11 +89,14 @@ export const TodoItemScreen = ({ navigation, route }) => {
         description: todoDescription,
       });
     }
-    if (value) {
-      await updateTodo(todo.id, {
-        frequency: value,
-      });
-    }
+    updateTodo(todo.id, {
+      frequency: value,
+    });
+    // dispatch(updateTodo(id,
+    //   {
+    //   ...(todoDescription !== '' && {description: todoDescription}), frequency: value}
+    // }
+    // ))
     setTodoDescription('');
     setValue(null);
     nav.navigate('TodoList');
@@ -146,8 +147,8 @@ export const TodoItemScreen = ({ navigation, route }) => {
               onPress={() => handleCheckedChange(todo.id, todo.completed)}
             />
             <IconButton
-              icon='trash-can-outline'
-              color='#8f3985'
+              icon="trash-can-outline"
+              color="#8f3985"
               onPress={() => handleDelete(todo.id)}
             />
           </View>
@@ -155,9 +156,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
-            mode='contained'
+            mode="contained"
             onPress={handleSubmit}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -168,9 +169,9 @@ export const TodoItemScreen = ({ navigation, route }) => {
           </Button>
           <Button
             style={styles.button}
-            mode='contained'
+            mode="contained"
             onPress={() => nav.navigate('TodoList')}
-            color='#07BEB8'
+            color="#07BEB8"
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
