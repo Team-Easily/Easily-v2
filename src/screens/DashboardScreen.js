@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, ScrollView } from 'react-native';
 import { Headline } from 'react-native-paper';
 import Weather from './Weather';
 import Calendars from './Calendar';
@@ -49,12 +49,12 @@ export const DashboardScreen = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.layout}>
+      <ScrollView style={styles.layout}>
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -62,19 +62,22 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    padding: 30,
+    paddingHorizontal: 53,
+    paddingVertical: 27,
   },
   headline1: {
     color: '#2c497f',
-    marginBottom: 20,
-    fontSize: 35,
+    marginBottom: 13,
+    fontSize: 30,
     fontWeight: '500',
+    lineHeight: 25,
   },
   headline2: {
     color: '#2c497f',
-    marginBottom: 40,
-    fontSize: 35,
+    marginBottom: 22,
+    fontSize: 30,
     fontWeight: '800',
+    lineHeight: 25,
   },
   title: {
     fontSize: 32,
