@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
-// import { logInWithEmailAndPassword } from '../firebase/firebaseMethods';
 import { TextInput, Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-// import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import useAuth from '../authProvider';
 
 const LoginScreen = ({ navigation }) => {

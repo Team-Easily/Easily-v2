@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Headline } from 'react-native-paper';
+import { SafeAreaView, StyleSheet, Text, ScrollView } from 'react-native';
+import { Headline, Button } from 'react-native-paper';
 import Weather from './Weather';
 import Calendars from './Calendar';
 import useAuth from '../authProvider';
@@ -12,7 +12,7 @@ import { GmailScreen } from './GmailScreen';
 import { setEmails } from '../components/emails/emails';
 
 export const DashboardScreen = () => {
-  const user = useSelector((state) => state.auth.currentUser);
+  // const user = useSelector((state) => state.auth.currentUser);
   const accessToken = useSelector((state) => state.auth.accessToken);
   // const [emails, setEmails] = useState(null);
   const emails = useSelector((state) => state.emails.emails);
@@ -98,21 +98,29 @@ export const DashboardScreen = () => {
     }
   }, [user]);
 
+  const handleGmailClick = () => {
+    navigation.push('Gmail');
+  };
+
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.layout}>
-        <Text>{emails.length}</Text>
-        {/* 
-          {emails.map((email) => <EmailAccordian props={email}/>)}
-        */}
-        {!!emails.length &&
-          emails.map((email) => {
-            return <Text key={email.id}>{email.subject}</Text>;
-          })}
+    <SafeAreaView style={styles.layout}>
+      <ScrollView style={styles.scrollView}>
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
+        <Button
+          style={{ marginTop: 15 }}
+          icon='gmail'
+          mode='contained'
+          onPress={() => {
+            handleGmailClick();
+          }}
+          contentStyle={{ height: 45 }}
+          labelStyle={{ color: '#2c497f', fontSize: 18 }}
+        >
+          Gmail
+        </Button>
         <GmailScreen />
       </ScrollView>
     </SafeAreaView>
@@ -124,6 +132,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 53,
     paddingVertical: 27,
+  },
+  scrollView: {
+    paddingTop: 30,
+    paddingHorizontal: 20,
   },
   headline1: {
     color: '#2c497f',

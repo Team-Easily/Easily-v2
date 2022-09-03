@@ -5,44 +5,68 @@ import { handleSignoutClick } from '../components/GmailJS';
 import { handleAuthClick } from '../components/GmailJS';
 
 export const GmailScreen = ({ navigation }) => {
+  const user = useSelector((state) => state.auth.currentUser);
+  useEffect(() => {
+    if (user.uid) {
+      const fetchEmailsFromGmail = async () => {
+        try {
+          let uri = `https://gmail.googleapis.com/gmail/v1/users/me/messages`;
+          const res = await fetch(uri, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: `application/json`,
+            },
+          });
+          const data = await res.json();
+          const emailsArr = [];
+          data.messages.forEach(async (message) => {
+            let uri = `https://gmail.googleapis.com/gmail/v1/users/me/messages/${message.id}?key=${accessToken}`;
+            const res = await fetch(uri, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: `application/json`,
+              },
+            });
+            const data = await res.json();
+            if (data.labelIds.includes('UNREAD')) {
+              const email = {
+                id: data.id,
+                from: data.payload.headers[15].value,
+                subject: data.payload.headers[14].value,
+                date: data.payload.headers[17].value,
+                body: data.payload.body.data,
+                snippet: data.snippet,
+                threadId: data.threadId,
+              };
+              emailsArr.push(email);
+            }
+            dispatch(setEmails(emailsArr));
+          });
+          console.log(emailsArr);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchEmailsFromGmail();
+    }
+  }, [user]);
+
   return (
-    <View style={styles.container}>
-      <Button
-        style={{ marginTop: 15 }}
-        icon='send'
-        mode='contained'
-        onPress={handleAuthClick}
-        color='#07BEB8'
-        contentStyle={{ height: 45 }}
-        labelStyle={{ color: 'white', fontSize: 18 }}
-      >
-        Authenticate
-      </Button>
-      <Button
-        style={styles.button}
-        icon='hand-wave'
-        mode='contained'
-        onPress={handleSignoutClick}
-        color='#90be6d'
-        contentStyle={{ height: 45 }}
-        labelStyle={{ color: 'white', fontSize: 16 }}
-      >
-        Sign Out
-      </Button>
-    </View>
+    <SafeAreaView>
+      <ScrollView>
+        <View>
+          <Text>{emails.length}</Text>
+          {/* 
+          {emails.map((email) => <EmailAccordian props={email}/>)}
+        */}
+          {!!emails.length &&
+            emails.map((email) => {
+              return <Text key={email.id}>{email.subject}</Text>;
+            })}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    // marginTop: '25%',
-    // flex: 1,
-    // marginLeft: 40,
-    // marginRight: 40,
-    flexDirection: 'row',
-  },
-  button: {
-    // minWidth: 180,
-    // marginBottom: 15,
-  },
-});
+const styles = StyleSheet.create({});
