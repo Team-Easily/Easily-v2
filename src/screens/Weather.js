@@ -63,7 +63,7 @@ const Weather = () => {
           <View style={styles.weatherItemContainer}>
             <View style={styles.headerContainer}>
               <MaterialCommunityIcons
-                size={65}
+                size={55}
                 name={WeatherConditions[data?.list[0].weather[0].main].icon}
                 color={'#fff'}
               />
@@ -101,9 +101,11 @@ const Weather = () => {
 
 const styles = StyleSheet.create({
   weatherContainer: {
-    padding: 25,
+    paddingTop: 15,
+    paddingHorizontal: 25,
+    paddingBottom: 20,
     borderRadius: 10,
-    marginBottom: 40,
+    marginBottom: 20,
     shadowColor: '#64646F',
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.2,
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   tempText: {
-    fontSize: 55,
+    fontSize: 45,
     color: '#fff',
   },
   headerContainer: {
@@ -146,16 +148,18 @@ const styles = StyleSheet.create({
   city: {
     color: '#fff',
     textTransform: 'uppercase',
-    fontSize: 17,
+    fontSize: 14,
   },
   description: {
     color: '#fff',
     textTransform: 'uppercase',
     textAlign: 'right',
+    fontSize: 15,
+    lineHeight: 18,
   },
   bottomRowText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 15,
   },
   weatherItemContainer: {
     flexDirection: 'column',

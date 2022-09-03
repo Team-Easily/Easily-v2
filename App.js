@@ -18,6 +18,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/authProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentUser } from './src/components/auth/authSlice';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();

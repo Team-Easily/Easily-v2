@@ -7,7 +7,7 @@ import {
 } from '../firebase/firebaseMethods';
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodos, addToTodos } from '../components/todos/todoSlice';
+import { setTodos } from '../components/todos/todoSlice';
 import { setCurrentUser } from '../components/auth/authSlice';
 import {
   StyleSheet,
@@ -37,6 +37,7 @@ export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
+  const todo = useSelector((state) => state.todos.todo);
   const user = useSelector((state) => state.auth.currentUser);
 
   //form details
@@ -60,28 +61,29 @@ export const ToDoListScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getTodos();
-  }, [navigation]);
-
   const getTodos = async () => {
     const todos = await getTodosByUid(user.uid);
     dispatch(setTodos(todos));
   };
 
+  useEffect(() => {
+    getTodos();
+    console.log('GETTING TODOS');
+  }, [todo]);
+
   const getProgress = () => {
     const points = user.points;
     switch (true) {
-      case points < 6:
-        return user.points / 5;
       case points < 11:
-        return user.points / 5 - 1;
-      case points < 16:
-        return user.points / 5 - 2;
+        return user.points / 10;
       case points < 21:
-        return user.points / 5 - 3;
-      case points < 26:
-        return user.points / 5 - 4;
+        return user.points / 10 - 1;
+      case points < 31:
+        return user.points / 10 - 2;
+      case points < 41:
+        return user.points / 10 - 3;
+      case points < 51:
+        return user.points / 10 - 4;
       default:
         return 0;
     }
@@ -115,11 +117,11 @@ export const ToDoListScreen = ({ navigation }) => {
   const checkModal = () => {
     const points = user.points;
     if (
-      points === 9 ||
-      points === 19 ||
-      points === 29 ||
-      points === 39 ||
-      points === 49
+      points === 5 ||
+      points === 10 ||
+      points === 15 ||
+      points === 20 ||
+      points === 25
     )
       showModal();
   };
@@ -353,8 +355,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   submitButton: {
-    width: 265,
+    width: 250,
     height: 50,
+    paddingLeft: 0,
+    marginLeft: 0,
+    textAlign: 'center',
   },
   accordion: {
     bottom: 0,

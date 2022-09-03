@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
-import { SafeAreaView, View, Image, StyleSheet } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { Headline, Button, TextInput } from 'react-native-paper';
 import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -79,73 +85,81 @@ export const EditProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ paddingHorizontal: 30 }}>
-        <View style={{ alignItems: 'center' }}>
-          <Headline>Edit Profile</Headline>
-          <ImageComponent />
-        </View>
-        <View>
-          <Button
-            style={styles.button}
-            mode="contained"
-            onPress={pickImage}
-            color="#90be6d"
-            contentStyle={{ height: 45 }}
-            labelStyle={{
-              color: 'white',
-              fontSize: 18,
-            }}
-          >
-            Set Avatar Image
-          </Button>
+      <ScrollView>
+        <View
+          style={{
+            paddingHorizontal: '4rem',
+            paddingTop: '3rem',
+            justifyContent: 'center',
+          }}
+        >
+          <View style={{ alignItems: 'center' }}>
+            <Headline>Edit Profile</Headline>
+            <ImageComponent />
+          </View>
+          <View>
+            <Button
+              style={styles.button}
+              mode='contained'
+              onPress={pickImage}
+              color='#90be6d'
+              contentStyle={{ height: 45 }}
+              labelStyle={{
+                color: 'white',
+                fontSize: 18,
+              }}
+            >
+              Set Avatar Image
+            </Button>
 
-          <TextInput
-            style={styles.textInput}
-            value={userName}
-            placeholder={user.userName ? user.userName : 'username'}
-            onChangeText={(text) => {
-              setUserName(text);
-            }}
-          />
-          <TextInput
-            style={styles.textInput}
-            value={firstName}
-            placeholder={user.firstName ? user.firstName : 'First Name'}
-            onChangeText={(text) => {
-              setFirstName(text);
-            }}
-          />
-          <TextInput
-            style={styles.textInput}
-            value={lastName}
-            placeholder={user.lastName ? user.lastName : 'Last Name'}
-            onChangeText={(text) => {
-              setLastName(text);
-            }}
-          />
-          <TextInput
-            style={styles.textInput}
-            value={address}
-            placeholder={user.address ? user.address : 'Address'}
-            onChangeText={(text) => {
-              setAddress(text);
-            }}
-          />
-          <Button
-            style={styles.button}
-            mode="contained"
-            onPress={handleUpdate}
-            color="#90be6d"
-            contentStyle={{ height: 45 }}
-            labelStyle={{
-              color: 'white',
-              fontSize: 18,
-            }}
-          >
-            Update
-          </Button>
+            <TextInput
+              style={styles.textInput}
+              value={userName}
+              placeholder={user.userName ? user.userName : 'username'}
+              onChangeText={(text) => {
+                setUserName(text);
+              }}
+            />
+            <TextInput
+              style={styles.textInput}
+              value={firstName}
+              placeholder={user.firstName ? user.firstName : 'First Name'}
+              onChangeText={(text) => {
+                setFirstName(text);
+              }}
+            />
+            <TextInput
+              style={styles.textInput}
+              value={lastName}
+              placeholder={user.lastName ? user.lastName : 'Last Name'}
+              onChangeText={(text) => {
+                setLastName(text);
+              }}
+            />
+            <TextInput
+              style={styles.textInput}
+              value={address}
+              placeholder={user.address ? user.address : 'Address'}
+              onChangeText={(text) => {
+                setAddress(text);
+              }}
+            />
+            <Button
+              style={styles.button}
+              mode='contained'
+              onPress={handleUpdate}
+              color='#90be6d'
+              contentStyle={{ height: 45 }}
+              labelStyle={{
+                color: 'white',
+                fontSize: 18,
+              }}
+            >
+              Update
+            </Button>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -154,6 +168,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    paddingTop: 15,
   },
   textInput: {
     marginTop: 15,
