@@ -55,6 +55,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
+        <Pomodoro />
       </ScrollView>
     </SafeAreaView>
   );
@@ -67,17 +68,17 @@ const styles = StyleSheet.create({
     paddingVertical: 27,
   },
   headline1: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 13,
     fontSize: 30,
-    fontWeight: '500',
+    fontWeight: "500",
     lineHeight: 25,
   },
   headline2: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 22,
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: "800",
     lineHeight: 25,
   },
   title: {
