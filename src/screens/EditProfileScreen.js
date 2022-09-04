@@ -13,8 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../firebase/firebaseMethods';
 import { setCurrentUser } from '../components/auth/authSlice';
+import { useNavigation } from '@react-navigation/native';
 
 export const EditProfileScreen = ({ navigation }) => {
+  const nav = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [firstName, setFirstName] = useState('');
@@ -100,9 +102,9 @@ export const EditProfileScreen = ({ navigation }) => {
           <View>
             <Button
               style={styles.button}
-              mode='contained'
+              mode="contained"
               onPress={pickImage}
-              color='#90be6d'
+              color="#90be6d"
               contentStyle={{ height: 45 }}
               labelStyle={{
                 color: 'white',
@@ -146,9 +148,9 @@ export const EditProfileScreen = ({ navigation }) => {
             />
             <Button
               style={styles.button}
-              mode='contained'
+              mode="contained"
               onPress={handleUpdate}
-              color='#90be6d'
+              color="#90be6d"
               contentStyle={{ height: 45 }}
               labelStyle={{
                 color: 'white',
@@ -156,6 +158,19 @@ export const EditProfileScreen = ({ navigation }) => {
               }}
             >
               Update
+            </Button>
+            <Button
+              style={styles.button}
+              mode="contained"
+              onPress={() => nav.navigate('Profile')}
+              color="#07BEB8"
+              contentStyle={{ height: 45 }}
+              labelStyle={{
+                color: 'white',
+                fontSize: 18,
+              }}
+            >
+              Back
             </Button>
           </View>
         </View>

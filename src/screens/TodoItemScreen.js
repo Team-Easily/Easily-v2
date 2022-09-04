@@ -19,7 +19,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export const TodoItemScreen = ({ navigation, route }) => {
+export const TodoItemScreen = ({ route }) => {
   const dispatch = useDispatch();
   const todo = useSelector((state) => state.todos.todo);
   const todos = useSelector((state) => state.todos.todos);
