@@ -18,7 +18,7 @@ const Weather = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log('FETCH DATA', data);
+          // console.log('FETCH DATA', data);
           setData(data);
         });
     }

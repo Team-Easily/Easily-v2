@@ -1,29 +1,24 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  ScrollView,
-  Button,
-} from "react-native";
-import { Headline } from "react-native-paper";
-import Weather from "./Weather";
-import Calendars from "./Calendar";
-import useAuth from "../authProvider";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { setCurrentUser } from "../components/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
-import Pomodoro from "./Pomodoro";
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, ScrollView } from 'react-native';
+import { Headline, Button } from 'react-native-paper';
+import Weather from './Weather';
+import Calendars from './Calendar';
+import useAuth from '../authProvider';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
+import { setCurrentUser } from '../components/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { GmailScreen } from './GmailScreen';
 
-export const DashboardScreen = ({ navigation }) => {
+export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
+
   const dispatch = useDispatch();
   const { authUser } = useAuth();
 
   useEffect(() => {
     const getUserOrCreate = async () => {
-      console.log("AUTH USER", authUser);
+      // console.log("AUTH USER", authUser);
       const docSnap = await getDoc(doc(db, "users", authUser.uid));
       if (docSnap.exists()) {
         dispatch(setCurrentUser(docSnap.data()));
@@ -54,14 +49,29 @@ export const DashboardScreen = ({ navigation }) => {
     getUserOrCreate();
   }, []);
 
+  const handleGmailClick = () => {
+    navigation.push('Gmail');
+  };
+
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.layout}>
+    <SafeAreaView style={styles.layout}>
+      <ScrollView style={styles.scrollView}>
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
-       <Pomodoro />
+        {/* <Button
+          style={{ marginTop: 15 }}
+          icon='gmail'
+          mode='contained'
+          onPress={() => {
+            handleGmailClick();
+          }}
+          contentStyle={{ height: 45 }}
+          labelStyle={{ color: '#2c497f', fontSize: 18 }}
+        >
+          Gmail
+        </Button> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -72,6 +82,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 53,
     paddingVertical: 27,
+  },
+  scrollView: {
+    paddingTop: 30,
+    paddingHorizontal: 20,
   },
   headline1: {
     color: "#2c497f",
