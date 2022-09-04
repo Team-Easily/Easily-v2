@@ -66,7 +66,6 @@ export const GmailScreen = ({ navigation }) => {
             }
             dispatch(setEmails(emailsArr));
           });
-          console.log(emailsArr);
         } catch (error) {
           console.log(error);
         }

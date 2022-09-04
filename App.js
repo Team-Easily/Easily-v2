@@ -9,6 +9,7 @@ import { DashboardScreen } from './src/screens/DashboardScreen';
 import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { GmailScreen } from './src/screens/GmailScreen';
+import { EventsScreen } from './src/screens/EventsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { EditProfileScreen } from './src/screens/EditProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -19,8 +20,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/authProvider';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentUser } from './src/components/auth/authSlice';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -89,6 +88,20 @@ const NavBar = () => (
           tabBarLabel: 'Gmail',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='gmail' color={color} size={24} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='Events'
+        component={EventsScreen}
+        options={{
+          tabBarLabel: 'Events',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name='calendar-clock'
+              color={color}
+              size={24}
+            />
           ),
         }}
       />

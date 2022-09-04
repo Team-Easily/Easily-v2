@@ -37,7 +37,6 @@ export const TodoItemScreen = ({ navigation, route }) => {
 
   const getTodo = async () => {
     const todo = await getTodoById(route.params.id);
-    console.log("GET TODO", todo);
     dispatch(setTodo(todo));
   };
 
@@ -229,9 +228,6 @@ const styles = StyleSheet.create({
     minWidth: 180,
     marginBottom: 15,
   },
-  // itemDescription: {
-  //   height: 100,
-  // },
   dropDown: {
     borderColor: "#999999",
     justifyContent: "flex-start",

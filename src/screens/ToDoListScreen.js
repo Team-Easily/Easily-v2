@@ -68,7 +68,6 @@ export const ToDoListScreen = ({ navigation }) => {
 
   useEffect(() => {
     getTodos();
-    console.log('GETTING TODOS');
   }, [todo]);
 
   const getProgress = () => {

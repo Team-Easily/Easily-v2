@@ -8,7 +8,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { GCalsEvents } from './GCalsEvents';
+import { GCalsEvents } from './EventsScreen';
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -58,8 +58,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
-        <GCalsEvents />
-        {/* <Calendars /> */}
+        <Calendars />
       </ScrollView>
     </SafeAreaView>
   );
