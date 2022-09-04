@@ -8,6 +8,7 @@ import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
+import { GmailScreen } from './src/screens/GmailScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { EditProfileScreen } from './src/screens/EditProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -78,6 +79,16 @@ const NavBar = () => (
               color={color}
               size={24}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='Email'
+        component={GmailScreen}
+        options={{
+          tabBarLabel: 'Gmail',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name='gmail' color={color} size={24} />
           ),
         }}
       />
