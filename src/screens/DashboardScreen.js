@@ -8,7 +8,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { GmailScreen } from './GmailScreen';
+import { GCalsEvents } from './EventsScreen';
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -18,7 +18,6 @@ export const DashboardScreen = () => {
 
   useEffect(() => {
     const getUserOrCreate = async () => {
-      // console.log('AUTH USER', authUser);
       const docSnap = await getDoc(doc(db, 'users', authUser.uid));
       if (docSnap.exists()) {
         dispatch(setCurrentUser(docSnap.data()));
@@ -60,18 +59,6 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
-        {/* <Button
-          style={{ marginTop: 15 }}
-          icon='gmail'
-          mode='contained'
-          onPress={() => {
-            handleGmailClick();
-          }}
-          contentStyle={{ height: 45 }}
-          labelStyle={{ color: '#2c497f', fontSize: 18 }}
-        >
-          Gmail
-        </Button> */}
       </ScrollView>
     </SafeAreaView>
   );

@@ -7,7 +7,6 @@ export const AvatarComponent = () => {
   const user = useSelector((state) => state.auth.currentUser);
 
   if (user.imageUrl !== '') {
-    console.log('AVATAR', user);
     return (
       <Image
         style={styles.avatar}
