@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Button,
+} from "react-native";
 import { Headline } from "react-native-paper";
 import Weather from "./Weather";
 import Calendars from "./Calendar";
@@ -10,7 +16,7 @@ import { setCurrentUser } from "../components/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pomodoro from "./Pomodoro";
 
-export const DashboardScreen = () => {
+export const DashboardScreen = ({ navigation }) => {
   const user = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
   const { authUser } = useAuth();
@@ -55,7 +61,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
-        <Pomodoro />
+       <Pomodoro />
       </ScrollView>
     </SafeAreaView>
   );

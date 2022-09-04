@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import PropTypes from "prop-types";
 
 const ClockView = (props) => {
   return (
@@ -12,6 +13,22 @@ const ClockView = (props) => {
   );
 };
 
+ClockView.propTypes = {
+  time: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    minutes: PropTypes.number.isRequired,
+    seconds: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+ClockView.defaultProps = {
+  time: {
+    type: "Default",
+    minutes: 0,
+    seconds: 0,
+  },
+};
+
 const padZero = (number) => {
   if (number.toString().length === 1) {
     return "0" + number.toString();
@@ -22,7 +39,6 @@ const padZero = (number) => {
 
 const styles = StyleSheet.create({
   clockviewContainer: {
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     margin: 5,
@@ -32,11 +48,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 30,
     margin: 2,
+    color: "#000000",
   },
 
   timeText: {
     fontSize: 35,
     margin: 1,
+    color: "#000000",
   },
 });
 
