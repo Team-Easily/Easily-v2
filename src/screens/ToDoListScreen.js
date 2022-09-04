@@ -32,6 +32,7 @@ import {
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import SelectedModal from '../components/RewardModal';
 
 export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
@@ -49,7 +50,7 @@ export const ToDoListScreen = ({ navigation }) => {
   const [form, setForm] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [modalImage, setModalSource] = useState('../assets/coffee-maker.gif');
   let explosion;
 
   const getUser = async () => {
@@ -117,11 +118,12 @@ export const ToDoListScreen = ({ navigation }) => {
   const checkModal = () => {
     const points = user.points;
     if (
-      points === 5 ||
-      points === 10 ||
-      points === 15 ||
-      points === 20 ||
-      points === 25
+      points === 2 ||
+      points === 4 ||
+      points === 7 ||
+      points === 9 ||
+      points === 12 ||
+      points === 14
     )
       showModal();
   };
@@ -213,14 +215,7 @@ export const ToDoListScreen = ({ navigation }) => {
               onDismiss={hideModal}
               contentContainerStyle={styles.modalContainerStyle}
             >
-              <Title style={{ textAlign: 'center' }}>
-                You're doing great!
-                <br /> Keep up the momentum!
-              </Title>
-              <Image
-                style={styles.coffeeMaker}
-                source={require('../assets/coffee-maker.gif')}
-              />
+              <SelectedModal />
             </Modal>
           </Portal>
           <View style={styles.row}>
@@ -261,8 +256,8 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon='pencil-outline'
-                          color='#2c497f'
+                          icon="pencil-outline"
+                          color="#2c497f"
                           onPress={() =>
                             nav.navigate('TodoItem', {
                               id: todo.id,
@@ -270,8 +265,8 @@ export const ToDoListScreen = ({ navigation }) => {
                           }
                         />
                         <IconButton
-                          icon='trash-can-outline'
-                          color='#8f3985'
+                          icon="trash-can-outline"
+                          color="#8f3985"
                           onPress={() => handleDelete(todo.id)}
                         />
                       </View>
@@ -286,23 +281,23 @@ export const ToDoListScreen = ({ navigation }) => {
         </ScrollView>
         <List.Accordion
           style={styles.accordion}
-          title='Add Task'
-          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
+          title="Add Task"
+          left={(props) => <List.Icon {...props} icon="playlist-plus" />}
         >
           <TextInput
-            placeholder='task name'
+            placeholder="task name"
             value={todoName}
             onChangeText={(text) => setTodoName(text)}
           />
           <TextInput
-            placeholder='task description'
+            placeholder="task description"
             value={todoDescription}
             onChangeText={(text) => setTodoDescription(text)}
           />
           <Button
-            mode='contained'
+            mode="contained"
             onPress={handleSubmit}
-            color='#90be6d'
+            color="#90be6d"
             contentStyle={styles.submitButton}
             labelStyle={{
               color: 'white',
@@ -366,12 +361,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#fff',
     width: '100%',
-  },
-  coffeeMaker: {
-    width: 200,
-    height: 200,
-    marginLeft: 'auto',
-    marginRight: 'auto',
   },
   title: {
     textAlign: 'center',
