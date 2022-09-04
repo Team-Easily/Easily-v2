@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, ScrollView } from 'react-native';
-import { Headline, Button } from 'react-native-paper';
-import Weather from './Weather';
-import Calendars from './Calendar';
-import useAuth from '../authProvider';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
-import { setCurrentUser } from '../components/auth/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { GmailScreen } from './GmailScreen';
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, ScrollView } from "react-native";
+import { Headline, Button } from "react-native-paper";
+import Weather from "./Weather";
+import Calendars from "./Calendar";
+import useAuth from "../authProvider";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { setCurrentUser } from "../components/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { GmailScreen } from "./GmailScreen";
+import Pomodoro from "./Pomodoro";
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -50,7 +51,7 @@ export const DashboardScreen = () => {
   }, []);
 
   const handleGmailClick = () => {
-    navigation.push('Gmail');
+    navigation.push("Gmail");
   };
 
   return (
@@ -60,6 +61,7 @@ export const DashboardScreen = () => {
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <Weather />
         <Calendars />
+        <Pomodoro />
         {/* <Button
           style={{ marginTop: 15 }}
           icon='gmail'
