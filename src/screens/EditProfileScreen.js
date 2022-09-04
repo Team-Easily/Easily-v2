@@ -27,7 +27,6 @@ export const EditProfileScreen = ({ navigation }) => {
     const docSnap = await getDoc(doc(db, 'users', user.uid));
     if (docSnap.exists()) {
       dispatch(setCurrentUser(docSnap.data()));
-      console.log(docSnap.data());
     } else {
       console.log('No such document!');
     }

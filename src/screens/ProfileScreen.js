@@ -77,7 +77,6 @@ export const ProfileScreen = ({ navigation }) => {
           </Button>
           <Button
             style={styles.button}
-            // icon='exit-to-app'
             icon='hand-wave'
             mode='contained'
             onPress={handleSignOut}

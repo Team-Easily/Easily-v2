@@ -24,6 +24,7 @@ export const AuthContext = createContext({});
 const provider = new GoogleAuthProvider();
 provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
 provider.addScope('https://www.googleapis.com/auth/calendar.events');
+provider.addScope('https://www.googleapis.com/auth/calendar');
 
 export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
