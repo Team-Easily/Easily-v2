@@ -1,14 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView, ScrollView, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmails } from '../components/emails/emails';
-import { Headline, List } from 'react-native-paper';
+import { Headline, Title, List } from 'react-native-paper';
 
 export const GmailScreen = ({ navigation }) => {
   const user = useSelector((state) => state.auth.currentUser);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const emails = useSelector((state) => state.emails.emails);
   const dispatch = useDispatch();
+
+  const getEmail = (data) => {
+    let email = {
+      id: data.id,
+      body: data.payload.body.data,
+      snippet: data.snippet,
+      threadId: data.threadId,
+    };
+    for (
+      let headerIndex = 0;
+      headerIndex < data.payload.headers.length;
+      headerIndex++
+    ) {
+      if (data.payload.headers[headerIndex].name == 'Subject') {
+        email.subject = data.payload.headers[headerIndex].value;
+      }
+      if (data.payload.headers[headerIndex].name == 'From') {
+        email.from = data.payload.headers[headerIndex].value;
+      }
+      if (data.payload.headers[headerIndex].name == 'Date') {
+        email.date = data.payload.headers[headerIndex].value;
+      }
+    }
+    return email;
+  };
 
   useEffect(() => {
     if (user.uid) {
@@ -36,17 +61,6 @@ export const GmailScreen = ({ navigation }) => {
               data.labelIds.includes('INBOX') &&
               data.labelIds.includes('UNREAD')
             ) {
-              console.log('Data: ', data);
-              // if (data.labelIds.includes('UNREAD')) {
-              // const email = {
-              //   id: data.id,
-              //   from: data.payload.headers[19].value,
-              //   subject: data.payload.headers[18].value,
-              //   date: data.payload.headers[17].value,
-              //   body: data.payload.body.data,
-              //   snippet: data.snippet,
-              //   threadId: data.threadId,
-              // };
               const email = getEmail(data);
               emailsArr.push(email);
             }
@@ -61,31 +75,6 @@ export const GmailScreen = ({ navigation }) => {
     }
   }, [user]);
 
-  const getEmail = (data) => {
-    let email = {
-      id: data.id,
-      body: data.payload.body.data,
-      snippet: data.snippet,
-      threadId: data.threadId,
-    };
-    for (
-      let headerIndex = 0;
-      headerIndex < data.payload.headers.length;
-      headerIndex++
-    ) {
-      if (data.payload.headers[headerIndex].name == 'Subject') {
-        email.subject = data.payload.headers[headerIndex].value;
-      }
-      if (data.payload.headers[headerIndex].name == 'From') {
-        email.from = data.payload.headers[headerIndex].value;
-      }
-      if (data.payload.headers[headerIndex].name == 'Date') {
-        email.date = data.payload.headers[headerIndex].value;
-      }
-    }
-    return email;
-  };
-
   const from = (email) => {
     return 'From: ' + email.from;
   };
@@ -96,25 +85,33 @@ export const GmailScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Headline style={styles.headline}>
-          {emails.length} emails waiting
-        </Headline>
-
-        <List.Section>
-          {!!emails.length &&
-            emails.map((email) => {
-              return (
-                <List.Accordion
-                  key={email.id}
-                  title={from(email)}
-                  description={subject(email)}
-                  left={(props) => <List.Icon {...props} icon='gmail' />}
-                >
-                  <List.Item title={email.snippet} titleNumberOfLines='4' />
-                </List.Accordion>
-              );
-            })}
-        </List.Section>
+        {emails.length !== 0 ? (
+          <View>
+            <Headline style={styles.headline}>
+              {emails.length} emails waiting
+            </Headline>
+            <List.Section>
+              {!!emails.length &&
+                emails.map((email) => {
+                  return (
+                    <List.Accordion
+                      key={email.id}
+                      title={from(email)}
+                      description={subject(email)}
+                      left={(props) => <List.Icon {...props} icon='gmail' />}
+                    >
+                      <List.Item title={email.snippet} titleNumberOfLines='4' />
+                    </List.Accordion>
+                  );
+                })}
+            </List.Section>
+          </View>
+        ) : (
+          <View>
+            <Headline style={styles.headline}>No emails to show.</Headline>
+            <Title style={styles.headline}>Did you Login with Google?</Title>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -131,6 +128,6 @@ const styles = StyleSheet.create({
   headline: {
     width: '100%',
     textAlign: 'center',
-    marginTop: '1rem',
+    marginTop: '1.5rem',
   },
 });
