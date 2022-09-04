@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -19,6 +19,9 @@ import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/authProvider';
 import requestPermission from './src/firebase/firebaseMessaging';
+import Notifications from './src/components/Notifications/Notifications';
+import ReactNotificationComponent from './src/components/Notifications/ReactNotification';
+import { onMessageListener } from './src/firebase/firebaseMessaging';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -96,12 +99,36 @@ const NavBar = () => (
 
 function App() {
   const auth = getAuth();
+  const [show, setShow] = useState(false);
+  const [notification, setNotification] = useState({ title: '', body: '' });
+
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log('failed: ', err));
 
   return (
     <SafeAreaProvider>
       <StoreProvider store={store}>
         <AuthProvider>
           <PaperProvider theme={DefaultTheme}>
+            <View>
+              {show ? (
+                <ReactNotificationComponent
+                  title={notification.title}
+                  body={notification.body}
+                />
+              ) : (
+                <></>
+              )}
+              <Notifications />
+            </View>
             <NavigationContainer>
               {auth ? (
                 <MainStack.Navigator
