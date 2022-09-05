@@ -9,6 +9,7 @@ export const GmailScreen = ({ navigation }) => {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const emails = useSelector((state) => state.emails.emails);
   const dispatch = useDispatch();
+  const he = require('he');
 
   const getEmail = (data) => {
     let email = {
@@ -97,9 +98,17 @@ export const GmailScreen = ({ navigation }) => {
                       key={email.id}
                       title={from(email)}
                       description={subject(email)}
-                      left={(props) => <List.Icon {...props} icon='gmail' />}
+                      color={'#333333'}
+                      left={(props) => (
+                        <List.Icon {...props} icon='gmail' color={'#07A6A0'} />
+                      )}
                     >
-                      <List.Item title={email.snippet} titleNumberOfLines='4' />
+                      <List.Item
+                        title={he.decode(email.snippet)}
+                        titleNumberOfLines='4'
+                        color='#666666'
+                        titleStyle={styles.snippet}
+                      />
                     </List.Accordion>
                   );
                 })}
@@ -122,11 +131,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
   },
   scrollView: {
-    marginHorizontal: 10,
+    paddingHorizontal: 12,
   },
   headline: {
     width: '100%',
     textAlign: 'center',
-    marginTop: '1.5rem',
+    marginTop: '2rem',
+    color: '#2c497f',
+    marginBottom: 13,
+    fontSize: '1.7rem',
+    fontWeight: '500',
+  },
+  snippet: {
+    lineHeight: '1.3rem',
+    fontSize: '1rem',
+    color: '#333333',
   },
 });
