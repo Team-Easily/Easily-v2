@@ -1,6 +1,6 @@
-import React from "react";
-import { TextInput, View, Text, StyleSheet } from "react-native";
-import PropTypes from "prop-types";
+import React from 'react';
+import { TextInput, View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
 const ConfigTimerInput = (props) => {
   return (
@@ -16,18 +16,6 @@ const ConfigTimerInput = (props) => {
         placeholder="Minutes"
         keyboardType="numeric"
       />
-      {/* <Text> : </Text>
-      <TextInput
-        style={style.inputField}
-        defaultValue={`${props.data.seconds}`}
-        onChangeText={(text) => {
-          props.data.seconds = parseInt(text);
-          props.onUpdate(props.data);
-        }}
-        maxLength={2}
-        placeholder="Seconds"
-        keyboardType="numeric"
-      /> */}
     </View>
   );
 };
@@ -42,9 +30,9 @@ ConfigTimerInput.propTypes = {
 
 const style = StyleSheet.create({
   configInputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     margin: 5,
     padding: 5,
   },
@@ -52,13 +40,13 @@ const style = StyleSheet.create({
     margin: 4,
     borderWidth: 1,
     borderRadius: 4,
-    borderColor: "#000",
+    borderColor: '#000',
     padding: 5,
   },
   typeText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginHorizontal: 5,
-    color: "#000000",
+    color: '#000000',
   },
 });
 
