@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Headline, Title, List, Button } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { AvatarComponent } from '../components/AvatarComponent';
-import { RewardBadge } from '../components/RewardBadge';
+import { RewardBadge } from '../components/rewards/RewardBadge';
 import useAuth from '../authProvider';
 
 export const ProfileScreen = ({ navigation }) => {

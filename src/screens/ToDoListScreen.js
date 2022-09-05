@@ -32,7 +32,7 @@ import {
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import SelectedModal from '../components/RewardModal';
+import SelectedModal from '../components/rewards/RewardModal';
 
 export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
@@ -122,7 +122,8 @@ export const ToDoListScreen = ({ navigation }) => {
       points === 7 ||
       points === 9 ||
       points === 12 ||
-      points === 14
+      points === 14 ||
+      points === 18
     )
       showModal();
   };
