@@ -29,7 +29,7 @@ export const TodoItemScreen = ({ route }) => {
   const [value, setValue] = useState(null);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
-    { label: 'once', value: 'once' },
+    { label: 'one-time', value: 'one-time' },
     { label: 'weekly', value: 'weekly' },
     { label: 'monthly', value: 'monthly' },
   ]);
