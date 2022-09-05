@@ -26,7 +26,7 @@ import {
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import SelectedModal from '../components/RewardModal';
+import SelectedModal from '../components/rewards/RewardModal';
 
 export const ToDoListScreen = ({ navigation }) => {
   const nav = useNavigation();
@@ -44,7 +44,6 @@ export const ToDoListScreen = ({ navigation }) => {
   const [form, setForm] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalImage, setModalSource] = useState('../assets/coffee-maker.gif');
   let explosion;
 
   const getUser = async () => {
@@ -116,7 +115,8 @@ export const ToDoListScreen = ({ navigation }) => {
       points === 7 ||
       points === 9 ||
       points === 12 ||
-      points === 14
+      points === 14 ||
+      points === 18
     )
       showModal();
   };
@@ -211,6 +211,7 @@ export const ToDoListScreen = ({ navigation }) => {
               <SelectedModal />
             </Modal>
           </Portal>
+
           <View style={styles.header}>
             <View style={styles.row}>
               <Headline>Today's Tasks</Headline>
@@ -252,7 +253,6 @@ export const ToDoListScreen = ({ navigation }) => {
                       <View style={styles.buttonContainer}>
                         <IconButton
                           icon='plus'
-                          // icon='pencil-outline'
                           color='#2c497f'
                           onPress={() =>
                             nav.navigate('TodoItem', {
@@ -264,6 +264,11 @@ export const ToDoListScreen = ({ navigation }) => {
                           icon='trash-can-outline'
                           color='#8f3985'
                           onPress={() => handleDelete(todo.id)}
+                        />
+                        <IconButton
+                          icon='timer-outline'
+                          color='#2c497f'
+                          onPress={() => nav.navigate('Pomodoro')}
                         />
                       </View>
                     )}

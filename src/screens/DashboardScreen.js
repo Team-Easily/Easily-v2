@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, ScrollView, Text } from 'react-native';
 import { Headline, IconButton, Button } from 'react-native-paper';
-import Weather from './Weather';
-import CalendarScreen from './CalendarScreen';
 import useAuth from '../authProvider';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
@@ -15,7 +13,6 @@ export const DashboardScreen = () => {
   const nav = useNavigation();
   const dispatch = useDispatch();
   const { authUser } = useAuth();
-  const todos = useSelector((state) => state.todos.todos);
 
   useEffect(() => {
     const getUserOrCreate = async () => {
@@ -96,7 +93,7 @@ export const DashboardScreen = () => {
             <IconButton
               style={styles.button}
               mode='contained'
-              onPress={() => nav.navigate('TodoList')}
+              onPress={() => nav.navigate('Pomodoro')}
               color='#90be6d'
               icon='timer'
               size={45}
@@ -190,15 +187,4 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.24,
     shadowRadius: 8,
   },
-  //   outlinedButton: {
-  //     height: 70,
-  //     border: 'grey',
-  //     borderWidth: 1,
-  //     borderRadius: 20,
-  //     padding: 15,
-  //     shadowColor: '#64646F',
-  //     shadowOffset: { width: 0, height: 3 },
-  //     shadowOpacity: 0.24,
-  //     shadowRadius: 8,
-  //   },
 });
