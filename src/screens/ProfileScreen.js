@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { StyleSheet, SafeAreaView, View, Image } from 'react-native';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Headline, Title, List, Button } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { AvatarComponent } from '../components/AvatarComponent';
+import { RewardBadge } from '../components/RewardBadge';
 import useAuth from '../authProvider';
 
 export const ProfileScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
   const { logout } = useAuth();
   const user = useSelector((state) => state.auth.currentUser);
   const [avatarInitial, setAvatarInitial] = useState('');
@@ -31,10 +30,10 @@ export const ProfileScreen = ({ navigation }) => {
       return (
         <List.Item
           style={styles.listItem}
-          color={'#2c497f'}
+          color={'#333333'}
           title={user.address}
           left={() => (
-            <List.Icon color={'#A3A4A6'} icon='map-marker-star-outline' />
+            <List.Icon color={'#BBBBBB'} icon='map-marker-star-outline' />
           )}
         />
       );
@@ -43,23 +42,43 @@ export const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <View style={{ alignItems: 'center' }}>
-          <AvatarComponent user={user} />
-          <Headline style={styles.headline}>{user.userName}</Headline>
-          <Headline style={styles.headline}>
-            {user?.firstName} {user?.lastName}
-          </Headline>
-          <Title style={styles.points}>Points: {user?.points}</Title>
+      <View style={styles.layout}>
+        <View style={styles.header}>
+          <AvatarComponent user={user} style={{ marginTop: 15 }} />
+          <Headline style={styles.headline}>Hi {user.firstName}!</Headline>
+        </View>
+        <View style={styles.reward}>
+          <RewardBadge />
+          <View style={styles.tasks}>
+            <Title style={styles.points}>{user?.points} Tasks</Title>
+            <Title style={styles.points}>Completed!</Title>
+          </View>
         </View>
 
         <List.Section style={styles.list}>
+          <List.Item
+            style={styles.listItem}
+            color={'#333333'}
+            title={user?.userName}
+            left={() => <List.Icon color={'#BBBBBB'} icon='star' />}
+          />
+          <List.Item
+            style={styles.listItem}
+            color={'#333333'}
+            title={user?.firstName + ' ' + user?.lastName}
+            left={() => (
+              <List.Icon
+                color={'#BBBBBB'}
+                icon='card-account-details-outline'
+              />
+            )}
+          />
           <Address />
           <List.Item
             style={styles.listItem}
-            color={'#2c497f'}
+            color={'#333333'}
             title={user?.email}
-            left={() => <List.Icon color={'#A3A4A6'} icon='email' />}
+            left={() => <List.Icon color={'#BBBBBB'} icon='email' />}
           />
         </List.Section>
 
@@ -70,19 +89,18 @@ export const ProfileScreen = ({ navigation }) => {
             mode='contained'
             onPress={() => navigation.push('EditProfile')}
             color='#90be6d'
-            contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 16 }}
+            contentStyle={{ height: 40 }}
+            labelStyle={{ color: 'white', fontSize: 14 }}
           >
             Edit Profile
           </Button>
           <Button
-            style={styles.button}
+            style={styles.outlinedButton}
             icon='hand-wave'
-            mode='contained'
+            mode='outlined'
             onPress={handleSignOut}
-            color='#90be6d'
-            contentStyle={{ height: 45 }}
-            labelStyle={{ color: 'white', fontSize: 16 }}
+            contentStyle={{ height: 40 }}
+            labelStyle={{ color: '#90be6d', fontSize: 14 }}
           >
             Sign Out
           </Button>
@@ -98,26 +116,61 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 20,
     marginRight: 20,
+    height: '100%',
+  },
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '1rem',
   },
   headline: {
     color: '#2c497f',
     fontSize: 30,
     fontWeight: '500',
+    marginLeft: 30,
+  },
+  reward: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: '1rem',
+  },
+  tasks: {
+    flexDirection: 'column',
+    marginLeft: 25,
   },
   points: {
     marginTop: 10,
-    color: 'grey',
+    color: '#8c8c8c',
+    lineHeight: 15,
   },
   buttons: {
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: '1rem',
   },
   button: {
-    minWidth: 180,
-    marginBottom: 15,
+    minWidth: '40%',
+    marginHorizontal: 5,
+  },
+  outlinedButton: {
+    minWidth: '40%',
+    marginHorizontal: 5,
+    borderColor: '#90be6d',
+    borderWidth: 2,
   },
   list: {
     marginHorizontal: '10%',
-    marginVertical: 20,
+    marginVertical: '1rem',
   },
   listItem: {
     margin: 0,

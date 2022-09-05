@@ -29,7 +29,7 @@ const SelectedModal = () => {
           </Title>
           <Image
             style={styles.coffeeMaker}
-            source={require('../assets/polar-bear.gif')}
+            source={require('../assets/koala-sleeping.gif')}
           />
         </View>
       );
