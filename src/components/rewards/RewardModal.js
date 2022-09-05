@@ -7,7 +7,7 @@ const SelectedModal = () => {
   const user = useSelector((state) => state.auth.currentUser);
   const points = user.points;
   switch (true) {
-    case points <= 4 || points > 15:
+    case points <= 4:
       return (
         <View>
           <Title style={{ textAlign: 'center' }}>
