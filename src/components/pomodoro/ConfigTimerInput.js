@@ -16,7 +16,7 @@ const ConfigTimerInput = (props) => {
             props.data.onChangeMinute(parseInt(0));
           }
         }}
-        defaultValue={""}
+        defaultValue={" "}
         keyboardType="numeric"
       />
       <Text> : </Text>
@@ -39,9 +39,9 @@ const ConfigTimerInput = (props) => {
 
 ConfigTimerInput.propTypes = {
   data: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    onChangeMinute: PropTypes.func.isRequired,
-    onChangeSecond: PropTypes.func.isRequired,
+    type: PropTypes.string,
+    onChangeMinute: PropTypes.func,
+    onChangeSecond: PropTypes.func,
   }),
 };
 

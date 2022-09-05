@@ -17,8 +17,8 @@ const Controls = (props) => {
 };
 
 Controls.propTypes = {
-  onStartPausePress: PropTypes.func.isRequired,
-  onResetPress: PropTypes.func.isRequired,
+  onStartPausePress: PropTypes.func,
+  onResetPress: PropTypes.func,
 };
 
 const style = StyleSheet.create({

@@ -68,7 +68,7 @@ class CountdownTimer extends React.Component {
     } else {
       this.setState((prevState) => ({ time: prevState.time - 1 }));
       if (this.state.time === 0) {
-        Vibration.vibrate([ 500, 500, 500]);
+        Vibration.vibrate([500, 500, 500]);
       }
     }
   };

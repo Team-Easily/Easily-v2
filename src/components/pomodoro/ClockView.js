@@ -15,10 +15,10 @@ const ClockView = (props) => {
 
 ClockView.propTypes = {
   time: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    minutes: PropTypes.number.isRequired,
-    seconds: PropTypes.number.isRequired,
-  }).isRequired,
+    type: PropTypes.string,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
 };
 
 ClockView.defaultProps = {

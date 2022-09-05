@@ -8,6 +8,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import Pomodoro from './Pomodoro';
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
