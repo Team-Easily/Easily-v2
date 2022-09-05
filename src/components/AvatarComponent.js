@@ -7,7 +7,6 @@ export const AvatarComponent = () => {
   const user = useSelector((state) => state.auth.currentUser);
 
   if (user.imageUrl !== '') {
-    console.log('AVATAR', user);
     return (
       <Image
         style={styles.avatar}
@@ -31,6 +30,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 30,
+    shadowColor: '#64646F',
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.2,
+    shadowRadius: 50,
   },
 });

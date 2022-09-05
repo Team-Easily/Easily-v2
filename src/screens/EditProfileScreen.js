@@ -13,8 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../firebase/firebaseMethods';
 import { setCurrentUser } from '../components/auth/authSlice';
+import { useNavigation } from '@react-navigation/native';
 
 export const EditProfileScreen = ({ navigation }) => {
+  const nav = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [firstName, setFirstName] = useState('');
@@ -27,7 +29,6 @@ export const EditProfileScreen = ({ navigation }) => {
     const docSnap = await getDoc(doc(db, 'users', user.uid));
     if (docSnap.exists()) {
       dispatch(setCurrentUser(docSnap.data()));
-      console.log(docSnap.data());
     } else {
       console.log('No such document!');
     }
@@ -77,9 +78,7 @@ export const EditProfileScreen = ({ navigation }) => {
 
   const ImageComponent = () => {
     if (image !== '') {
-      return (
-        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
-      );
+      return <Image source={{ uri: image }} style={styles.avatar} />;
     }
   };
 
@@ -115,6 +114,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={userName}
+              label={'Username'}
               placeholder={user.userName ? user.userName : 'username'}
               onChangeText={(text) => {
                 setUserName(text);
@@ -123,6 +123,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={firstName}
+              label={'First Name'}
               placeholder={user.firstName ? user.firstName : 'First Name'}
               onChangeText={(text) => {
                 setFirstName(text);
@@ -131,6 +132,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={lastName}
+              label={'Last Name'}
               placeholder={user.lastName ? user.lastName : 'Last Name'}
               onChangeText={(text) => {
                 setLastName(text);
@@ -139,6 +141,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={address}
+              label={'Address'}
               placeholder={user.address ? user.address : 'Address'}
               onChangeText={(text) => {
                 setAddress(text);
@@ -157,6 +160,19 @@ export const EditProfileScreen = ({ navigation }) => {
             >
               Update
             </Button>
+            <Button
+              style={styles.button}
+              mode='contained'
+              onPress={() => nav.navigate('Profile')}
+              color='#07BEB8'
+              contentStyle={{ height: 45 }}
+              labelStyle={{
+                color: 'white',
+                fontSize: 18,
+              }}
+            >
+              Back
+            </Button>
           </View>
         </View>
       </ScrollView>
@@ -168,13 +184,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: 15,
+    marginTop: 15,
+  },
+  avatar: {
+    width: 125,
+    height: 125,
+    borderRadius: '50%',
   },
   textInput: {
-    marginTop: 15,
+    marginTop: 12,
+    height: 55,
   },
   button: {
     minWidth: 180,
-    marginTop: 15,
+    marginTop: 12,
   },
 });
