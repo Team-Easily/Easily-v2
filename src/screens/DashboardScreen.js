@@ -8,6 +8,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import Pomodoro from './Pomodoro';
 
 export const DashboardScreen = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -22,21 +23,21 @@ export const DashboardScreen = () => {
         dispatch(setCurrentUser(docSnap.data()));
       } else {
         const user = {
-          address: '',
+          address: "",
           email: authUser.email,
-          firstName: '',
+          firstName: "",
           imageUrl: authUser.photoURL,
-          lastName: '',
+          lastName: "",
           points: 0,
           uid: authUser.uid,
           userName: authUser.displayName,
         };
-        setDoc(doc(db, 'users', authUser.uid), {
-          address: '',
+        setDoc(doc(db, "users", authUser.uid), {
+          address: "",
           email: authUser.email,
-          firstName: '',
+          firstName: "",
           imageUrl: authUser.photoURL,
-          lastName: '',
+          lastName: "",
           points: 0,
           uid: authUser.uid,
           userName: authUser.displayName,
@@ -70,17 +71,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headline1: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 13,
     fontSize: 30,
-    fontWeight: '500',
+    fontWeight: "500",
     lineHeight: 25,
   },
   headline2: {
-    color: '#2c497f',
+    color: "#2c497f",
     marginBottom: 22,
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: "800",
     lineHeight: 25,
   },
   title: {

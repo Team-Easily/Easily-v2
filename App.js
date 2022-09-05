@@ -20,6 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/authProvider';
+import Pomodoro  from './src/screens/Pomodoro'
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -28,11 +29,12 @@ const ProfileStack = createStackNavigator();
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator
-    initialRouteName='TodoList'
+    initialRouteName="TodoList"
     screenOptions={{ headerShown: false }}
   >
-    <TodoStack.Screen name='TodoList' component={ToDoListScreen} />
-    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+    <TodoStack.Screen name="TodoList" component={ToDoListScreen} />
+    <TodoStack.Screen name="TodoItem" component={TodoItemScreen} />
+    <TodoStack.Screen name="Pomodoro" component={Pomodoro} />
   </TodoStack.Navigator>
 );
 
