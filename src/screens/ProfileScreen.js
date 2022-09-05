@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { Headline, Title, List, Button } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,7 +7,6 @@ import { RewardBadge } from '../components/RewardBadge';
 import useAuth from '../authProvider';
 
 export const ProfileScreen = ({ navigation }) => {
-  // const dispatch = useDispatch();
   const { logout } = useAuth();
   const user = useSelector((state) => state.auth.currentUser);
   const [avatarInitial, setAvatarInitial] = useState('');
