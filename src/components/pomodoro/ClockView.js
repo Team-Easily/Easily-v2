@@ -24,8 +24,8 @@ ClockView.propTypes = {
 ClockView.defaultProps = {
   time: {
     type: "Default",
-    minutes: 0,
-    seconds: 0,
+    minutes: 25,
+    // seconds: 0,
   },
 };
 

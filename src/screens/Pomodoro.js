@@ -19,8 +19,8 @@ export default class Pomodoro extends React.Component {
     this.state = {
       currentTimerIdx: 0,
       timers: [
-        { minutes: 0, seconds: 10, type: "Work" },
-        { minutes: 0, seconds: 5, type: "Break" },
+        { minutes: 25, seconds: 0, type: "Work" },
+        { minutes: 5, seconds: 0, type: "Break" },
       ],
       isTimerRunning: false,
       isTimerPaused: false,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     margin: 5,
   },
   scrollviewContentContainer: {
