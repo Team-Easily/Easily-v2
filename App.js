@@ -6,6 +6,8 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
+import CalendarScreen from './src/screens/CalendarScreen';
+import Weather from './src/screens/Weather';
 import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { GmailScreen } from './src/screens/GmailScreen';
@@ -24,8 +26,22 @@ import { AuthProvider } from './src/authProvider';
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
+const DashboardStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
+const DashboardStackScreen = () => (
+  <DashboardStack.Navigator
+    initialRouteName='Dashboard'
+    screenOptions={{ headerShown: false }}
+  >
+    <DashboardStack.Screen name='Dashboard' component={DashboardScreen} />
+    <DashboardStack.Screen name='Weather' component={Weather} />
+    <DashboardStack.Screen name='CalendarScreen' component={CalendarScreen} />
+    <DashboardStack.Screen name='TodoList' component={ToDoListScreen} />
+    <DashboardStack.Screen name='Gmail' component={GmailScreen} />
+    <DashboardStack.Screen name='Events' component={EventsScreen} />
+  </DashboardStack.Navigator>
+);
 const TodoStackScreen = () => (
   <TodoStack.Navigator
     initialRouteName='TodoList'
@@ -54,8 +70,8 @@ const NavBar = () => (
   >
     <Tab.Group initialRouteName='Dashboard'>
       <Tab.Screen
-        name='Dashboard'
-        component={DashboardScreen}
+        name='DashboardStackScreen'
+        component={DashboardStackScreen}
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
