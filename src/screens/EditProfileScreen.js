@@ -78,9 +78,7 @@ export const EditProfileScreen = ({ navigation }) => {
 
   const ImageComponent = () => {
     if (image !== '') {
-      return (
-        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
-      );
+      return <Image source={{ uri: image }} style={styles.avatar} />;
     }
   };
 
@@ -101,9 +99,9 @@ export const EditProfileScreen = ({ navigation }) => {
           <View>
             <Button
               style={styles.button}
-              mode="contained"
+              mode='contained'
               onPress={pickImage}
-              color="#90be6d"
+              color='#90be6d'
               contentStyle={{ height: 45 }}
               labelStyle={{
                 color: 'white',
@@ -116,6 +114,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={userName}
+              label={'Username'}
               placeholder={user.userName ? user.userName : 'username'}
               onChangeText={(text) => {
                 setUserName(text);
@@ -124,6 +123,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={firstName}
+              label={'First Name'}
               placeholder={user.firstName ? user.firstName : 'First Name'}
               onChangeText={(text) => {
                 setFirstName(text);
@@ -132,6 +132,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={lastName}
+              label={'Last Name'}
               placeholder={user.lastName ? user.lastName : 'Last Name'}
               onChangeText={(text) => {
                 setLastName(text);
@@ -140,6 +141,7 @@ export const EditProfileScreen = ({ navigation }) => {
             <TextInput
               style={styles.textInput}
               value={address}
+              label={'Address'}
               placeholder={user.address ? user.address : 'Address'}
               onChangeText={(text) => {
                 setAddress(text);
@@ -147,9 +149,9 @@ export const EditProfileScreen = ({ navigation }) => {
             />
             <Button
               style={styles.button}
-              mode="contained"
+              mode='contained'
               onPress={handleUpdate}
-              color="#90be6d"
+              color='#90be6d'
               contentStyle={{ height: 45 }}
               labelStyle={{
                 color: 'white',
@@ -160,9 +162,9 @@ export const EditProfileScreen = ({ navigation }) => {
             </Button>
             <Button
               style={styles.button}
-              mode="contained"
+              mode='contained'
               onPress={() => nav.navigate('Profile')}
-              color="#07BEB8"
+              color='#07BEB8'
               contentStyle={{ height: 45 }}
               labelStyle={{
                 color: 'white',
@@ -182,13 +184,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: 15,
+    marginTop: 15,
+  },
+  avatar: {
+    width: 125,
+    height: 125,
+    borderRadius: '50%',
   },
   textInput: {
-    marginTop: 15,
+    marginTop: 12,
+    height: 55,
   },
   button: {
     minWidth: 180,
-    marginTop: 15,
+    marginTop: 12,
   },
 });
