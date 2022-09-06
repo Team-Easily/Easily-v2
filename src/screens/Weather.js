@@ -18,6 +18,7 @@ const Weather = () => {
       )
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           setData(data);
         });
     }
@@ -61,35 +62,35 @@ const Weather = () => {
         >
           <View style={styles.weatherItemContainer}>
             <View style={styles.headerContainer}>
-              <MaterialCommunityIcons
-                size={55}
-                name={WeatherConditions[data?.list[0].weather[0].main].icon}
-                color={'#fff'}
-              />
               <Text style={styles.tempText}>
                 {Math.round(data?.list[0].main.temp)}˚
               </Text>
+              <MaterialCommunityIcons
+                size={90}
+                name={WeatherConditions[data?.list[0].weather[0].main].icon}
+                color={'#fff'}
+              />
             </View>
             <View style={styles.weatherRow2}>
-              <Title style={styles.city}>{data?.city.name}</Title>
+              <Text style={styles.feelsLike}>
+                Feels Like: {Math.round(data?.list[0].main.feels_like)}°F
+              </Text>
               <Title style={styles.description}>
                 {data?.list[0].weather[0].description}
               </Title>
             </View>
             <View style={styles.weatherRow3}>
-              <Text style={styles.bottomRowText}>
-                Feels Like: {Math.round(data?.list[0].main.feels_like)}°F
-              </Text>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={styles.rhRow}>
                 <MaterialCommunityIcons
-                  size={20}
+                  size={30}
                   name={'water-percent'}
                   color={'#fff'}
                 />
-                <Text style={styles.bottomRowText}>
-                  {data?.list[0].main.humidity}%
+                <Text style={styles.humidity}>
+                  {data?.list[0].main.humidity}% RH
                 </Text>
               </View>
+              <Text style={styles.city}>{data?.city.name}</Text>
             </View>
           </View>
         </View>
@@ -100,29 +101,22 @@ const Weather = () => {
 
 const styles = StyleSheet.create({
   weatherContainer: {
-    paddingTop: 15,
-    paddingHorizontal: 25,
-    paddingBottom: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#64646F',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.2,
-    shadowRadius: 29,
+    flex: 1,
+    paddingVertical: '60%',
+    paddingHorizontal: '3rem',
+    height: '100%',
   },
   loading: {
-    padding: 25,
-    marginBottom: 40,
+    paddingTop: '10rem',
   },
   tempText: {
-    fontSize: 45,
+    fontSize: 80,
     color: '#fff',
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
     height: 'auto',
     color: '#fff',
   },
@@ -132,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 15,
     color: '#fff',
+    marginVertical: '2rem',
   },
   weatherRow3: {
     flexDirection: 'row',
@@ -141,24 +136,32 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginTop: 20,
   },
+  rhRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   fontColor: {
     color: '#fff',
   },
   city: {
     color: '#fff',
     textTransform: 'uppercase',
-    fontSize: 14,
+    fontSize: 18,
   },
   description: {
     color: '#fff',
     textTransform: 'uppercase',
     textAlign: 'right',
-    fontSize: 15,
-    lineHeight: 18,
+    fontSize: 22,
+    lineHeight: 25,
   },
-  bottomRowText: {
+  humidity: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: 18,
+  },
+  feelsLike: {
+    color: '#fff',
+    fontSize: 17,
   },
   weatherItemContainer: {
     flexDirection: 'column',

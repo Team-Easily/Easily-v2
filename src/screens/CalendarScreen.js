@@ -25,9 +25,14 @@ const CalendarScreen = () => {
         theme={{
           backgroundColor: '#ffffff',
           calendarBackground: '#ffffff',
-          selectedDayBackgroundColor: '#07beb8',
+          selectedDayBackgroundColor: '#8f3985',
+          textDayFontWeight: '400',
+          textMonthFontWeight: '500',
+          textMonthFontSize: 18,
+          textDayHeaderFontWeight: '500',
           selectedDayTextColor: '#ffffff',
-          todayTextColor: '#07beb8',
+          todayTextColor: '#ffffff',
+          todayBackgroundColor: '#8f3985',
           textDisabledColor: '#d9e1e8',
           dotColor: '#8f3985',
           selectedDotColor: '#ffffff',
@@ -50,17 +55,9 @@ const CalendarScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // maxWidth: 200,
-    // height: 200,
-    borderRadius: 10,
-    shadowColor: '#64646F',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.2,
-    shadowRadius: 29,
-  },
-  calendar: {
-    borderRadius: 10,
-    borderColor: 'gray',
+    paddingVertical: '40%',
+    paddingHorizontal: '2rem',
+    backgroundColor: '#ffffff',
   },
 });
 

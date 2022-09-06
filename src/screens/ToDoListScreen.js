@@ -215,6 +215,12 @@ export const ToDoListScreen = ({ navigation }) => {
           <View style={styles.header}>
             <View style={styles.row}>
               <Headline>Today's Tasks</Headline>
+              <IconButton
+                icon='timer-outline'
+                color='#90be6d'
+                size={28}
+                onPress={() => nav.navigate('Pomodoro')}
+              />
               <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
             </View>
             <ProgressBar
@@ -237,9 +243,9 @@ export const ToDoListScreen = ({ navigation }) => {
                     style={styles.listItem}
                     key={idx}
                     title={todo.title}
-                    description={todo.description}
+                    // description={todo.description}
                     left={() => (
-                      <View style={{ paddingTop: 5 }}>
+                      <View style={{ paddingTop: 8 }}>
                         <Checkbox
                           style={{ borderWidth: '1px' }}
                           status={todo.completed ? 'checked' : 'unchecked'}
@@ -264,11 +270,6 @@ export const ToDoListScreen = ({ navigation }) => {
                           icon='trash-can-outline'
                           color='#8f3985'
                           onPress={() => handleDelete(todo.id)}
-                        />
-                        <IconButton
-                          icon='timer-outline'
-                          color='#2c497f'
-                          onPress={() => nav.navigate('Pomodoro')}
                         />
                       </View>
                     )}
@@ -346,6 +347,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   items: {
     marginTop: 10,
@@ -376,5 +378,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
+    paddingTop: 3,
   },
 });
