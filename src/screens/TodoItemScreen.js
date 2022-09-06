@@ -110,6 +110,12 @@ export const TodoItemScreen = ({ route }) => {
       <View style={styles.taskWrapper}>
         <View style={styles.titleRow}>
           <Title style={styles.sectionTitle}>{todo.title}</Title>
+          <IconButton
+            icon='timer-outline'
+            color='#90be6d'
+            size={28}
+            onPress={() => nav.navigate('Pomodoro')}
+          />
         </View>
         <TextInput
           style={styles.itemDescription}
@@ -204,10 +210,12 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     marginBottom: '0.7rem',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
-    // marginBottom: '1rem',
   },
   items: {
     marginTop: 10,

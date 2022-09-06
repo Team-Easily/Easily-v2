@@ -8,11 +8,17 @@ import { setCurrentUser } from '../components/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
-export const DashboardScreen = () => {
+export const DashboardScreen = ({ navigation }) => {
   const user = useSelector((state) => state.auth.currentUser);
   const nav = useNavigation();
   const dispatch = useDispatch();
   const { authUser } = useAuth();
+
+  useEffect(() => {
+    navigation.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+  });
 
   useEffect(() => {
     const getUserOrCreate = async () => {
@@ -81,9 +87,8 @@ export const DashboardScreen = () => {
             <IconButton
               style={styles.button}
               mode='contained'
-              onPress={() => nav.navigate('TodoList')}
+              onPress={() => navigation.push('TodoStackScreen')}
               color='#999999'
-              //   color='#c0c0c0'
               icon='format-list-bulleted'
               size={45}
             ></IconButton>
@@ -95,7 +100,7 @@ export const DashboardScreen = () => {
               mode='contained'
               onPress={() => nav.navigate('Pomodoro')}
               color='#90be6d'
-              icon='timer'
+              icon='timer-outline'
               size={45}
             ></IconButton>
           </View>

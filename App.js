@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -30,20 +34,41 @@ const TodoStack = createStackNavigator();
 const DashboardStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
-const DashboardStackScreen = () => (
-  <DashboardStack.Navigator
-    initialRouteName='Dashboard'
-    screenOptions={{ headerShown: false }}
-  >
-    <DashboardStack.Screen name='Dashboard' component={DashboardScreen} />
-    <DashboardStack.Screen name='Weather' component={Weather} />
-    <DashboardStack.Screen name='CalendarScreen' component={CalendarScreen} />
-    <DashboardStack.Screen name='TodoList' component={ToDoListScreen} />
-    <DashboardStack.Screen name='Gmail' component={GmailScreen} />
-    <DashboardStack.Screen name='Events' component={EventsScreen} />
-    <DashboardStack.Screen name='Pomodoro' component={Pomodoro} />
-  </DashboardStack.Navigator>
-);
+const DashboardStackScreen = ({ navigation, route }) => {
+  // TODO: stackoverflow suggestion for hiding navbar
+  // React.useLayoutEffect(() => {
+  //   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Dashboard';
+  //   if (routeName === 'Dashboard') {
+  //     navigation.setOptions({ tabBarVisible: { display: 'none' } });
+  //   } else {
+  //     navigation.setOptions({ tabBarVisible: { display: 'flex' } });
+  //   }
+  // }, [navigation, route]);
+  return (
+    <DashboardStack.Navigator
+      initialRouteName='Dashboard'
+      screenOptions={{ headerShown: false }}
+    >
+      <DashboardStack.Screen
+        name='Dashboard'
+        component={DashboardScreen}
+        options={{
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <DashboardStack.Screen name='Weather' component={Weather} />
+      <DashboardStack.Screen name='CalendarScreen' component={CalendarScreen} />
+      <DashboardStack.Screen
+        name='TodoStackScreen'
+        component={TodoStackScreen}
+      />
+      <DashboardStack.Screen name='Gmail' component={GmailScreen} />
+      <DashboardStack.Screen name='Events' component={EventsScreen} />
+      <DashboardStack.Screen name='Pomodoro' component={Pomodoro} />
+    </DashboardStack.Navigator>
+  );
+};
+
 const TodoStackScreen = () => (
   <TodoStack.Navigator
     initialRouteName='TodoList'
@@ -75,7 +100,7 @@ const NavBar = () => (
       <Tab.Screen
         name='DashboardStackScreen'
         component={DashboardStackScreen}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -84,7 +109,17 @@ const NavBar = () => (
               size={24}
             />
           ),
-        }}
+          // TODO: stackoverflow suggestion for hiding navbar
+          // tabBarStyle: ((route) => {
+          //   const routeName =
+          //     getFocusedRouteNameFromRoute(route) ?? 'Dashboard';
+          //   console.log(routeName);
+          //   if (routeName === 'Dashboard') {
+          //     return { display: 'none' };
+          //   }
+          //   return;
+          // })(route),
+        })}
       />
       <Tab.Screen
         name='TodoStackScreen'
