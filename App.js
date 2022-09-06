@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
+import CalendarScreen from './src/screens/CalendarScreen';
+import Weather from './src/screens/Weather';
 import { ToDoListScreen } from './src/screens/ToDoListScreen';
 import { TodoItemScreen } from './src/screens/TodoItemScreen';
 import { GmailScreen } from './src/screens/GmailScreen';
@@ -20,21 +26,57 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/authProvider';
-import Pomodoro  from './src/screens/Pomodoro'
+import Pomodoro from './src/screens/Pomodoro';
 
 const Tab = createMaterialBottomTabNavigator();
 const MainStack = createStackNavigator();
 const TodoStack = createStackNavigator();
+const DashboardStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
+
+const DashboardStackScreen = ({ navigation, route }) => {
+  // TODO: stackoverflow suggestion for hiding navbar
+  // React.useLayoutEffect(() => {
+  //   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Dashboard';
+  //   if (routeName === 'Dashboard') {
+  //     navigation.setOptions({ tabBarVisible: { display: 'none' } });
+  //   } else {
+  //     navigation.setOptions({ tabBarVisible: { display: 'flex' } });
+  //   }
+  // }, [navigation, route]);
+  return (
+    <DashboardStack.Navigator
+      initialRouteName='Dashboard'
+      screenOptions={{ headerShown: false }}
+    >
+      <DashboardStack.Screen
+        name='Dashboard'
+        component={DashboardScreen}
+        options={{
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <DashboardStack.Screen name='Weather' component={Weather} />
+      <DashboardStack.Screen name='CalendarScreen' component={CalendarScreen} />
+      <DashboardStack.Screen
+        name='TodoStackScreen'
+        component={TodoStackScreen}
+      />
+      <DashboardStack.Screen name='Gmail' component={GmailScreen} />
+      <DashboardStack.Screen name='Events' component={EventsScreen} />
+      <DashboardStack.Screen name='Pomodoro' component={Pomodoro} />
+    </DashboardStack.Navigator>
+  );
+};
 
 const TodoStackScreen = () => (
   <TodoStack.Navigator
-    initialRouteName="TodoList"
+    initialRouteName='TodoList'
     screenOptions={{ headerShown: false }}
   >
-    <TodoStack.Screen name="TodoList" component={ToDoListScreen} />
-    <TodoStack.Screen name="TodoItem" component={TodoItemScreen} />
-    <TodoStack.Screen name="Pomodoro" component={Pomodoro} />
+    <TodoStack.Screen name='TodoList' component={ToDoListScreen} />
+    <TodoStack.Screen name='TodoItem' component={TodoItemScreen} />
+    <TodoStack.Screen name='Pomodoro' component={Pomodoro} />
   </TodoStack.Navigator>
 );
 
@@ -56,9 +98,9 @@ const NavBar = () => (
   >
     <Tab.Group initialRouteName='Dashboard'>
       <Tab.Screen
-        name='Dashboard'
-        component={DashboardScreen}
-        options={{
+        name='DashboardStackScreen'
+        component={DashboardStackScreen}
+        options={({ route }) => ({
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -67,7 +109,17 @@ const NavBar = () => (
               size={24}
             />
           ),
-        }}
+          // TODO: stackoverflow suggestion for hiding navbar
+          // tabBarStyle: ((route) => {
+          //   const routeName =
+          //     getFocusedRouteNameFromRoute(route) ?? 'Dashboard';
+          //   console.log(routeName);
+          //   if (routeName === 'Dashboard') {
+          //     return { display: 'none' };
+          //   }
+          //   return;
+          // })(route),
+        })}
       />
       <Tab.Screen
         name='TodoStackScreen'

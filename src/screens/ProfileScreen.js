@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     height: '100%',
+    backgroundColor: '#F6F6F6',
   },
   layout: {
     display: 'flex',

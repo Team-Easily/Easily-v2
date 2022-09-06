@@ -1,33 +1,23 @@
 import React, { useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
-import { Agenda, Calendar } from 'react-native-calendars';
-import { Card } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
-const timeToString = (time) => {
-  const date = new Date(time);
-  return date.toISOString().split('T')[0];
-};
-
-const Calendars = () => {
-  const [items, setItems] = useState({});
-
+const CalendarScreen = () => {
   return (
     <View style={styles.container}>
       <Calendar
-        style={{ borderRadius: 10, borderColor: 'gray' }}
+        style={styles.calendar}
         theme={{
           backgroundColor: '#ffffff',
           calendarBackground: '#ffffff',
-          selectedDayBackgroundColor: '#07beb8',
+          selectedDayBackgroundColor: '#8f3985',
+          textDayFontWeight: '400',
+          textMonthFontWeight: '500',
+          textMonthFontSize: 18,
+          textDayHeaderFontWeight: '500',
           selectedDayTextColor: '#ffffff',
-          todayTextColor: '#07beb8',
+          todayTextColor: '#ffffff',
+          todayBackgroundColor: '#8f3985',
           textDisabledColor: '#d9e1e8',
           dotColor: '#8f3985',
           selectedDotColor: '#ffffff',
@@ -50,12 +40,10 @@ const Calendars = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderRadius: 10,
-    shadowColor: '#64646F',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.2,
-    shadowRadius: 29,
+    paddingVertical: '40%',
+    paddingHorizontal: '2rem',
+    backgroundColor: '#ffffff',
   },
 });
 
-export default Calendars;
+export default CalendarScreen;

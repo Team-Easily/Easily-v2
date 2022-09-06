@@ -62,8 +62,13 @@ export const EventsScreen = ({ navigation }) => {
                     key={event.id}
                     title={event.summary}
                     description={details(event)}
+                    color={'#333333'}
                     left={(props) => (
-                      <List.Icon {...props} icon='calendar-clock' />
+                      <List.Icon
+                        {...props}
+                        icon='calendar-clock'
+                        color={'#07A6A0'}
+                      />
                     )}
                   />
                 );
@@ -85,14 +90,18 @@ export const EventsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#FFFFFF',
   },
   scrollView: {
-    marginHorizontal: 10,
+    paddingHorizontal: 15,
   },
   headline: {
     width: '100%',
     textAlign: 'center',
-    marginTop: '1.5rem',
+    marginTop: '2rem',
+    color: '#2c497f',
+    marginBottom: 13,
+    fontSize: '1.7rem',
+    fontWeight: '500',
   },
 });

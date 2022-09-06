@@ -110,6 +110,12 @@ export const TodoItemScreen = ({ route }) => {
       <View style={styles.taskWrapper}>
         <View style={styles.titleRow}>
           <Title style={styles.sectionTitle}>{todo.title}</Title>
+          <IconButton
+            icon='timer-outline'
+            color='#90be6d'
+            size={28}
+            onPress={() => nav.navigate('Pomodoro')}
+          />
         </View>
         <TextInput
           style={styles.itemDescription}
@@ -117,7 +123,7 @@ export const TodoItemScreen = ({ route }) => {
           value={todoDescription}
           onChangeText={(text) => setTodoDescription(text)}
           multiline={true}
-          numberOfLines={3}
+          numberOfLines={4}
         />
 
         <View style={styles.iconContainer}>
@@ -143,8 +149,8 @@ export const TodoItemScreen = ({ route }) => {
               onPress={() => handleCheckedChange(todo.id, todo.completed)}
             />
             <IconButton
-              icon="trash-can-outline"
-              color="#8f3985"
+              icon='trash-can-outline'
+              color='#8f3985'
               onPress={() => handleDelete(todo.id)}
             />
           </View>
@@ -152,9 +158,9 @@ export const TodoItemScreen = ({ route }) => {
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -165,9 +171,9 @@ export const TodoItemScreen = ({ route }) => {
           </Button>
           <Button
             style={styles.button}
-            mode="contained"
+            mode='contained'
             onPress={() => nav.navigate('TodoList')}
-            color="#07BEB8"
+            color='#07BEB8'
             contentStyle={{ height: 45 }}
             labelStyle={{
               color: 'white',
@@ -185,12 +191,12 @@ export const TodoItemScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: '#F6F6F6',
     height: '100%',
     justifyContent: 'center',
   },
   taskWrapper: {
-    paddingHorizontal: 20,
+    marginHorizontal: '3rem',
   },
   checkboxOutline: {
     height: 37,
@@ -198,11 +204,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    color: '#2c497f',
+    fontSize: '1.5rem',
+    fontWeight: '500',
   },
   titleRow: {
-    marginBottom: 20,
+    marginBottom: '0.7rem',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
@@ -210,8 +220,8 @@ const styles = StyleSheet.create({
   items: {
     marginTop: 10,
   },
-  buttonContainer: {
-    alignItems: 'center',
+  itemDescription: {
+    marginVertical: '2rem',
   },
   iconContainer: {
     flex: 1,
@@ -220,8 +230,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     zIndex: 1000,
-    paddingVertical: 20,
+    marginVertical: '2rem',
     paddingLeft: 10,
+  },
+  buttonContainer: {
+    marginTop: '1rem',
+    alignItems: 'center',
   },
   button: {
     margin: 0,

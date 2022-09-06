@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,11 +6,11 @@ import {
   View,
   Text,
   StatusBar,
-} from "react-native";
-import CountdownTimer from "../components/pomodoro/CountdownTimer.js";
-import Controls from "../components/pomodoro/Controls";
-import ConfigTimerInput from "../components/pomodoro/ConfigTimerInput";
-import Constants from "expo-constants";
+} from 'react-native';
+import CountdownTimer from '../components/pomodoro/CountdownTimer.js';
+import Controls from '../components/pomodoro/Controls';
+import ConfigTimerInput from '../components/pomodoro/ConfigTimerInput';
+import { Headline } from 'react-native-paper';
 
 export default class Pomodoro extends React.Component {
   constructor(props) {
@@ -19,8 +19,8 @@ export default class Pomodoro extends React.Component {
     this.state = {
       currentTimerIdx: 0,
       timers: [
-        { minutes: 25, seconds: 0, type: "Work" },
-        { minutes: 5, seconds: 0, type: "Break" },
+        { minutes: 25, seconds: 0, type: 'Work' },
+        { minutes: 5, seconds: 0, type: 'Break' },
       ],
       isTimerRunning: false,
       isTimerPaused: false,
@@ -97,37 +97,35 @@ export default class Pomodoro extends React.Component {
 
   render() {
     return (
-      <>
-        <StatusBar barStyle="light-content" />
-        <SafeAreaView>
-          <ScrollView contentContainerStyle={styles.scrollviewContentContainer}>
-            <Text style={styles.appHeaderText}>Pomodoro Timer</Text>
-            <CountdownTimer
-              time={this.state.timers[this.state.currentTimerIdx]}
-              onCountdownComplete={this.onCountdownComplete}
-              ref={(ref) => {
-                this._timer = ref;
-              }}
-            />
-            <Controls
-              onStartPausePress={this.startStopButtonPress}
-              onResetPress={this.resetTimer}
-              isTimerRunning={this.state.isTimerRunning}
-            />
-            <View style={styles.container}>
-              {this.state.timers.map((e, idx) => {
-                return (
-                  <ConfigTimerInput
-                    key={idx}
-                    data={e}
-                    onUpdate={this.onUpdateTimerConfig}
-                  />
-                );
-              })}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </>
+      <SafeAreaView>
+        <StatusBar barStyle='light-content' />
+        <ScrollView style={styles.container}>
+          <Headline style={styles.headerText}>Pomodoro Timer</Headline>
+          <CountdownTimer
+            time={this.state.timers[this.state.currentTimerIdx]}
+            onCountdownComplete={this.onCountdownComplete}
+            ref={(ref) => {
+              this._timer = ref;
+            }}
+          />
+          <Controls
+            onStartPausePress={this.startStopButtonPress}
+            onResetPress={this.resetTimer}
+            isTimerRunning={this.state.isTimerRunning}
+          />
+          <View style={styles.inputRow}>
+            {this.state.timers.map((e, idx) => {
+              return (
+                <ConfigTimerInput
+                  key={idx}
+                  data={e}
+                  onUpdate={this.onUpdateTimerConfig}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -135,22 +133,19 @@ export default class Pomodoro extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    // justifyContent: "space-between",
-    margin: 5,
+    paddingVertical: '18%',
+    paddingHorizontal: '2rem',
+    backgroundColor: 'tomato',
   },
-  scrollviewContentContainer: {
-    paddingTop: Constants.statusBarHeight,
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
+  headerText: {
+    fontSize: '2.4rem',
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#ffffff',
+    marginBottom: '0.85rem',
   },
-  appHeaderText: {
-    fontWeight: "bold",
-    fontSize: 40,
-    margin: 7,
-    padding: 5,
-    alignSelf: "center",
-    color: "#000",
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

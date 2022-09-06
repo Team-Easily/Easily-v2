@@ -9,13 +9,7 @@ import { auth, db } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTodos } from '../components/todos/todoSlice';
 import { setCurrentUser } from '../components/auth/authSlice';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
 import {
   DefaultTheme,
   Headline,
@@ -50,7 +44,6 @@ export const ToDoListScreen = ({ navigation }) => {
   const [form, setForm] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalImage, setModalSource] = useState('../assets/coffee-maker.gif');
   let explosion;
 
   const getUser = async () => {
@@ -218,15 +211,24 @@ export const ToDoListScreen = ({ navigation }) => {
               <SelectedModal />
             </Modal>
           </Portal>
-          <View style={styles.row}>
-            <Headline>Today's Tasks</Headline>
-            <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+
+          <View style={styles.header}>
+            <View style={styles.row}>
+              <Headline>Today's Tasks</Headline>
+              <IconButton
+                icon='timer-outline'
+                color='#90be6d'
+                size={28}
+                onPress={() => nav.navigate('Pomodoro')}
+              />
+              <Title style={{ color: '#2c497f' }}>{user.points} pts</Title>
+            </View>
+            <ProgressBar
+              progress={getProgress()}
+              color={getProgressColor()}
+              style={styles.progressBar}
+            />
           </View>
-          <ProgressBar
-            progress={getProgress()}
-            color={getProgressColor()}
-            style={styles.progressBar}
-          />
           <ConfettiCannon
             count={200}
             origin={{ x: -50, y: 0 }}
@@ -238,12 +240,12 @@ export const ToDoListScreen = ({ navigation }) => {
               todos.map((todo, idx) => {
                 return (
                   <List.Item
-                    style={{ color: '#2c497f' }}
+                    style={styles.listItem}
                     key={idx}
                     title={todo.title}
-                    description={todo.description}
+                    // description={todo.description}
                     left={() => (
-                      <View style={{ paddingTop: 5 }}>
+                      <View style={{ paddingTop: 8 }}>
                         <Checkbox
                           style={{ borderWidth: '1px' }}
                           status={todo.completed ? 'checked' : 'unchecked'}
@@ -256,8 +258,8 @@ export const ToDoListScreen = ({ navigation }) => {
                     right={() => (
                       <View style={styles.buttonContainer}>
                         <IconButton
-                          icon="pencil-outline"
-                          color="#2c497f"
+                          icon='plus'
+                          color='#2c497f'
                           onPress={() =>
                             nav.navigate('TodoItem', {
                               id: todo.id,
@@ -265,14 +267,9 @@ export const ToDoListScreen = ({ navigation }) => {
                           }
                         />
                         <IconButton
-                          icon="trash-can-outline"
-                          color="#8f3985"
+                          icon='trash-can-outline'
+                          color='#8f3985'
                           onPress={() => handleDelete(todo.id)}
-                        />
-                        <IconButton
-                          icon="timer-outline"
-                          color="#2c497f"
-                          onPress={() => nav.navigate('Pomodoro')}
                         />
                       </View>
                     )}
@@ -286,23 +283,23 @@ export const ToDoListScreen = ({ navigation }) => {
         </ScrollView>
         <List.Accordion
           style={styles.accordion}
-          title="Add Task"
-          left={(props) => <List.Icon {...props} icon="playlist-plus" />}
+          title='Add Task'
+          left={(props) => <List.Icon {...props} icon='playlist-plus' />}
         >
           <TextInput
-            placeholder="task name"
+            placeholder='task name'
             value={todoName}
             onChangeText={(text) => setTodoName(text)}
           />
           <TextInput
-            placeholder="task description"
+            placeholder='task description'
             value={todoDescription}
             onChangeText={(text) => setTodoDescription(text)}
           />
           <Button
-            mode="contained"
+            mode='contained'
             onPress={handleSubmit}
-            color="#90be6d"
+            color='#90be6d'
             contentStyle={styles.submitButton}
             labelStyle={{
               color: 'white',
@@ -320,7 +317,7 @@ export const ToDoListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: '#F6F6F6',
     height: '100%',
   },
   modalContainerStyle: {
@@ -330,7 +327,11 @@ const styles = StyleSheet.create({
   },
   tasksWrapper: {
     paddingTop: 30,
+    paddingHorizontal: 15,
+  },
+  header: {
     paddingHorizontal: 20,
+    flexDirection: 'column',
   },
   sectionTitle: {
     fontSize: 24,
@@ -346,9 +347,14 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   items: {
     marginTop: 10,
+  },
+  listItem: {
+    color: '#2c497f',
+    paddingHorizontal: 0,
   },
   noTasks: {
     color: '#2c497f',
@@ -372,5 +378,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
+    paddingTop: 3,
   },
 });
