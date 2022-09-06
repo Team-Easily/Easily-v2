@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   clockviewContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: '2.25rem',
+    marginVertical: '2.5rem',
   },
 
   clockViewHeader: {

@@ -33,7 +33,7 @@ export const WelcomeScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    marginTop: '9em',
+    marginVertical: '47%',
     alignItems: 'center',
   },
   logo: {

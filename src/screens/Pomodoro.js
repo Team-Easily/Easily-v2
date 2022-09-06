@@ -132,7 +132,8 @@ export default class Pomodoro extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: '18%',
+    paddingTop: '30%',
+    paddingBottom: '40%',
     paddingHorizontal: '2rem',
     backgroundColor: 'tomato',
   },
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     color: '#ffffff',
-    marginBottom: '0.85rem',
+    marginBottom: '1.5rem',
   },
   inputRow: {
     flexDirection: 'row',

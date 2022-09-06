@@ -107,10 +107,11 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: '3em',
+    // marginTop: '3em',
     flex: 1,
     marginLeft: 40,
     marginRight: 40,
+    marginVertical: '25%',
   },
   logo: {
     height: 150,

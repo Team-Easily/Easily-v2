@@ -137,12 +137,12 @@ export const DashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    paddingHorizontal: 55,
-    paddingVertical: 35,
   },
   scrollView: {
-    paddingTop: '2.5rem',
     paddingHorizontal: '3rem',
+    paddingVertical: '20%',
+    alignContent: 'center',
+    flexDirection: 'column',
   },
   headline1: {
     color: '#2c497f',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   headline2: {
     color: '#2c497f',
-    marginBottom: '2.5rem',
+    marginBottom: '3.25rem',
     fontSize: 33,
     fontWeight: '800',
     lineHeight: 25,
