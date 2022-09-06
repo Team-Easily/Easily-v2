@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 
@@ -23,23 +23,34 @@ const LoginButton = () => {
 
 export const WelcomeScreen = () => {
   return (
-    <View style={styles.layout}>
-      <Image style={styles.logo} source={require('../assets/logo.png')} />
-      <LoginButton />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.layout}>
+        <Image style={styles.logo} source={require('../assets/logo.png')} />
+        <LoginButton />
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  layout: {
+  container: {
     flex: 1,
-    marginTop: '9em',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: '-3rem',
   },
   logo: {
+    marginTop: '-3rem',
     height: 200,
     width: 200,
-    margin: 30,
   },
   title: {
     fontSize: 32,

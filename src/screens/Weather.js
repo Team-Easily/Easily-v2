@@ -102,8 +102,10 @@ const Weather = () => {
 const styles = StyleSheet.create({
   weatherContainer: {
     flex: 1,
-    paddingVertical: '60%',
+    paddingTop: '60%',
+    paddingBottom: '100%',
     paddingHorizontal: '3rem',
+    justifyContent: 'center',
     height: '100%',
   },
   loading: {
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 'auto',
     color: '#fff',
+    marginBottom: '0.5rem',
   },
   weatherRow2: {
     flexDirection: 'row',
