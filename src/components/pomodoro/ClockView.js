@@ -1,14 +1,15 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import PropTypes from "prop-types";
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Title } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 const ClockView = (props) => {
   return (
     <View style={styles.clockviewContainer}>
-      <Text style={styles.clockViewHeader}>{props.time.type} Time</Text>
-      <Text style={styles.timeText}>
+      <Title style={styles.clockViewHeader}>{props.time.type} Time</Title>
+      <Title style={styles.timeText}>
         {props.time.minutes}:{padZero(props.time.seconds)}
-      </Text>
+      </Title>
     </View>
   );
 };
@@ -23,7 +24,7 @@ ClockView.propTypes = {
 
 ClockView.defaultProps = {
   time: {
-    type: "Default",
+    type: 'Default',
     minutes: 25,
     // seconds: 0,
   },
@@ -31,7 +32,7 @@ ClockView.defaultProps = {
 
 const padZero = (number) => {
   if (number.toString().length === 1) {
-    return "0" + number.toString();
+    return '0' + number.toString();
   } else {
     return number;
   }
@@ -39,22 +40,21 @@ const padZero = (number) => {
 
 const styles = StyleSheet.create({
   clockviewContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: '2.25rem',
   },
 
   clockViewHeader: {
-    textAlign: "center",
-    fontSize: 30,
-    margin: 2,
-    color: "#000000",
+    fontSize: '1.25rem',
+    color: '#ffffff',
   },
 
   timeText: {
-    fontSize: 35,
-    margin: 1,
-    color: "#000000",
+    fontSize: '4.7rem',
+    color: '#ffffff',
+    marginTop: '1.25rem',
+    marginBottom: '2rem',
   },
 });
 

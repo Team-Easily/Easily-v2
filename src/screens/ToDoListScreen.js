@@ -184,7 +184,7 @@ export const ToDoListScreen = ({ navigation }) => {
         description: todoDescription,
         author: user.uid,
         completed: completed,
-        frequency: 'once',
+        frequency: 'one-time',
       });
     } catch (err) {
       console.error(err);

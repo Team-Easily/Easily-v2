@@ -1,23 +1,8 @@
 import React, { useState } from 'react';
-import {
-  View,
-  // TouchableOpacity,
-  // Text,
-  StyleSheet,
-  // ScrollView,
-  // SafeAreaView,
-} from 'react-native';
-import { Agenda, Calendar } from 'react-native-calendars';
-// import { Card } from 'react-native-paper';
-
-// const timeToString = (time) => {
-//   const date = new Date(time);
-//   return date.toISOString().split('T')[0];
-// };
+import { View, StyleSheet } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
 const CalendarScreen = () => {
-  // const [items, setItems] = useState({});
-
   return (
     <View style={styles.container}>
       <Calendar
