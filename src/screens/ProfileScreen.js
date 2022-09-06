@@ -114,8 +114,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 20,
-    marginRight: 20,
     height: '100%',
     backgroundColor: '#F6F6F6',
   },
@@ -124,6 +122,9 @@ const styles = StyleSheet.create({
     flexFlow: 'column',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
+    backgroundColor: '#F6F6F6',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   header: {
     flexDirection: 'row',
