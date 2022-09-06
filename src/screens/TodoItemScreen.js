@@ -10,7 +10,7 @@ import {
   IconButton,
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodo, setTodos, editTodo } from '../components/todos/todoSlice';
+import { setTodo } from '../components/todos/todoSlice';
 import {
   getTodoById,
   updateTodo,
