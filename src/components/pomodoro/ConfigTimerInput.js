@@ -26,7 +26,6 @@ ConfigTimerInput.propTypes = {
   data: PropTypes.shape({
     type: PropTypes.string.isRequired,
     minutes: PropTypes.number.isRequired,
-    // seconds: PropTypes.number.isRequired,
   }),
 };
 

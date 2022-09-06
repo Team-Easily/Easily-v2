@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   todos: [],
@@ -6,14 +6,11 @@ const initialState = {
 };
 
 export const todosSlice = createSlice({
-  name: "todos",
+  name: 'todos',
   initialState,
   reducers: {
     setTodos(state, action) {
       state.todos = [...action.payload];
-    },
-    addToTodos(state, action) {
-      state.todos = [...state.todos, action.payload];
     },
     setTodo(state, action) {
       state.todo = action.payload;

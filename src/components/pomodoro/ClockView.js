@@ -26,7 +26,6 @@ ClockView.defaultProps = {
   time: {
     type: 'Default',
     minutes: 25,
-    // seconds: 0,
   },
 };
 

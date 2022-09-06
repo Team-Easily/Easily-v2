@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
   StatusBar,
 } from 'react-native';
 import CountdownTimer from '../components/pomodoro/CountdownTimer.js';
