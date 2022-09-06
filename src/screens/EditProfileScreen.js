@@ -84,98 +84,100 @@ export const EditProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <View
-          style={{
-            paddingHorizontal: '4rem',
-            paddingTop: '3rem',
-            justifyContent: 'center',
-          }}
-        >
-          <View style={{ alignItems: 'center' }}>
-            <Headline>Edit Profile</Headline>
-            <ImageComponent />
-          </View>
-          <View>
-            <Button
-              style={styles.button}
-              mode='contained'
-              onPress={pickImage}
-              color='#90be6d'
-              contentStyle={{ height: 45 }}
-              labelStyle={{
-                color: 'white',
-                fontSize: 18,
-              }}
-            >
-              Set Avatar Image
-            </Button>
+      <View style={styles.layout}>
+        <ScrollView>
+          <View
+            style={{
+              paddingHorizontal: '4rem',
+              paddingTop: '3rem',
+              justifyContent: 'center',
+            }}
+          >
+            <View style={{ alignItems: 'center' }}>
+              <Headline>Edit Profile</Headline>
+              <ImageComponent />
+            </View>
+            <View>
+              <Button
+                style={styles.button}
+                mode='contained'
+                onPress={pickImage}
+                color='#90be6d'
+                contentStyle={{ height: 45 }}
+                labelStyle={{
+                  color: 'white',
+                  fontSize: 18,
+                }}
+              >
+                Set Avatar Image
+              </Button>
 
-            <TextInput
-              style={styles.textInput}
-              value={userName}
-              label={'Username'}
-              placeholder={user.userName ? user.userName : 'username'}
-              onChangeText={(text) => {
-                setUserName(text);
-              }}
-            />
-            <TextInput
-              style={styles.textInput}
-              value={firstName}
-              label={'First Name'}
-              placeholder={user.firstName ? user.firstName : 'First Name'}
-              onChangeText={(text) => {
-                setFirstName(text);
-              }}
-            />
-            <TextInput
-              style={styles.textInput}
-              value={lastName}
-              label={'Last Name'}
-              placeholder={user.lastName ? user.lastName : 'Last Name'}
-              onChangeText={(text) => {
-                setLastName(text);
-              }}
-            />
-            <TextInput
-              style={styles.textInput}
-              value={address}
-              label={'Address'}
-              placeholder={user.address ? user.address : 'Address'}
-              onChangeText={(text) => {
-                setAddress(text);
-              }}
-            />
-            <Button
-              style={styles.button}
-              mode='contained'
-              onPress={handleUpdate}
-              color='#90be6d'
-              contentStyle={{ height: 45 }}
-              labelStyle={{
-                color: 'white',
-                fontSize: 18,
-              }}
-            >
-              Update
-            </Button>
-            <Button
-              style={styles.button}
-              mode='contained'
-              onPress={() => nav.navigate('Profile')}
-              color='#07BEB8'
-              contentStyle={{ height: 45 }}
-              labelStyle={{
-                color: 'white',
-                fontSize: 18,
-              }}
-            >
-              Back
-            </Button>
+              <TextInput
+                style={styles.textInput}
+                value={userName}
+                label={'Username'}
+                placeholder={user.userName ? user.userName : 'username'}
+                onChangeText={(text) => {
+                  setUserName(text);
+                }}
+              />
+              <TextInput
+                style={styles.textInput}
+                value={firstName}
+                label={'First Name'}
+                placeholder={user.firstName ? user.firstName : 'First Name'}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                }}
+              />
+              <TextInput
+                style={styles.textInput}
+                value={lastName}
+                label={'Last Name'}
+                placeholder={user.lastName ? user.lastName : 'Last Name'}
+                onChangeText={(text) => {
+                  setLastName(text);
+                }}
+              />
+              <TextInput
+                style={styles.textInput}
+                value={address}
+                label={'Address'}
+                placeholder={user.address ? user.address : 'Address'}
+                onChangeText={(text) => {
+                  setAddress(text);
+                }}
+              />
+              <Button
+                style={styles.button}
+                mode='contained'
+                onPress={handleUpdate}
+                color='#90be6d'
+                contentStyle={{ height: 45 }}
+                labelStyle={{
+                  color: 'white',
+                  fontSize: 18,
+                }}
+              >
+                Update
+              </Button>
+              <Button
+                style={styles.button}
+                mode='contained'
+                onPress={() => nav.navigate('Profile')}
+                color='#07BEB8'
+                contentStyle={{ height: 45 }}
+                labelStyle={{
+                  color: 'white',
+                  fontSize: 18,
+                }}
+              >
+                Back
+              </Button>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -184,7 +186,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginTop: 15,
+    height: '100%',
+  },
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   avatar: {
     width: 125,

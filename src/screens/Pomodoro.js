@@ -96,34 +96,36 @@ export default class Pomodoro extends React.Component {
 
   render() {
     return (
-      <SafeAreaView>
-        <StatusBar barStyle='light-content' />
-        <ScrollView style={styles.container}>
-          <Headline style={styles.headerText}>Pomodoro Timer</Headline>
-          <CountdownTimer
-            time={this.state.timers[this.state.currentTimerIdx]}
-            onCountdownComplete={this.onCountdownComplete}
-            ref={(ref) => {
-              this._timer = ref;
-            }}
-          />
-          <Controls
-            onStartPausePress={this.startStopButtonPress}
-            onResetPress={this.resetTimer}
-            isTimerRunning={this.state.isTimerRunning}
-          />
-          <View style={styles.inputRow}>
-            {this.state.timers.map((e, idx) => {
-              return (
-                <ConfigTimerInput
-                  key={idx}
-                  data={e}
-                  onUpdate={this.onUpdateTimerConfig}
-                />
-              );
-            })}
-          </View>
-        </ScrollView>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.layout}>
+          <StatusBar barStyle='light-content' />
+          <ScrollView>
+            <Headline style={styles.headerText}>Pomodoro Timer</Headline>
+            <CountdownTimer
+              time={this.state.timers[this.state.currentTimerIdx]}
+              onCountdownComplete={this.onCountdownComplete}
+              ref={(ref) => {
+                this._timer = ref;
+              }}
+            />
+            <Controls
+              onStartPausePress={this.startStopButtonPress}
+              onResetPress={this.resetTimer}
+              isTimerRunning={this.state.isTimerRunning}
+            />
+            <View style={styles.inputRow}>
+              {this.state.timers.map((e, idx) => {
+                return (
+                  <ConfigTimerInput
+                    key={idx}
+                    data={e}
+                    onUpdate={this.onUpdateTimerConfig}
+                  />
+                );
+              })}
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     );
   }
@@ -132,10 +134,18 @@ export default class Pomodoro extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: '30%',
-    paddingBottom: '40%',
+    justifyContent: 'center',
+    height: '100%',
     paddingHorizontal: '2rem',
     backgroundColor: 'tomato',
+  },
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   headerText: {
     fontSize: '2.4rem',

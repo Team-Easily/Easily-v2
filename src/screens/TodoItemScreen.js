@@ -107,7 +107,7 @@ export const TodoItemScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.taskWrapper}>
+      <View style={styles.layout}>
         <View style={styles.titleRow}>
           <Title style={styles.sectionTitle}>{todo.title}</Title>
           <IconButton
@@ -191,12 +191,18 @@ export const TodoItemScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6F6F6',
-    height: '100%',
     justifyContent: 'center',
+    height: '100%',
+    backgroundColor: '#F6F6F6',
   },
-  taskWrapper: {
-    marginHorizontal: '3rem',
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    backgroundColor: '#F6F6F6',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   checkboxOutline: {
     height: 37,

@@ -53,8 +53,8 @@ export const DashboardScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.layout}>
-      <ScrollView style={styles.scrollView}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.layout}>
         <Headline style={styles.headline1}>Welcome,</Headline>
         <Headline style={styles.headline2}>{user?.userName}!</Headline>
         <View style={styles.widgetRow}>
@@ -129,33 +129,37 @@ export const DashboardScreen = ({ navigation }) => {
             ></IconButton>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  layout: {
+  container: {
     flex: 1,
+    justifyContent: 'center',
+    height: '100%',
   },
-  scrollView: {
+  layout: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
     paddingHorizontal: '3rem',
-    paddingVertical: '20%',
-    alignContent: 'center',
-    flexDirection: 'column',
   },
   headline1: {
     color: '#2c497f',
+    marginTop: '2rem',
     marginBottom: 13,
-    fontSize: 33,
+    fontSize: 35,
     fontWeight: '500',
     lineHeight: 25,
     paddingLeft: 2,
   },
   headline2: {
     color: '#2c497f',
-    marginBottom: '3.25rem',
-    fontSize: 33,
+    marginBottom: '3.5rem',
+    fontSize: 35,
     fontWeight: '800',
     lineHeight: 25,
     paddingLeft: 2,
