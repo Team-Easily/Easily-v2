@@ -12,6 +12,10 @@ Created with convenience and design in mind, Easily combines your most-used apps
 
 Easily uses the Google Mail and Google Calendar APIs to access user's email and events, as well as the OpenWeather API and geolocation to provide an up-to-date local weather snapshot.
 
+![Logo](https://i.imgur.com/Y0oae6H.png)
+
+Scan the QR Code to view the app on your smartphone
+
 ## Tech Stack
 
 - React
