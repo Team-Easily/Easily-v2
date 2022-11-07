@@ -4,6 +4,9 @@ Do Everything Easily
 
 ![Logo](https://i.imgur.com/FGkww5c.png)
 
+## Demo
+- [YouTube Video](https://youtu.be/l552ZBV1kRQ)
+
 ## About
 
 Easily is a mobile Personal Assistant app that brings together everything you need to stay organized, plan ahead and prepare for your day.
