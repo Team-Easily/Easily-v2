@@ -1,6 +1,6 @@
 # Easily
 
-Do Everything Easily
+Do Everything Easily - Created with convenience and design in mind, Easily combines your most-used apps and websites in one simple interface: email, calendar, events, weather and tasks.
 
 ![Logo](https://i.imgur.com/FGkww5c.png)
 
